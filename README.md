@@ -1,0 +1,1 @@
+Consiste en un Sistema de Gestión de Materiales de Construcción desarrollado con Java 17.0.12 con los visuales de JavaFX
