@@ -26,15 +26,20 @@ Este proyecto consiste en una solución de software diseñada para optimizar las
 
 **RF-06. Aplicación de Descuentos y Promociones** > El sistema debe calcular automáticamente los descuentos aplicables y permitir al Gerente (para configuración) y al Vendedor (al momento del cobro) aplicar promociones especiales ya sea sobre productos específicos o sobre el total de la compra.
 
-**RF-07. Gestión de Salidas y Entradas de Inventario** > El sistema proveerá una interfaz para el Almacenista donde deberá ingresar el número de ticket, folio o ID de pedido generado por el Vendedor. Al ingresarlo, el sistema recuperará y mostrará los detalles exactos de la venta. El Almacenista solo validará físicamente la carga y presionará un botón para "Confirmar Entrega", lo cual descontará automáticamente el stock del inventario y marcará el ticket como "Surtido" para evitar entregas duplicadas.
+**RF-07. Gestión de Salidas y Entradas de Inventario** > El sistema proveerá una interfaz simplificada para el Almacenista dividida en dos flujos operativos: 
+-**Salidas (Despacho a Clientes)**: El Almacenista ingresará el número de ticket o ID de pedido. El sistema mostrará los detalles de la venta y, al "Confirmar Entrega", descontará automáticamente el stock y marcará el ticket como "Surtido" para evitar dobles entregas. 
+
+-**Entradas (Recepción de Proveedores)**: El Almacenista ingresará el ID de la Orden de Compra (previamente registrada en el sistema). El sistema desplegará la lista de materiales esperados con un campo numérico editable para cada uno. El Almacenista deberá ingresar la cantidad real recibida de cada producto. Al confirmar, el sistema sumará exclusivamente las cantidades reales al stock y notificará automáticamente al Gerente en caso de existir discrepancias (faltantes) entre lo pedido y lo recibido. El sistema mostrará el listado de materiales esperados. 
 
 **RF-08. Sistema de Alertas de Stock** > El sistema debe monitorear constantemente los niveles de inventario y generar notificaciones visuales dirigidas al Gerente y al Vendedor cuando las existencias de un producto alcancen su límite mínimo preestablecido.
 
-**RF-09. Gestión de Proveedores y Registro de Compras** > El sistema debe mantener un catálogo con la información de contacto de los proveedores. Además, debe permitir al Gerente y al Vendedor registrar las compras de reabastecimiento realizadas a dichos proveedores, enlazando estos registros al inventario.
+**RF-09. Gestión de Proveedores y Generación de Ordenes de Compras** >El sistema debe mantener un catálogo con la información de contacto de los proveedores. Además, debe permitir exclusivamente al Gerente generar "Órdenes de Compra" para el reabastecimiento de material. Estas órdenes se guardarán en el sistema con un estado de "Pendiente" y servirán como el folio base para que el Almacenista registre la entrada física y actualice el inventario (como se especifica en el RF-07). 
 
 **RF-10. Historial y Consulta de Ventas** > El sistema debe almacenar un registro histórico inmutable de todas las ventas realizadas (incluyendo fecha, productos, precios y cliente asociado). El Vendedor y el Gerente podrán realizar búsquedas y consultas sobre este registro en cualquier momento.
 
 **RF-11. Generación de Reportes e Inteligencia de Negocio** > El sistema debe permitir exclusivamente al Gerente la generación de reportes financieros y de rendimiento. Esto incluye informes de ventas diarias, semanales, mensuales y anuales, así como análisis de ventas filtrados por producto, categoría y período de tiempo.
+
+**RF-12. Autorización de Operaciones Restringidas (Override)** > El sistema debe contar con un mecanismo de validación de credenciales de supervisor en la pantalla de Punto de Venta. Acciones críticas como la cancelación de un ticket ya cobrado, la modificación de precios manual o la aplicación de descuentos no programados por parte de un Vendedor, dispararán una ventana de autorización que exigirá la clave de un Gerente para proceder. 
 
 
 ## ⚙️ Requerimientos No Funcionales (RNF)
