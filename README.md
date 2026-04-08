@@ -27,6 +27,7 @@ Este proyecto consiste en una solución de software diseñada para optimizar las
 **RF-06. Aplicación de Descuentos y Promociones** > El sistema debe calcular automáticamente los descuentos aplicables y permitir al Gerente (para configuración) y al Vendedor (al momento del cobro) aplicar promociones especiales ya sea sobre productos específicos o sobre el total de la compra.
 
 **RF-07. Gestión de Salidas y Entradas de Inventario** > El sistema proveerá una interfaz simplificada para el Almacenista dividida en dos flujos operativos: 
+
 -**Salidas (Despacho a Clientes)**: El Almacenista ingresará el número de ticket o ID de pedido. El sistema mostrará los detalles de la venta y, al "Confirmar Entrega", descontará automáticamente el stock y marcará el ticket como "Surtido" para evitar dobles entregas. 
 
 -**Entradas (Recepción de Proveedores)**: El Almacenista ingresará el ID de la Orden de Compra (previamente registrada en el sistema). El sistema desplegará la lista de materiales esperados con un campo numérico editable para cada uno. El Almacenista deberá ingresar la cantidad real recibida de cada producto. Al confirmar, el sistema sumará exclusivamente las cantidades reales al stock y notificará automáticamente al Gerente en caso de existir discrepancias (faltantes) entre lo pedido y lo recibido. El sistema mostrará el listado de materiales esperados. 
