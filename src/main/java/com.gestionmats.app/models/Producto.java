@@ -4,6 +4,7 @@ package com.gestionmats.app.models;
  * Record que representa la entidad Producto.
  * Al ser un record de Java 17, los getters se llaman igual que el atributo (ej. producto.nombre())
  */
+
 public record Producto(
         String id,
         String nombre,

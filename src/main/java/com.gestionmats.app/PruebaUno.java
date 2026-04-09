@@ -14,7 +14,6 @@ public class PruebaUno {
                 210.50, 100, "Materiales Básicos", "Bulto",
                 20, 0.0, "img/cemento.png", "2026-04-08", "2026-04-08"
         );
-
         // Lo guardamos en el CSV
         dao.create(nuevoCemento);
 
