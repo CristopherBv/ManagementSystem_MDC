@@ -10,7 +10,7 @@ public class PruebaUno {
 
         // Creamos un producto de prueba
         Producto nuevoCemento = new Producto(
-                "P-001", "Cemento Cruz Azul", "Bulto de 50kg",
+                "P-001", "Cemento Cruz Azulito", "Bulto de 50kg",
                 210.50, 100, "Materiales Básicos", "Bulto",
                 20, 0.0, "img/cemento.png", "2026-04-08", "2026-04-08"
         );
