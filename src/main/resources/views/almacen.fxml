@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.text.Text?>
+
+<BorderPane xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="gestionmats.controllers.WarehouseController" prefWidth="900" prefHeight="600">
+
+    <top>
+        <HBox spacing="20" alignment="CENTER_RIGHT" style="-fx-background-color: #fafafa; -fx-border-color: #eee; -fx-border-width: 0 0 1 0;">
+            <padding><Insets top="10" right="20" bottom="10" left="20"/></padding>
+            <VBox HBox.hgrow="ALWAYS">
+                <Text text="Control de Almacén" style="-fx-font-size: 18px; -fx-font-weight: bold;"/>
+                <Text text="Gestión de inventario" style="-fx-fill: #737373; -fx-font-size: 12px;"/>
+            </VBox>
+            <Label fx:id="lblUsuario" text="Almacenista: Don Rigo" style="-fx-text-fill: #525252;"/>
+            <Button text="Salir" onAction="#handleLogout" style="-fx-background-color: transparent; -fx-border-color: #ddd; -fx-border-radius: 5; -fx-cursor: hand;"/>
+        </HBox>
+    </top>
+
+    <center>
+        <VBox spacing="20">
+            <padding><Insets top="20" right="40" bottom="20" left="40"/></padding>
+
+            <HBox spacing="10">
+                <ToggleButton fx:id="btnTabSalidas" text="Salidas (Despacho)" selected="true" onAction="#switchTab">
+                    <toggleGroup><ToggleGroup fx:id="tabGroup"/></toggleGroup>
+                </ToggleButton>
+                <ToggleButton fx:id="btnTabEntradas" text="Entradas (Recepción)" onAction="#switchTab" toggleGroup="$tabGroup"/>
+            </HBox>
+
+            <VBox spacing="10" style="-fx-background-color: white; -fx-border-color: #eee; -fx-border-radius: 10; -fx-background-radius: 10;">
+                <padding><Insets top="20" right="20" bottom="20" left="20"/></padding>
+                <Label fx:id="lblSearchTitle" text="Buscar Pedido para Despacho" style="-fx-font-weight: bold;"/>
+                <HBox spacing="10">
+                    <TextField fx:id="txtSearchId" HBox.hgrow="ALWAYS" promptText="Ingresa el ID..." prefHeight="40"/>
+                    <Button text="Buscar" onAction="#handleSearch" prefHeight="40" prefWidth="100"
+                            style="-fx-background-color: #0a0a0a; -fx-text-fill: white; -fx-cursor: hand;"/>
+                </HBox>
+            </VBox>
+
+            <VBox fx:id="vboxResults" spacing="15" VBox.vgrow="ALWAYS" style="-fx-background-color: #fdfdfd; -fx-border-color: #eee; -fx-border-radius: 10;">
+                <padding><Insets top="20" right="20" bottom="20" left="20"/></padding>
+                <Label text="Aquí aparecerán los detalles del documento encontrado..." style="-fx-text-fill: #a3a3a3;"/>
+            </VBox>
+        </VBox>
+    </center>
+</BorderPane>
