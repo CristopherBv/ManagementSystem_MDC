@@ -3,7 +3,13 @@ out/
 !**/src/main/**/out/
 !**/src/test/**/out/
 .kotlin
+.idea/
 *.iml
+
+##JAVA Y MAVEN##
+*.class
+/target/
+/out/
 
 ### Eclipse ###
 .apt_generated
