@@ -2,7 +2,7 @@ package com.gestionmats.app.dao;
 
 import com.gestionmats.app.models.Proveedor;
 
-public class ProveedorDAO extends AbstractCsvDAO<Proveedor>{
+public class ProveedorDAO extends AbstractCsvDAO<Proveedor> implements IProveedorDAO{
     // --- Singleton ---
     private static ProveedorDAO instancia;
 
