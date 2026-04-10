@@ -2,7 +2,7 @@ package com.gestionmats.app.dao;
 
 import com.gestionmats.app.models.Producto;
 
-public class ProductoDAO extends AbstractCsvDAO<Producto> {
+public class ProductoDAO extends AbstractCsvDAO<Producto> implements IProductoDAO {
 
     private static ProductoDAO instancia;
 
@@ -10,7 +10,6 @@ public class ProductoDAO extends AbstractCsvDAO<Producto> {
     private ProductoDAO() {
         super("productos.csv");
     }
-
     public static ProductoDAO getInstancia() {
         if (instancia == null) {
             instancia = new ProductoDAO();
@@ -21,13 +20,18 @@ public class ProductoDAO extends AbstractCsvDAO<Producto> {
     @Override
     protected Producto mapearDeCSV(String[] datos) {
         return new Producto(
-                datos[0], datos[1], datos[2],
-                Double.parseDouble(datos[3]),
-                Integer.parseInt(datos[4]),
-                datos[5], datos[6],
-                Integer.parseInt(datos[7]),
-                Double.parseDouble(datos[8]),
-                datos[9], datos[10], datos[11]
+                datos[0], //id
+                datos[1], //nombre
+                datos[2], //descripcion
+                Double.parseDouble(datos[3]), //precio
+                Integer.parseInt(datos[4]), //stock
+                datos[5], //categoría
+                datos[6], //unidad
+                Integer.parseInt(datos[7]), //stock minimo
+                Double.parseDouble(datos[8]), //descuento
+                datos[9], //imagen
+                datos[10], //createdAt
+                datos[11] //updatedAt
         );
     }
 

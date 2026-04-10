@@ -1,18 +1,19 @@
 package com.gestionmats.app;
 
+import com.gestionmats.app.dao.IProductoDAO;
 import com.gestionmats.app.dao.ProductoDAO;
 import com.gestionmats.app.models.Producto;
 
 public class PruebaUno {
     public static void main(String[] args) {
         // Obtenemos la instancia del DAO usando Singleton
-        ProductoDAO dao = ProductoDAO.getInstancia();
+        IProductoDAO dao = ProductoDAO.getInstancia();
 
         // Creamos un producto de prueba
         Producto nuevoCemento = new Producto(
-                "P-001", "Cemento Cruz Azulito", "Bulto de 50kg",
-                210.50, 100, "Materiales Básicos", "Bulto",
-                20, 0.0, "img/cemento.png", "2026-04-08", "2026-04-08"
+                "P-009", "Cemento Cruz Azulito Pro", "Bulto de 800kg",
+                210.50, 900, "Materiales Básicos", "Bulto",
+                60, 0.0, "img/cemento.png", "2026-04-08", "2026-04-08"
         );
         // Lo guardamos en el CSV
         dao.create(nuevoCemento);
