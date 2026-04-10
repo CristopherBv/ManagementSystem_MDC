@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.text.Text?>
+
+<VBox alignment="CENTER" spacing="20.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="gestionmats.controllers.LoginController" prefWidth="400" prefHeight="300">
+    <padding>
+        <Insets bottom="20.0" left="20.0" right="20.0" top="20.0"/>
+    </padding>
+
+    <Text text="Inicio de Sesión" style="-fx-font-size: 24px; -fx-font-weight: bold;"/>
+
+    <VBox spacing="5.0">
+        <Label text="Usuario:"/>
+        <TextField fx:id="txtUsername" promptText="Ingrese su usuario"/>
+    </VBox>
+
+    <VBox spacing="5.0">
+        <Label text="Contraseña:"/>
+        <PasswordField fx:id="txtPassword" promptText="Ingrese su contraseña"/>
+    </VBox>
+
+    <Button text="Entrar" onAction="#handleLogin" prefWidth="150" style="-fx-cursor: hand;"/>
+
+    <Label fx:id="lblError" text="" style="-fx-text-fill: red;"/>
+</VBox>
