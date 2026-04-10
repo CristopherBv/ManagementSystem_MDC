@@ -2,7 +2,7 @@ package com.gestionmats.app.dao;
 
 import com.gestionmats.app.models.Cliente;
 
-public class ClienteDAO extends AbstractCsvDAO<Cliente> {
+public class ClienteDAO extends AbstractCsvDAO<Cliente> implements IClienteDAO {
 
     private static ClienteDAO instancia;
 
