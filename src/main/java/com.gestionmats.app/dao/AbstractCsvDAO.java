@@ -9,7 +9,6 @@ public abstract class AbstractCsvDAO<T> {
     protected final String rutaArchivo;
     protected final String SEPARADOR = ",";
 
-    // El constructor verifica que el archivo exista
     public AbstractCsvDAO(String nombreArchivo) {
         this.rutaArchivo = nombreArchivo;
         File archivo = new File(rutaArchivo);
@@ -17,62 +16,95 @@ public abstract class AbstractCsvDAO<T> {
             try {
                 archivo.createNewFile();
             } catch (IOException e) {
-                System.err.println("Error al crear el archivo " + nombreArchivo + ": " + e.getMessage());
+                throw new RuntimeException("Error crítico al crear el archivo base: " + nombreArchivo, e);
             }
         }
     }
 
-    // =================================================================
-    // MÉTODOS ABSTRACTOS: Cada DAO específico debe enseñar cómo hacer esto
-    // =================================================================
     protected abstract T mapearDeCSV(String[] datos);
     protected abstract String mapearACSV(T entidad);
     protected abstract String obtenerId(T entidad);
 
-    // =================================================================
-    // MÉTODOS UNIVERSALES (El principio DRY en acción)
-    // =================================================================
+    // =========================================================
+    // MÉTODOS PÚBLICOS (El CRUD)
+    // =========================================================
 
-    public List<T> getAll() {
+    public synchronized List<T> getAll() {
         List<T> lista = new ArrayList<>();
         try (BufferedReader br = new BufferedReader(new FileReader(rutaArchivo))) {
             String linea;
             while ((linea = br.readLine()) != null) {
                 if (linea.trim().isEmpty()) continue;
                 String[] datos = linea.split(SEPARADOR);
-                lista.add(mapearDeCSV(datos)); // Delega la conversión al hijo
+                lista.add(mapearDeCSV(datos));
             }
         } catch (IOException e) {
-            System.err.println("Error al leer " + rutaArchivo + ": " + e.getMessage());
+            throw new RuntimeException("Error al leer el archivo " + rutaArchivo, e);
         }
         return lista;
     }
 
-    public void saveAll(List<T> entidades) {
-        try (BufferedWriter bw = new BufferedWriter(new FileWriter(rutaArchivo))) {
-            for (T entidad : entidades) {
-                bw.write(mapearACSV(entidad)); // Delega la conversión al hijo
-                bw.newLine();
-            }
-        } catch (IOException e) {
-            System.err.println("Error al guardar en " + rutaArchivo + ": " + e.getMessage());
-        }
-    }
+    public synchronized T create(T entidad) {
+        String nuevoId = obtenerId(entidad);
 
-    public T create(T entidad) {
-        List<T> lista = getAll();
-        lista.add(entidad);
-        saveAll(lista);
+        // VALIDACIÓN: Evitar IDs duplicados en el CSV
+        List<T> existentes = getAll();
+        for (T e : existentes) {
+            if (obtenerId(e).equals(nuevoId)) {
+                throw new IllegalArgumentException("No se puede guardar: El ID '" + nuevoId + "' ya existe en el sistema.");
+            }
+        }
+
+        // Si pasa la validación, añadimos al final (Append)
+        try (BufferedWriter bw = new BufferedWriter(new FileWriter(rutaArchivo, true))) {
+            bw.write(mapearACSV(entidad));
+            bw.newLine();
+        } catch (IOException e) {
+            throw new RuntimeException("Error al añadir un nuevo registro en " + rutaArchivo, e);
+        }
         return entidad;
     }
 
-    public boolean delete(String id) {
+    public synchronized boolean update(String id, T entidadActualizada) {
         List<T> lista = getAll();
-        // Usa el método obtenerId para saber cuál borrar, sin importar qué clase sea
+        boolean actualizado = false;
+
+        for (int i = 0; i < lista.size(); i++) {
+            if (obtenerId(lista.get(i)).equals(id)) {
+                lista.set(i, entidadActualizada);
+                actualizado = true;
+                break;
+            }
+        }
+
+        if (actualizado) {
+            saveAll(lista); // Llama al método protegido para reescribir
+        }
+        return actualizado;
+    }
+
+    public synchronized boolean delete(String id) {
+        List<T> lista = getAll();
         boolean removido = lista.removeIf(entidad -> obtenerId(entidad).equals(id));
         if (removido) {
             saveAll(lista);
         }
         return removido;
+    }
+
+    // =========================================================
+    // MÉTODOS INTERNOS (Ocultos a la interfaz gráfica)
+    // =========================================================
+
+    // Cambiado de 'public' a 'protected'. Solo el DAO y sus hijos pueden usarlo.
+    protected synchronized void saveAll(List<T> entidades) {
+        try (BufferedWriter bw = new BufferedWriter(new FileWriter(rutaArchivo))) {
+            for (T entidad : entidades) {
+                bw.write(mapearACSV(entidad));
+                bw.newLine();
+            }
+        } catch (IOException e) {
+            throw new RuntimeException("Error al guardar la lista completa en " + rutaArchivo, e);
+        }
     }
 }

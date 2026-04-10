@@ -2,7 +2,7 @@ package com.gestionmats.app.dao;
 
 import com.gestionmats.app.models.Producto;
 
-public class ProductoDAO extends AbstractCsvDAO<Producto> {
+public class ProductoDAO extends AbstractCsvDAO<Producto> implements IProductoDAO {
 
     private static ProductoDAO instancia;
 
