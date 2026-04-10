@@ -1,64 +1,61 @@
 package com.gestionmats.app.dao;
 
-import com.gestionmats.app.models.Rol; //ENUM DE ROLES
 import com.gestionmats.app.models.Usuario;
-import java.util.List;
+import com.gestionmats.app.models.Rol;
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.Optional;
 
 public class UsuarioDAO extends AbstractCsvDAO<Usuario> implements IUsuarioDAO {
 
     private static UsuarioDAO instancia;
 
-    private UsuarioDAO() {
-        super("usuarios.csv");
-    }
-
-    @Override
-    public synchronized Usuario create(Usuario usuario) {
-        // 1. Validación exclusiva de Usuarios: Que el username no se repita
-        List<Usuario> todos = getAll();
-        for (Usuario u : todos) {
-            if (u.username().equalsIgnoreCase(usuario.username())) {
-                throw new IllegalArgumentException("Error: El nombre de usuario '" + usuario.username() + "' ya está ocupado.");
-            }
-        }
-
-        // 2. Si pasa la prueba, le pasamos la bolita al Padre para que valide el ID y lo guarde en el CSV
-        return super.create(usuario);
-    }
+    private UsuarioDAO() { super("usuarios.csv"); }
 
     public static UsuarioDAO getInstancia() {
         if (instancia == null) { instancia = new UsuarioDAO(); }
         return instancia;
     }
 
-    // --- LA LÓGICA DEL LOGIN ---
+    // --- EL BUSCADOR OPTIMIZADO (Sin cargar toda la RAM) ---
     @Override
-    public Usuario autenticar(String username, String password) {
-        List<Usuario> todos = getAll();
-        for (Usuario u : todos) {
-            // Compara usuario y contraseña. Si coinciden, devuelve el objeto Usuario completo
-            if (u.username().equals(username) && u.password().equals(password)) {
-                return u;
+    public Optional<Usuario> buscarPorUsername(String username) {
+        try (BufferedReader br = new BufferedReader(new FileReader(rutaArchivo))) {
+            String linea;
+            while ((linea = br.readLine()) != null) {
+                if (linea.trim().isEmpty()) continue;
+
+                String[] datos = linea.split(SEPARADOR);
+                // El username está en el índice 2
+                if (datos[2].equals(username)) {
+                    // Usamos el método del Padre para no repetir cómo se construye el objeto
+                    return Optional.of(mapearDeCSV(datos));
+                }
             }
+        } catch (IOException e) {
+            throw new RuntimeException("Error al buscar usuario en CSV", e);
         }
-        return null; // Si no lo encuentra o la contraseña está mal, devuelve nulo
+        return Optional.empty(); // Si termina el archivo y no lo encontró
     }
 
-    // --- MAPEOS (Igual que siempre) ---
+    @Override
+    public synchronized Usuario create(Usuario usuario) {
+        // Validamos que el username no se repita usando el nuevo método ultra rápido
+        if (buscarPorUsername(usuario.username()).isPresent()) {
+            throw new IllegalArgumentException("Error: El nombre de usuario '" + usuario.username() + "' ya está ocupado.");
+        }
+        return super.create(usuario);
+    }
+
     @Override
     protected Usuario mapearDeCSV(String[] datos) {
-        return new Usuario(
-                datos[0], datos[1], datos[2], datos[3],
-                Rol.valueOf(datos[4].toUpperCase()) // Traduce de texto a Enum
-        );
+        return new Usuario(datos[0], datos[1], datos[2], datos[3], Rol.valueOf(datos[4].toUpperCase()));
     }
 
     @Override
     protected String mapearACSV(Usuario u) {
-        return String.join(SEPARADOR,
-                u.id(), u.nombre(), u.username(), u.password(),
-                u.rol().name() // Traduce de Enum a texto para el CSV
-        );
+        return String.join(SEPARADOR, u.id(), u.nombre(), u.username(), u.password(), u.rol().name());
     }
 
     @Override
