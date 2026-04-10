@@ -10,7 +10,6 @@ public class ProductoDAO extends AbstractCsvDAO<Producto> implements IProductoDA
     private ProductoDAO() {
         super("productos.csv");
     }
-
     public static ProductoDAO getInstancia() {
         if (instancia == null) {
             instancia = new ProductoDAO();
