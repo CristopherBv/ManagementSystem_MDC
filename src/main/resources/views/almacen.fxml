@@ -15,7 +15,7 @@
                 <Text text="Control de Almacén" style="-fx-font-size: 18px; -fx-font-weight: bold;"/>
                 <Text text="Gestión de inventario" style="-fx-fill: #737373; -fx-font-size: 12px;"/>
             </VBox>
-            <Label fx:id="lblUsuario" text="Almacenista: Don Rigo" style="-fx-text-fill: #525252;"/>
+            <Label fx:id="lblUsuario" text="" style="-fx-text-fill: #525252;"/>
             <Button text="Salir" onAction="#handleLogout" style="-fx-background-color: transparent; -fx-border-color: #ddd; -fx-border-radius: 5; -fx-cursor: hand;"/>
         </HBox>
     </top>

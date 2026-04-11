@@ -35,7 +35,6 @@ public class LoginController {
             Usuario u = optUsuario.get();
 
             if (u.password().equals(pass)) {
-                // ¡ÉXITO! Ahora decidimos a dónde mandarlo según su Rol
                 dirigirAPantallaSegunRol(u);
             } else {
                 lblError.setText("Contraseña incorrecta.");
@@ -50,34 +49,35 @@ public class LoginController {
             String fxmlPath = "";
             String titulo = "";
 
-            // Lógica de ruteo por Rol
             if (u.rol() == Rol.ALMACENISTA) {
                 fxmlPath = "/views/almacen.fxml";
                 titulo = "Panel de Control - Almacén";
             } else if (u.rol() == Rol.GERENTE) {
-                // fxmlPath = "/views/gerente.fxml"; // Por crear
+                // fxmlPath = "/views/gerente.fxml";
                 titulo = "Panel de Administración - Gerencia";
             } else {
-                // fxmlPath = "/views/ventas.fxml"; // Por crear
+                // fxmlPath = "/views/ventas.fxml";
                 titulo = "Punto de Venta";
             }
 
-            // Si aún no hemos creado la pantalla (como la de Gerente),
-            // mandamos a Almacenista para probar o sacamos un aviso
             if (fxmlPath.isEmpty()) {
                 mostrarAlerta("Próximamente", "La pantalla de " + u.rol() + " aún está en desarrollo.");
                 return;
             }
 
-            // --- CAMBIO DE ESCENA ---
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource(fxmlPath));
             Scene scene = new Scene(fxmlLoader.load());
 
-            // Obtenemos el Stage actual desde cualquier componente (ej. txtUsername)
+            // --- INYECCIÓN DEL USUARIO ---
+            if (u.rol() == Rol.ALMACENISTA) {
+                WarehouseController controller = fxmlLoader.getController();
+                controller.initData(u);
+            }
+
             Stage stage = (Stage) txtUsername.getScene().getWindow();
             stage.setTitle(titulo + " - " + u.nombre());
             stage.setScene(scene);
-            stage.centerOnScreen(); // Centramos la nueva pantalla
+            stage.centerOnScreen();
 
         } catch (IOException e) {
             lblError.setText("Error al cargar la pantalla: " + e.getMessage());
