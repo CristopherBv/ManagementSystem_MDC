@@ -2,6 +2,7 @@ package gestionmats.controllers;
 
 import gestionmats.dao.*;
 import gestionmats.models.*;
+import gestionmats.utils.NavigationUtils;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -179,17 +180,7 @@ public class WarehouseController {
         a.showAndWait();
     }
 
-    @FXML
-    public void handleLogout() {
-        try {
-            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/views/login.fxml"));
-            Scene scene = new Scene(fxmlLoader.load());
-            Stage stage = (Stage) lblUsuario.getScene().getWindow();
-            stage.setTitle("Inicio de Sesión - Constructora");
-            stage.setScene(scene);
-            stage.centerOnScreen();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+    @FXML public void handleLogout() {
+        NavigationUtils.irALogin(lblUsuario);
     }
 }
