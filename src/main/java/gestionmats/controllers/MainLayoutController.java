@@ -49,12 +49,12 @@ public class MainLayoutController {
     }
 
     @FXML public void mostrarHistorial() {
-        txtVistaActual.setText("Historial");
+        txtVistaActual.setText("Historial de Ventas y Pedidos");
         NavigationUtils.mostrarEnConstruccion(contentArea, "Historial");
     }
 
     @FXML public void mostrarClientes() {
-        txtVistaActual.setText("Clientes");
+        txtVistaActual.setText("Directorio de Clientes");
         NavigationUtils.mostrarEnConstruccion(contentArea, "Clientes");
     }
 

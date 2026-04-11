@@ -6,7 +6,8 @@
 <?import javafx.scene.text.Text?>
 
 <BorderPane xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="gestionmats.controllers.MainLayoutController" prefWidth="1200" prefHeight="800">
+            fx:controller="gestionmats.controllers.MainLayoutController"
+            style="-fx-background-color: white;">
 
     <top>
         <HBox spacing="20" alignment="CENTER_RIGHT" style="-fx-background-color: #ffffff; -fx-border-color: #eeeeee; -fx-border-width: 0 0 1 0;">
@@ -43,7 +44,6 @@
     </left>
 
     <center>
-        <StackPane fx:id="contentArea" style="-fx-background-color: #f5f5f5;">
-        </StackPane>
+        <StackPane fx:id="contentArea" style="-fx-background-color: #f5f5f5;" />
     </center>
 </BorderPane>

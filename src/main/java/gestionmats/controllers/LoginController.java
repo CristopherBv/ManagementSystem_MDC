@@ -51,6 +51,12 @@ public class LoginController {
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource(fxmlPath));
             Scene scene = new Scene(fxmlLoader.load());
 
+            // --- CÓDIGO ACTUALIZADO ---
+            // Capturamos la ventana actual del login para enviarla a destruir
+            Stage stageActual = (Stage) txtUsername.getScene().getWindow();
+            String tituloCompleto = titulo + " - " + u.nombre();
+
+            // Es fundamental inicializar los controladores ANTES de mostrar la nueva ventana
             if (u.rol() == Rol.ALMACENISTA) {
                 WarehouseController controller = fxmlLoader.getController();
                 controller.initData(u);
@@ -59,10 +65,8 @@ public class LoginController {
                 mainController.initData(u);
             }
 
-            Stage stage = (Stage) txtUsername.getScene().getWindow();
-            stage.setTitle(titulo + " - " + u.nombre());
-            stage.setScene(scene);
-            stage.centerOnScreen();
+            // Llamamos a la nueva utilidad pasándole el Stage viejo
+            NavigationUtils.abrirVentanaPrincipal(stageActual, scene, tituloCompleto);
 
         } catch (IOException e) {
             lblError.setText("Error al cargar la interfaz.");
