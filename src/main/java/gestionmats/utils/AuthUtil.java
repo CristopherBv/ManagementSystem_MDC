@@ -6,22 +6,16 @@ import java.util.Optional;
 
 public class AuthUtil {
 
-    private final UsuarioDAO usuarioDAO = UsuarioDAO.getInstancia();
-    private static AuthUtil instancia;
-
-    private AuthUtil() {}
-
-    public static AuthUtil getInstancia() {
-        if (instancia == null) {
-            instancia = new AuthUtil();
-        }
-        return instancia;
-    }
+    private static final UsuarioDAO usuarioDAO = UsuarioDAO.getInstancia();
 
     /**
-     * Valida las credenciales y devuelve el objeto Usuario si es exitoso.
+     * Lógica central de autenticación.
      */
-    public Optional<Usuario> login(String username, String password) {
+    public static Optional<Usuario> intentarLogin(String username, String password) {
+        if (username.isEmpty() || password.isEmpty()) {
+            return Optional.empty();
+        }
+
         Optional<Usuario> optUsuario = usuarioDAO.buscarPorUsername(username);
 
         if (optUsuario.isPresent() && optUsuario.get().password().equals(password)) {

@@ -2,8 +2,9 @@ package gestionmats.controllers;
 
 import gestionmats.models.Rol;
 import gestionmats.models.Usuario;
-import gestionmats.utils.AuthUtil;
 import gestionmats.utils.AlertUtils;
+import gestionmats.utils.AuthUtil;
+import gestionmats.utils.NavigationUtils;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -18,20 +19,9 @@ public class LoginController {
     @FXML private PasswordField txtPassword;
     @FXML private Label lblError;
 
-    private final AuthUtil authService = AuthUtil.getInstancia();
-
     @FXML
     public void handleLogin() {
-        String user = txtUsername.getText();
-        String pass = txtPassword.getText();
-
-        if (user.isEmpty() || pass.isEmpty()) {
-            lblError.setText("Por favor, llene todos los campos.");
-            return;
-        }
-
-        // Delegamos la validación al Servicio de Autenticación
-        Optional<Usuario> optUsuario = authService.login(user, pass);
+        Optional<Usuario> optUsuario = AuthUtil.intentarLogin(txtUsername.getText(), txtPassword.getText());
 
         if (optUsuario.isPresent()) {
             dirigirAPantallaSegunRol(optUsuario.get());
@@ -54,14 +44,13 @@ public class LoginController {
             }
 
             if (fxmlPath.isEmpty()) {
-                AlertUtils.mostrarInformacion("Próximamente", "La pantalla de " + u.rol() + " aún está en desarrollo. Bv");
+                AlertUtils.mostrarInformacion("Próximamente", "Módulo no disponible. Bv");
                 return;
             }
 
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource(fxmlPath));
             Scene scene = new Scene(fxmlLoader.load());
 
-            // Configuración de controladores hijos
             if (u.rol() == Rol.ALMACENISTA) {
                 WarehouseController controller = fxmlLoader.getController();
                 controller.initData(u);
@@ -76,7 +65,7 @@ public class LoginController {
             stage.centerOnScreen();
 
         } catch (IOException e) {
-            lblError.setText("Error crítico al cargar la interfaz.");
+            lblError.setText("Error al cargar la interfaz.");
             e.printStackTrace();
         }
     }
