@@ -12,55 +12,55 @@ import javafx.stage.Stage;
 import java.io.IOException;
 
 public class NavigationUtils {
+
     /**
-     * Cierra la ventana anterior y crea una nueva ventana maximizada para el sistema principal.
+     * Abre el sistema principal (Grande) y luego cierra el Login (Pequeño)
      */
     public static void abrirVentanaPrincipal(Stage stageAnterior, Scene scene, String titulo) {
-        // 1. Destruir la ventana de login
-        if (stageAnterior != null) {
-            stageAnterior.close();
-        }
-
-        // 2. Crear una ventana completamente nueva
+        // 1. Preparamos la ventana nueva
         Stage nuevoStage = new Stage();
         nuevoStage.setScene(scene);
         nuevoStage.setTitle(titulo);
-        nuevoStage.setResizable(true);
 
-        // 3. Aplicar dimensiones relativas a la pantalla
-        Rectangle2D bounds = Screen.getPrimary().getVisualBounds();
-        nuevoStage.setWidth(bounds.getWidth() * 0.9);
-        nuevoStage.setHeight(bounds.getHeight() * 0.9);
+        // Usamos el maximizado nativo del sistema operativo para la zona POS
+        // Esto es mucho más limpio que calcular el 90% manualmente
+        nuevoStage.setMaximized(true);
 
-        nuevoStage.centerOnScreen();
-        nuevoStage.show(); // Mostrar la nueva ventana
+        // 2. MOSTRAMOS la nueva ventana PRIMERO (Solapamiento)
+        nuevoStage.show();
+
+        // 3. CERRAMOS la ventana vieja DESPUÉS
+        if (stageAnterior != null) {
+            stageAnterior.close();
+        }
     }
 
     /**
-     * Cierra el sistema principal y crea una nueva ventana estricta para el Login.
+     * Abre el Login (Pequeño) y luego cierra el sistema principal
      */
     public static void irALogin(Node nodoCualquiera) {
         try {
-            // 1. Obtener la ventana actual (el cascarón) y destruirla
+            FXMLLoader fxmlLoader = new FXMLLoader(NavigationUtils.class.getResource("/views/login.fxml"));
+            Scene scene = new Scene(fxmlLoader.load());
+
+            // 1. Preparamos el Login pequeño
+            Stage loginStage = new Stage();
+            loginStage.setScene(scene);
+            loginStage.setTitle("Inicio de Sesión - Sistema de Gestión");
+
+            // Bloqueamos el tamaño para que sea estricto a lo que dice tu FXML
+            loginStage.setResizable(false);
+            loginStage.sizeToScene();
+
+            // 2. MOSTRAMOS el Login PRIMERO
+            loginStage.show();
+            loginStage.centerOnScreen(); // Lo centramos una vez que ya está visible
+
+            // 3. CERRAMOS el sistema gigante DESPUÉS
             Stage stageActual = (Stage) nodoCualquiera.getScene().getWindow();
             if (stageActual != null) {
                 stageActual.close();
             }
-
-            // 2. Cargar el FXML del login
-            FXMLLoader fxmlLoader = new FXMLLoader(NavigationUtils.class.getResource("/views/login.fxml"));
-            Scene scene = new Scene(fxmlLoader.load());
-
-            // 3. Crear una nueva ventana limpia para el login
-            Stage loginStage = new Stage();
-            loginStage.setScene(scene);
-            loginStage.setTitle("Inicio de Sesión");
-            loginStage.setResizable(false);
-
-            // Al ser un Stage nuevo, sizeToScene() funciona inmediatamente sin Platform.runLater
-            loginStage.sizeToScene();
-            loginStage.centerOnScreen();
-            loginStage.show();
 
         } catch (IOException e) {
             AlertUtils.mostrarError("Error de Navegación", "No se pudo regresar al login.");

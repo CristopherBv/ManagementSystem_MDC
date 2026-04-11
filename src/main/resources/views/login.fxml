@@ -5,25 +5,32 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.text.Text?>
 
-<VBox alignment="CENTER" spacing="20.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
-      fx:controller="gestionmats.controllers.LoginController" prefWidth="400" prefHeight="300">
-    <padding>
-        <Insets bottom="20.0" left="20.0" right="20.0" top="20.0"/>
-    </padding>
+<StackPane stylesheets="@../css/styles.css" styleClass="fondo-pantalla-inmersiva"
+           xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
+           fx:controller="gestionmats.controllers.LoginController">
 
-    <Text text="Inicio de Sesión" style="-fx-font-size: 24px; -fx-font-weight: bold;"/>
+    <VBox styleClass="tarjeta-login" alignment="CENTER" spacing="25.0" maxWidth="320" maxHeight="340">
+        <padding>
+            <Insets bottom="30.0" left="30.0" right="30.0" top="30.0"/>
+        </padding>
 
-    <VBox spacing="5.0">
-        <Label text="Usuario:"/>
-        <TextField fx:id="txtUsername" promptText="Ingrese su usuario"/>
+        <VBox alignment="CENTER" spacing="5.0">
+            <Text text="Bienvenido" styleClass="titulo-principal"/>
+            <Text text="Sistema de Gestión" styleClass="subtitulo"/>
+        </VBox>
+
+        <VBox spacing="8.0">
+            <Label text="Usuario" styleClass="etiqueta"/>
+            <TextField fx:id="txtUsername" promptText="ej. cristo123" styleClass="input-texto"/>
+        </VBox>
+
+        <VBox spacing="8.0">
+            <Label text="Contraseña" styleClass="etiqueta"/>
+            <PasswordField fx:id="txtPassword" promptText="••••••••" styleClass="input-texto"/>
+        </VBox>
+
+        <Button text="Ingresar" onAction="#handleLogin" styleClass="btn-principal" prefWidth="260"/>
+
+        <Label fx:id="lblError" text="" styleClass="etiqueta-error" wrapText="true" minHeight="20"/>
     </VBox>
-
-    <VBox spacing="5.0">
-        <Label text="Contraseña:"/>
-        <PasswordField fx:id="txtPassword" promptText="Ingrese su contraseña"/>
-    </VBox>
-
-    <Button text="Entrar" onAction="#handleLogin" prefWidth="150" style="-fx-cursor: hand;"/>
-
-    <Label fx:id="lblError" text="" style="-fx-text-fill: red;"/>
-</VBox>
+</StackPane>

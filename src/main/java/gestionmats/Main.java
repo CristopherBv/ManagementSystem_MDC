@@ -2,26 +2,30 @@ package gestionmats;
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Rectangle2D;
 import javafx.scene.Scene;
+import javafx.stage.Screen;
 import javafx.stage.Stage;
-import java.io.IOException;
 
-public class Main extends Application {
+public class Main extends Application { // El nombre de tu clase puede variar
+
     @Override
-    public void start(Stage stage) throws IOException {
-        // Cargamos la vista del login
-        FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("/views/login.fxml"));
-
-        // Creamos la escena (el contenido de la ventana)
+    public void start(Stage primaryStage) throws Exception {
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/views/login.fxml"));
         Scene scene = new Scene(fxmlLoader.load());
 
-        stage.setTitle("Sistema de Gestión - Constructora");
-        stage.setScene(scene);
-        stage.setResizable(false); // Por ahora que sea fija
-        stage.show();
+        primaryStage.setScene(scene);
+        primaryStage.setTitle("Inicio de Sesión - Sistema de Gestión");
+
+        // Login pequeño y fijo desde el inicio
+        primaryStage.setResizable(false);
+        primaryStage.sizeToScene();
+
+        primaryStage.show();
+        primaryStage.centerOnScreen();
     }
 
     public static void main(String[] args) {
-        launch();
+        launch(args);
     }
 }
