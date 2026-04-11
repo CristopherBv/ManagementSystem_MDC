@@ -53,7 +53,7 @@ public class LoginController {
                 fxmlPath = "/views/almacen.fxml";
                 titulo = "Panel de Control - Almacén";
             } else if (u.rol() == Rol.GERENTE) {
-                // fxmlPath = "/views/gerente.fxml";
+                fxmlPath = "/views/main_layout.fxml";
                 titulo = "Panel de Administración - Gerencia";
             } else {
                 // fxmlPath = "/views/ventas.fxml";
@@ -61,7 +61,7 @@ public class LoginController {
             }
 
             if (fxmlPath.isEmpty()) {
-                mostrarAlerta("Próximamente", "La pantalla de " + u.rol() + " aún está en desarrollo.");
+                mostrarAlerta("Próximamente", "La pantalla de " + u.rol() + " aún está en desarrollo. Bv");
                 return;
             }
 
@@ -72,6 +72,10 @@ public class LoginController {
             if (u.rol() == Rol.ALMACENISTA) {
                 WarehouseController controller = fxmlLoader.getController();
                 controller.initData(u);
+            }
+            else if(u.rol() == Rol.GERENTE) {
+                MainLayoutController Maincontroller = fxmlLoader.getController();
+                Maincontroller.initData(u);
             }
 
             Stage stage = (Stage) txtUsername.getScene().getWindow();

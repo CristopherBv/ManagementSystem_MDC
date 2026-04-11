@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.text.Text?>
+
+<BorderPane xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="gestionmats.controllers.MainLayoutController" prefWidth="1200" prefHeight="800">
+
+    <top>
+        <HBox spacing="20" alignment="CENTER_RIGHT" style="-fx-background-color: #ffffff; -fx-border-color: #eeeeee; -fx-border-width: 0 0 1 0;">
+            <padding><Insets top="10" right="20" bottom="10" left="20"/></padding>
+            <VBox HBox.hgrow="ALWAYS">
+                <Text text="Sistema Comercial" style="-fx-font-size: 18px; -fx-font-weight: bold;"/>
+                <Text fx:id="txtVistaActual" text="Punto de Venta" style="-fx-fill: #737373; -fx-font-size: 12px;"/>
+            </VBox>
+
+            <Label fx:id="lblUsuario" text="" style="-fx-text-fill: #525252; -fx-font-weight: bold;"/>
+            <Button text="Salir" onAction="#handleLogout" style="-fx-background-color: transparent; -fx-border-color: #dddddd; -fx-border-radius: 5; -fx-cursor: hand;"/>
+        </HBox>
+    </top>
+
+    <left>
+        <VBox spacing="5" style="-fx-background-color: #0a0a0a;" prefWidth="220">
+            <padding><Insets top="20" right="10" bottom="20" left="10"/></padding>
+
+            <Button fx:id="btnPOS" text="🛒 Punto de Venta" onAction="#mostrarPOS" prefWidth="200" alignment="BASELINE_LEFT"
+                    style="-fx-background-color: transparent; -fx-text-fill: white; -fx-font-size: 14px; -fx-cursor: hand; -fx-padding: 10 15;"/>
+
+            <Button fx:id="btnDashboard" text="📊 Panel Principal" onAction="#mostrarDashboard" prefWidth="200" alignment="BASELINE_LEFT"
+                    style="-fx-background-color: transparent; -fx-text-fill: white; -fx-font-size: 14px; -fx-cursor: hand; -fx-padding: 10 15;"/>
+
+            <Button fx:id="btnProductos" text="📦 Productos" onAction="#mostrarProductos" prefWidth="200" alignment="BASELINE_LEFT"
+                    style="-fx-background-color: transparent; -fx-text-fill: white; -fx-font-size: 14px; -fx-cursor: hand; -fx-padding: 10 15;"/>
+
+            <Button fx:id="btnHistorial" text="🕒 Historial" onAction="#mostrarHistorial" prefWidth="200" alignment="BASELINE_LEFT"
+                    style="-fx-background-color: transparent; -fx-text-fill: white; -fx-font-size: 14px; -fx-cursor: hand; -fx-padding: 10 15;"/>
+
+            <Button fx:id="btnClientes" text="👥 Clientes" onAction="#mostrarClientes" prefWidth="200" alignment="BASELINE_LEFT"
+                    style="-fx-background-color: transparent; -fx-text-fill: white; -fx-font-size: 14px; -fx-cursor: hand; -fx-padding: 10 15;"/>
+        </VBox>
+    </left>
+
+    <center>
+        <StackPane fx:id="contentArea" style="-fx-background-color: #f5f5f5;">
+        </StackPane>
+    </center>
+</BorderPane>
