@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.text.Text?>
+
+<VBox spacing="15" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="gestionmats.controllers.PosController" style="-fx-background-color: white;">
+    <padding><Insets top="20" right="20" bottom="20" left="20"/></padding>
+
+    <HBox spacing="10" alignment="CENTER_LEFT" style="-fx-background-color: #f8f9fa; -fx-padding: 10; -fx-border-color: #dee2e6; -fx-border-radius: 5;">
+        <Button text="Nueva Venta (Alt+V)" style="-fx-background-color: white; -fx-border-color: #007bff; -fx-text-fill: #007bff;"/>
+        <Button text="Consultar Precio (Alt+C)" style="-fx-background-color: white; -fx-border-color: #6c757d;"/>
+        <Region HBox.hgrow="ALWAYS" />
+        <Label text="CAJA-01" style="-fx-font-weight: bold; -fx-text-fill: #ffa000;"/>
+    </HBox>
+
+    <HBox spacing="10" alignment="CENTER_LEFT">
+        <VBox spacing="5">
+            <Label text="Cód. de barras / ID" style="-fx-font-size: 11px; -fx-text-fill: #737373;"/>
+            <TextField fx:id="txtProductoId" prefWidth="150" prefHeight="35"/>
+        </VBox>
+        <VBox spacing="5" HBox.hgrow="ALWAYS">
+            <Label text="Nombre del Producto" style="-fx-font-size: 11px; -fx-text-fill: #737373;"/>
+            <TextField fx:id="txtProductoNombre" editable="false" prefHeight="35" style="-fx-background-color: #f1f3f5;"/>
+        </VBox>
+        <VBox spacing="5">
+            <Label text="Cant." style="-fx-font-size: 11px; -fx-text-fill: #737373;"/>
+            <TextField fx:id="txtCantidad" prefWidth="80" prefHeight="35" text="1.0"/>
+        </VBox>
+        <Button text="+ Agregar" onAction="#handleAgregarProducto" prefHeight="35" style="-fx-background-color: #007bff; -fx-text-fill: white; -fx-font-weight: bold; -fx-cursor: hand;"/>
+    </HBox>
+
+    <TableView fx:id="tablaVenta" VBox.vgrow="ALWAYS" style="-fx-selection-bar: #e7f1ff;">
+        <columns>
+            <TableColumn fx:id="colDescripcion" text="Descripción" prefWidth="350"/>
+            <TableColumn fx:id="colPrecio" text="Precio unitario" prefWidth="120"/>
+            <TableColumn fx:id="colCantidad" text="Cantidad" prefWidth="100"/>
+            <TableColumn fx:id="colUnidad" text="Unidad" prefWidth="100"/>
+            <TableColumn fx:id="colImporte" text="Importe" prefWidth="120"/>
+        </columns>
+    </TableView>
+
+    <HBox spacing="20" alignment="CENTER_RIGHT">
+        <VBox alignment="CENTER_RIGHT">
+            <Label text="Total" style="-fx-font-size: 18px;"/>
+            <Label fx:id="lblTotal" text="\$0.00" style="-fx-font-size: 48px; -fx-font-weight: bold; -fx-text-fill: #d32f2f;"/>
+        </VBox>
+        <VBox spacing="10">
+            <Button text="\$ Cobrar (ESC)" onAction="#handleCobrar" prefWidth="200" prefHeight="50"
+                    style="-fx-background-color: #007bff; -fx-text-fill: white; -fx-font-size: 18px; -fx-font-weight: bold; -fx-cursor: hand;"/>
+            <HBox spacing="5">
+                <Button text="Cancelar (F4)" prefWidth="97" style="-fx-background-color: #f8f9fa; -fx-border-color: #ced4da;"/>
+                <Button text="Lista espera (F6)" prefWidth="97" style="-fx-background-color: #f8f9fa; -fx-border-color: #ced4da;"/>
+            </HBox>
+        </VBox>
+    </HBox>
+</VBox>

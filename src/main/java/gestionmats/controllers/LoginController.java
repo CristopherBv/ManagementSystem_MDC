@@ -1,8 +1,9 @@
 package gestionmats.controllers;
 
-import gestionmats.dao.UsuarioDAO;
 import gestionmats.models.Rol;
 import gestionmats.models.Usuario;
+import gestionmats.utils.AuthUtil;
+import gestionmats.utils.AlertUtils;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -17,7 +18,7 @@ public class LoginController {
     @FXML private PasswordField txtPassword;
     @FXML private Label lblError;
 
-    private final UsuarioDAO usuarioDAO = UsuarioDAO.getInstancia();
+    private final AuthUtil authService = AuthUtil.getInstancia();
 
     @FXML
     public void handleLogin() {
@@ -29,18 +30,13 @@ public class LoginController {
             return;
         }
 
-        Optional<Usuario> optUsuario = usuarioDAO.buscarPorUsername(user);
+        // Delegamos la validación al Servicio de Autenticación
+        Optional<Usuario> optUsuario = authService.login(user, pass);
 
         if (optUsuario.isPresent()) {
-            Usuario u = optUsuario.get();
-
-            if (u.password().equals(pass)) {
-                dirigirAPantallaSegunRol(u);
-            } else {
-                lblError.setText("Contraseña incorrecta.");
-            }
+            dirigirAPantallaSegunRol(optUsuario.get());
         } else {
-            lblError.setText("El usuario no existe.");
+            lblError.setText("Usuario o contraseña incorrectos.");
         }
     }
 
@@ -52,30 +48,26 @@ public class LoginController {
             if (u.rol() == Rol.ALMACENISTA) {
                 fxmlPath = "/views/almacen.fxml";
                 titulo = "Panel de Control - Almacén";
-            } else if (u.rol() == Rol.GERENTE) {
+            } else if (u.rol() == Rol.GERENTE || u.rol() == Rol.VENDEDOR) {
                 fxmlPath = "/views/main_layout.fxml";
-                titulo = "Panel de Administración - Gerencia";
-            } else {
-                // fxmlPath = "/views/ventas.fxml";
-                titulo = "Punto de Venta";
+                titulo = (u.rol() == Rol.GERENTE) ? "Panel de Administración - Gerencia" : "Punto de Venta";
             }
 
             if (fxmlPath.isEmpty()) {
-                mostrarAlerta("Próximamente", "La pantalla de " + u.rol() + " aún está en desarrollo. Bv");
+                AlertUtils.mostrarInformacion("Próximamente", "La pantalla de " + u.rol() + " aún está en desarrollo. Bv");
                 return;
             }
 
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource(fxmlPath));
             Scene scene = new Scene(fxmlLoader.load());
 
-            // --- INYECCIÓN DEL USUARIO ---
+            // Configuración de controladores hijos
             if (u.rol() == Rol.ALMACENISTA) {
                 WarehouseController controller = fxmlLoader.getController();
                 controller.initData(u);
-            }
-            else if(u.rol() == Rol.GERENTE) {
-                MainLayoutController Maincontroller = fxmlLoader.getController();
-                Maincontroller.initData(u);
+            } else {
+                MainLayoutController mainController = fxmlLoader.getController();
+                mainController.initData(u);
             }
 
             Stage stage = (Stage) txtUsername.getScene().getWindow();
@@ -84,16 +76,8 @@ public class LoginController {
             stage.centerOnScreen();
 
         } catch (IOException e) {
-            lblError.setText("Error al cargar la pantalla: " + e.getMessage());
+            lblError.setText("Error crítico al cargar la interfaz.");
             e.printStackTrace();
         }
-    }
-
-    private void mostrarAlerta(String titulo, String mensaje) {
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle(titulo);
-        alert.setHeaderText(null);
-        alert.setContentText(mensaje);
-        alert.showAndWait();
     }
 }
