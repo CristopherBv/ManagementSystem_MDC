@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.effect.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane prefHeight="500.0" prefWidth="650.0" styleClass="login-root" stylesheets="@../css/login.css" xmlns="http://javafx.com/javafx/17.0.2" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gestionmats.controllers.LoginController">
+
+    <children>
+        <VBox fx:id="loginContainer" alignment="CENTER" spacing="25.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+
+            <ImageView fitHeight="80.0" fitWidth="80.0" pickOnBounds="true" preserveRatio="true">
+                <image>
+                    <Image url="@../images/logoConstructora.png" />
+                </image>
+            </ImageView>
+
+            <VBox alignment="CENTER" spacing="5.0">
+                <Label styleClass="title-label" text="SDG MDC" />
+                <Label styleClass="subtitle-label" text="SISTEMA DE GESTIÓN" />
+            </VBox>
+
+            <Separator maxWidth="350.0" style="-fx-background-color: #4a5568; -fx-opacity: 0.5;" />
+
+            <VBox maxWidth="320.0" spacing="18.0">
+                <VBox spacing="5.0">
+                    <Label styleClass="field-label" text="USUARIO / ID" />
+                    <TextField fx:id="txtUser" prefHeight="42.0" promptText="Ingrese su credencial" styleClass="custom-text-field" />
+                </VBox>
+
+                <VBox spacing="5.0">
+                    <Label styleClass="field-label" text="CONTRASEÑA" />
+                    <AnchorPane>
+                        <TextField fx:id="txtPasswordVisible" managed="false" prefHeight="42.0" promptText="Ingrese su contraseña" styleClass="custom-text-field, password-field-custom" visible="false" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" />
+
+                        <PasswordField fx:id="txtPasswordHidden" prefHeight="42.0" promptText="Ingrese su contraseña" styleClass="custom-text-field, password-field-custom" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" />
+
+                        <ToggleButton fx:id="btnTogglePass" onAction="#togglePasswordVisibility" prefHeight="30.0" prefWidth="30.0" style="-fx-background-color: transparent; -fx-cursor: hand;" AnchorPane.rightAnchor="6.0" AnchorPane.topAnchor="6.0">
+                            <graphic>
+                                <ImageView fx:id="imgEye" fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
+                                    <image>
+                                        <Image url="@../images/ojoCerrado.png" />
+                                    </image>
+                                </ImageView>
+                            </graphic>
+                        </ToggleButton>
+                    </AnchorPane>
+                </VBox>
+            </VBox>
+
+            <Region prefHeight="5.0" />
+
+            <Button fx:id="btnLogin" mnemonicParsing="false" onAction="#handleLogin" prefHeight="45.0" prefWidth="320.0" styleClass="btn-login" text="INGRESAR">
+                <effect>
+                    <DropShadow color="#00000040" offsetY="3.0" />
+                </effect>
+            </Button>
+
+        </VBox>
+    </children>
+</AnchorPane>

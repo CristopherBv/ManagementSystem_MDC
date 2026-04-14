@@ -14,5 +14,5 @@ module gestionmats {
     //exports gestionmats.model; aun no hay nada xd
 
     // Exporta el paquete principal para que el launcher funcione
-    //exports gestionmats; AUN NO HAY NADA XD
+    exports gestionmats;
 }

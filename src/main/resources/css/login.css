@@ -1,0 +1,60 @@
+.login-root {
+    -fx-background-color: linear-gradient(to bottom, #2b3036, #1c1f24);
+}
+
+.title-label {
+    -fx-text-fill: #f0f4f8;
+    -fx-font-size: 32px;
+    -fx-font-weight: bold;
+    -fx-font-family: "Segoe UI Semibold";
+}
+
+.subtitle-label {
+    -fx-text-fill: #e67e22; /* Naranja industrial */
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-font-family: "Segoe UI";
+    -fx-letter-spacing: 2px;
+}
+
+.field-label {
+    -fx-text-fill: #a0aec0;
+    -fx-font-size: 12px;
+    -fx-font-weight: bold;
+    -fx-font-family: "Segoe UI";
+}
+
+.custom-text-field {
+    -fx-background-color: #373e47;
+    -fx-text-fill: white;
+    -fx-background-radius: 6;
+    -fx-padding: 10 10 10 10;
+    -fx-prompt-text-fill: #718096;
+    -fx-border-color: transparent;
+    -fx-border-width: 1;
+    -fx-border-radius: 6;
+}
+
+.custom-text-field:focused {
+    -fx-border-color: #e67e22;
+    -fx-background-color: #434b57;
+}
+
+/* Campo de contraseña con padding extra a la derecha para el botón del ojo */
+.password-field-custom {
+    -fx-padding: 10 40 10 10;
+}
+
+.btn-login {
+    -fx-background-color: #e67e22;
+    -fx-text-fill: white;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-font-family: "Segoe UI Semibold";
+    -fx-background-radius: 6;
+    -fx-cursor: hand;
+}
+
+.btn-login:hover {
+    -fx-background-color: #d35400;
+}
