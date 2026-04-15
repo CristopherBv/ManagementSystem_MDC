@@ -1,0 +1,10 @@
+idUsuario,Primer Apellido,Segundo Apellido,Nombre,Usuario,Contraseña,Rol
+0,doe,NA,yon,prueba,1,Gerente
+1,Cen,San,Cristopher,crisqlp,1234,Vendedor
+2,Lopez,Martinez,Ana,alopez,pass123,Almacenista
+3,Gomez,NA,Luis,lgomez,abc456,Vendedor
+4,Ramirez,Torres,Sofia,sramirez,clave789,Almacenista
+5,Hernandez,Diaz,Carlos,chernan,pass001,Vendedor
+6,Castillo,NA,Mariana,mcastillo,segura22,Gerente
+7,Vargas,Suarez,Diego,dvargas,clave99,Almacenista
+8,Ortega,Mendez,Lucia,lortega,pass777,Vendedor

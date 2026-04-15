@@ -1,5 +1,6 @@
 package gestionmats.controllers;
 
+import gestionmats.utils.AlertUtils;
 import javafx.animation.FadeTransition;
 import javafx.animation.TranslateTransition;
 import javafx.fxml.FXML;
@@ -8,10 +9,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.PasswordField;
-import javafx.scene.control.TextField;
-import javafx.scene.control.ToggleButton;
+import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.VBox;
@@ -108,16 +106,30 @@ public class LoginController implements Initializable {
         tt.setOnFinished(e -> node.setStyle("")); // Limpia el estilo al terminar
     }
 
-    private void loadMainDashboard() {
+    private void loadMainDashboard() {//Nombre Provisional/NO FINAL
         try {
-            // Ajusta la ruta al FXML principal de tu app
-            Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/views/Dashboard.fxml")));
+            // 1. Buscamos el recurso
+            URL dashboardUrl = getClass().getResource("/views/Dashboard.fxml");
+
+            // 2. Validamos explícitamente en lugar de depender del NullPointerException
+            if (dashboardUrl == null) {
+                throw new IOException("El archivo de vista 'Dashboard.fxml' no se encuentra en el directorio /views/.");
+            }
+
+            // 3. Cargamos la vista
+            Parent root = FXMLLoader.load(dashboardUrl);
             Stage stage = (Stage) btnLogin.getScene().getWindow();
             stage.setScene(new Scene(root));
             stage.setTitle("SDG MDC - Panel de Control");
             stage.centerOnScreen();
+
         } catch (IOException e) {
+            AlertUtils.mostrarAlerta(Alert.AlertType.ERROR, "Error de Sistema", "No se pudo cargar el panel principal.", e.getMessage());
+            e.printStackTrace();
+        } catch (Exception e) {
+            AlertUtils.mostrarAlerta(Alert.AlertType.ERROR, "Error Crítico", "Ocurrió un error inesperado al navegar.", e.getMessage());
             e.printStackTrace();
         }
     }
+
 }
