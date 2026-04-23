@@ -32,8 +32,8 @@ public class LoginController implements Initializable {
     @FXML private ImageView imgEye;
     @FXML private Button btnLogin;
 
-    private final String PATH_OJO_ABIERTO = "/images/ojoAbierto.png";
-    private final String PATH_OJO_CERRADO = "/images/ojoCerrado.png";
+    private final String PATH_OJO_ABIERTO = "/images/ojoAbierto_Naranja.png";
+    private final String PATH_OJO_CERRADO = "/images/ojoCerrado_Naranja.png";
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
