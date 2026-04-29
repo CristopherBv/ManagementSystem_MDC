@@ -33,7 +33,7 @@
                 <StackPane styleClass="logo-ring" prefWidth="112" prefHeight="112" maxWidth="112" maxHeight="112">
                     <ImageView fitHeight="72" fitWidth="72" preserveRatio="true">
                         <image>
-                            <Image url="@../images/logoConstructora.png"/>
+                            <Image url="@../images/logoConstructoraV1.png"/>
                         </image>
                     </ImageView>
                 </StackPane>
