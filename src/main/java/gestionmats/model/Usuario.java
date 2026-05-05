@@ -1,5 +1,7 @@
 package gestionmats.model;
 
+import java.util.Objects;
+
 public abstract class Usuario {
     private int idUsuario;
     private String primerApellido;
@@ -69,7 +71,28 @@ public abstract class Usuario {
         this.rol = rol;
     }
 
-    // Aquí irían todos tus Getters y Setters...
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Usuario usuario = (Usuario) o;
+        // Consideramos que dos usuarios son el mismo si comparten el mismo ID o Username
+        return idUsuario == usuario.idUsuario || Objects.equals(username, usuario.username);
+    }
 
+    @Override
+    public int hashCode() {
+        return Objects.hash(idUsuario, username);
+    }
+
+    @Override
+    public String toString() {
+        return "Usuario{" +
+                "id=" + idUsuario +
+                ", nombre='" + nombre + " " + primerApellido + '\'' +
+                ", username='" + username + '\'' +
+                ", rol=" + rol +
+                '}';
+    }
 
 }
