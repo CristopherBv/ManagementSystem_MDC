@@ -20,17 +20,18 @@ public abstract class AbstractDaoCsv<T> implements Dao<T> {
     public List<T> listarTodos() {
         List<T> lista = new ArrayList<>();
 
-        // Aquí usamos tu CsvUtils (según el diagrama) para obtener las líneas
-        List<String> lineas = CsvUtils.leerArchivo(this.ruta);
+        // Llamada real a tu herramienta de lectura
+        List<String> lineas = gestionmats.utils.CsvUtils.leerArchivo(this.ruta);
 
-        // Simulación temporal para que no te marque error si aún no tienes CsvUtils:
-        //List<String> lineas = new ArrayList<>();
+        for (int i = 0; i < lineas.size(); i++) {
+            String linea = lineas.get(i);
 
-        // Empezamos asumiendo que la primera línea puede ser el encabezado,
-        // dependiendo de cómo estructures tu CSV.
-        for (String linea : lineas) {
-            // Saltamos encabezados o líneas vacías
-            if (linea != null && !linea.trim().isEmpty() && !linea.startsWith("id")) {
+            // Saltamos la fila 0 si detectamos que es el encabezado
+            if (i == 0 && linea.toLowerCase().contains("idusuario")) {
+                continue;
+            }
+
+            if (linea != null && !linea.trim().isEmpty()) {
                 T entidad = mapearDeCsv(linea);
                 if (entidad != null) {
                     lista.add(entidad);
@@ -65,4 +66,6 @@ public abstract class AbstractDaoCsv<T> implements Dao<T> {
         // TODO: Usar CsvUtils.eliminarLinea(...)
         return false;
     }
+
+
 }
