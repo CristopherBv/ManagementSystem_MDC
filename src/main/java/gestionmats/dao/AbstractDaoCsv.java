@@ -2,7 +2,7 @@ package gestionmats.dao;
 
 import java.util.ArrayList;
 import java.util.List;
-// import gestionmats.utils.CsvUtils; // Descomenta esto cuando tengas tu CsvUtils
+import gestionmats.utils.CsvUtils; // Descomenta esto cuando tengas tu CsvUtils
 
 public abstract class AbstractDaoCsv<T> implements Dao<T> {
 
@@ -21,10 +21,10 @@ public abstract class AbstractDaoCsv<T> implements Dao<T> {
         List<T> lista = new ArrayList<>();
 
         // Aquí usamos tu CsvUtils (según el diagrama) para obtener las líneas
-        // List<String> lineas = CsvUtils.leerArchivo(this.ruta);
+        List<String> lineas = CsvUtils.leerArchivo(this.ruta);
 
         // Simulación temporal para que no te marque error si aún no tienes CsvUtils:
-        List<String> lineas = new ArrayList<>();
+        //List<String> lineas = new ArrayList<>();
 
         // Empezamos asumiendo que la primera línea puede ser el encabezado,
         // dependiendo de cómo estructures tu CSV.
