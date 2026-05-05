@@ -34,13 +34,13 @@ public class GestorSesion {
     public boolean iniciarSesion(String username, String password) {
         // Instanciamos el DAO para buscar en el CSV
         UsuarioDaoCsv dao = new UsuarioDaoCsv();
-        /*Usuario usuarioEncontrado = dao.buscarPorUsername(username);
+        Usuario usuarioEncontrado = dao.buscarPorUsername(username);
 
         // Si el usuario existe y la contraseña es correcta, lo asignamos a la sesión
         if (usuarioEncontrado != null && usuarioEncontrado.getPassword().equals(password)) {
             this.usuarioActual = usuarioEncontrado;
             return true; // Login exitoso
-        }*/
+        }
 
         return false; // Credenciales incorrectas o usuario no encontrado
     }

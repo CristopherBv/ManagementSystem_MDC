@@ -319,7 +319,7 @@ public class GerenteController implements Initializable {
         );
         if (confirmed) {
             clockTimeline.stop();
-            UIComponents.navigateTo(btnLogout, "/adinadvww22sddiews/Login.fxml", "Inicio");
+            UIComponents.navigateTo(btnLogout, "/views/Login.fxml", "Inicio");
         }
     }
 
