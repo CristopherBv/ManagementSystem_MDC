@@ -1,6 +1,6 @@
 package gestionmats.model;
 
-public abstract class AbstractUsuario {
+public abstract class Usuario {
     private int idUsuario;
     private String primerApellido;
     private String segundoApellido;
@@ -9,7 +9,7 @@ public abstract class AbstractUsuario {
     private String password;
     private RolUsuario rol; // Usamos el ENUM aquí
 
-    public AbstractUsuario(int idUsuario, String primerApellido, String segundoApellido, String nombre, String username, String password, RolUsuario rol) {
+    public Usuario(int idUsuario, String primerApellido, String segundoApellido, String nombre, String username, String password, RolUsuario rol) {
         this.idUsuario = idUsuario;
         this.primerApellido = primerApellido;
         this.segundoApellido = segundoApellido;
