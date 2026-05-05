@@ -321,6 +321,31 @@ public final class UIComponents {
         }
     }
 
+
+    /**
+     * MÉTODO UNIVERSAL (DRY)
+     * Maneja la lógica de cerrar sesión desde cualquier pantalla.
+     */
+    public static void manejarLogout(Button btnLogout, javafx.animation.Timeline relojActivo) {
+        boolean confirmed = showConfirmDialog(
+                "Cerrar sesión",
+                "¿Desea cerrar la sesión actual?"
+        );
+
+        if (confirmed) {
+            // 1. Detenemos el reloj si la vista lo tenía corriendo
+            if (relojActivo != null) {
+                relojActivo.stop();
+            }
+
+            // 2. Limpiamos el usuario del Singleton
+            gestionmats.services.GestorSesion.getInstancia().cerrarSesion();
+
+            // 3. Navegamos de vuelta al Login
+            navigateTo(btnLogout, "/views/Login.fxml", "SDG MDC – Autenticación");
+        }
+    }
+
     /**
      * Navega reemplazando la escena en el mismo Stage (sin nueva ventana).
      */

@@ -313,14 +313,8 @@ public class GerenteController implements Initializable {
     }
 
     @FXML private void handleLogout() {
-        boolean confirmed = UIComponents.showConfirmDialog(
-                "Cerrar sesión",
-                "¿Desea cerrar la sesión actual?"
-        );
-        if (confirmed) {
-            clockTimeline.stop();
-            UIComponents.navigateTo(btnLogout, "/views/Login.fxml", "Inicio");
-        }
+        // Llamamos a nuestro método universal pasándole el botón y el reloj
+        UIComponents.manejarLogout(btnLogout, clockTimeline);
     }
 
     // ══════════════════════════════════════════════════════
