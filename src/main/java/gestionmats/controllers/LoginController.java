@@ -14,6 +14,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.util.Duration;
@@ -22,7 +23,6 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.Objects;
 import java.util.ResourceBundle;
-// import gestionmats.dao.UsuarioDAO; // Descomenta cuando tengas tu DAO
 
 
 public class LoginController implements Initializable {
@@ -34,6 +34,7 @@ public class LoginController implements Initializable {
     @FXML private ToggleButton btnTogglePass;
     @FXML private ImageView imgEye;
     @FXML private Button btnLogin;
+    @FXML private HBox errorBox;
 
     private final String PATH_OJO_ABIERTO = "/images/ojoAbierto_Naranja.png";
     private final String PATH_OJO_CERRADO = "/images/ojoCerrado_Naranja.png";
@@ -97,16 +98,16 @@ public class LoginController implements Initializable {
             // 3. Redirigimos según el rol
             switch (rol) {
                 case GERENTE:
-                    loadGerenteView();
+                    cargarVistaUsuario("/views/GerenteView.fxml", "SDG MDC - Panel de Gerente");
                     break;
                 case VENDEDOR:
-                    loadVendedorView();
+                    cargarVistaUsuario("/views/VendedorView.fxml", "SDG MDC - Punto de Venta");
                     break;
                 case ALMACENISTA:
-                    loadAlmacenistaView();
+                    cargarVistaUsuario("/views/AlmacenistaView.fxml", "SDG MDC - Control de Almacén");
                     break;
                 default:
-                    AlertUtils.mostrarAlerta(Alert.AlertType.ERROR, "Error de Acceso", "Rol no reconocido", "Consulte con el administrador de sistemas.");
+                    AlertUtils.mostrarAlerta(Alert.AlertType.ERROR, "Error de Acceso", "Rol no reconocido", "Consulte con soporte.");
                     break;
             }
         } else {
@@ -115,10 +116,10 @@ public class LoginController implements Initializable {
             shakeNode(txtPasswordVisible.isVisible() ? txtPasswordVisible : txtPasswordHidden);
 
             // Opcional: mostrar la etiqueta de error si tienes una (ej. lblError.setVisible(true))
-            /*if (errorBox != null) {
+            if (errorBox != null) {
                 errorBox.setVisible(true);
                 errorBox.setManaged(true);
-            }*/
+            }
         }
     }
 
@@ -133,64 +134,33 @@ public class LoginController implements Initializable {
         node.setStyle("-fx-border-color: #e74c3c;");
         tt.setOnFinished(e -> node.setStyle("")); // Limpia el estilo al terminar
     }
-
-    private void loadGerenteView() {//Nombre Provisional/NO FINAL
+    /**
+     * MÉTODO UNIVERSAL (DRY)
+     * Carga cualquier vista pasándole la ruta del archivo FXML y el título de la ventana.
+     */
+    private void cargarVistaUsuario(String rutaFxml, String tituloVentana) {
         try {
-            // 1. Buscamos el recurso
-            URL gerenteUrl = getClass().getResource("/views/GerenteView.fxml");
+            URL vistaUrl = getClass().getResource(rutaFxml);
 
-            // 2. Validamos explícitamente en lugar de depender del NullPointerException
-            if (gerenteUrl == null) {
-                throw new IOException("El archivo de vista 'GerenteView.fxml' no se encuentra en el directorio /views/.");
+            if (vistaUrl == null) {
+                // Si la vista del vendedor o almacenista aún no existe, mostramos una alerta temporal
+                AlertUtils.mostrarAlerta(Alert.AlertType.INFORMATION, "Módulo en desarrollo", tituloVentana, "La interfaz para este rol aún está en construcción.");
+                return;
             }
 
-            // 3. Cargamos la vista
-            Parent root = FXMLLoader.load(gerenteUrl);
+            Parent root = FXMLLoader.load(vistaUrl);
             Stage stage = (Stage) btnLogin.getScene().getWindow();
             stage.setScene(new Scene(root));
-            stage.setTitle("SDG MDC - Panel de Control");
+            stage.setTitle(tituloVentana);
             stage.centerOnScreen();
 
         } catch (IOException e) {
-            AlertUtils.mostrarAlerta(Alert.AlertType.ERROR, "Error de Sistema", "No se pudo cargar el panel principal.", e.getMessage());
+            AlertUtils.mostrarAlerta(Alert.AlertType.ERROR, "Error de Sistema", "No se pudo cargar la vista.", e.getMessage());
             e.printStackTrace();
         } catch (Exception e) {
             AlertUtils.mostrarAlerta(Alert.AlertType.ERROR, "Error Crítico", "Ocurrió un error inesperado al navegar.", e.getMessage());
             e.printStackTrace();
         }
-    }
-
-    private void loadVendedorView() {
-        // TODO: Mismo código que loadGerenteView pero apuntando a "/views/VendedorView.fxml"
-        try {
-            // 1. Buscamos el recurso
-            URL vendedorUrl = getClass().getResource("/views/VendedorView.fxml");
-
-            // 2. Validamos explícitamente en lugar de depender del NullPointerException
-            if (vendedorUrl== null) {
-                throw new IOException("El archivo de vista 'VendedorView.fxml' no se encuentra en el directorio /views/.");
-            }
-
-            // 3. Cargamos la vista
-            Parent root = FXMLLoader.load(vendedorUrl);
-            Stage stage = (Stage) btnLogin.getScene().getWindow();
-            stage.setScene(new Scene(root));
-            stage.setTitle("SDG MDC - Punto de Venta");
-            stage.centerOnScreen();
-
-        } catch (IOException e) {
-            AlertUtils.mostrarAlerta(Alert.AlertType.ERROR, "Error de Sistema", "No se pudo cargar el de vendedor.", e.getMessage());
-            e.printStackTrace();
-        } catch (Exception e) {
-            AlertUtils.mostrarAlerta(Alert.AlertType.ERROR, "Error Crítico", "Ocurrió un error inesperado al navegar.", e.getMessage());
-            e.printStackTrace();
-        }
-    }
-
-    private void loadAlmacenistaView() {
-        // TODO: Mismo código que loadGerenteView pero apuntando a "/views/AlmacenistaView.fxml"
-        System.out.println("Cargando vista del Almacenista...");
-        AlertUtils.mostrarAlerta(Alert.AlertType.INFORMATION, "Redirección", "Vista Almacenista", "Aquí iría la interfaz de Entradas/Salidas");
     }
 
 
