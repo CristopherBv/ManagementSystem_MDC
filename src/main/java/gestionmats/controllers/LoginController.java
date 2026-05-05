@@ -86,7 +86,7 @@ public class LoginController implements Initializable {
 
         // Lógica simulada. Reemplazar con: if (UsuarioDAO.login(user, pass))
         if (user.equals("admin") && pass.equals("1234")) {
-            loadMainDashboard();
+            loadGerenteView();
         } else {
             // Animación de error
             shakeNode(txtUser);
@@ -106,18 +106,18 @@ public class LoginController implements Initializable {
         tt.setOnFinished(e -> node.setStyle("")); // Limpia el estilo al terminar
     }
 
-    private void loadMainDashboard() {//Nombre Provisional/NO FINAL
+    private void loadGerenteView() {//Nombre Provisional/NO FINAL
         try {
             // 1. Buscamos el recurso
-            URL dashboardUrl = getClass().getResource("/views/Dashboard.fxml");
+            URL gerenteUrl = getClass().getResource("/views/GerenteView.fxml");
 
             // 2. Validamos explícitamente en lugar de depender del NullPointerException
-            if (dashboardUrl == null) {
-                throw new IOException("El archivo de vista 'Dashboard.fxml' no se encuentra en el directorio /views/.");
+            if (gerenteUrl == null) {
+                throw new IOException("El archivo de vista 'GerenteView.fxml' no se encuentra en el directorio /views/.");
             }
 
             // 3. Cargamos la vista
-            Parent root = FXMLLoader.load(dashboardUrl);
+            Parent root = FXMLLoader.load(gerenteUrl);
             Stage stage = (Stage) btnLogin.getScene().getWindow();
             stage.setScene(new Scene(root));
             stage.setTitle("SDG MDC - Panel de Control");
