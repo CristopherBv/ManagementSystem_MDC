@@ -1,31 +1,21 @@
 package gestionmats.utils;
 
 import javafx.animation.*;
-import javafx.fxml.FXMLLoader;
 import javafx.scene.Cursor;
 import javafx.scene.Node;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
-import javafx.stage.Stage;
 import javafx.util.Duration;
 
-import java.io.IOException;
 import java.util.Optional;
 
 /**
  * UIComponents — Sistema centralizado de estilos, animaciones y utilidades UI.
- *
- * Reemplaza UIEfectos con un enfoque más modular:
- *  - Animaciones CSS-first (sin inline styles en los botones con clase CSS)
- *  - Transiciones fluidas con ScaleTransition + FadeTransition
- *  - Helpers de navegación y diálogos
- *  - Notificaciones toast temporales
+ * Responsabilidad: Manejo exclusivo de la capa visual (animaciones, diálogos, alertas).
  */
 public final class UIComponents {
 
@@ -35,17 +25,11 @@ public final class UIComponents {
     // CONSTANTES DE DURACIÓN
     // ══════════════════════════════════════════════════════
     private static final Duration HOVER_DURATION  = Duration.millis(120);
-    private static final Duration FADE_DURATION   = Duration.millis(200);
     private static final Duration TOAST_DURATION  = Duration.seconds(2.8);
 
     // ══════════════════════════════════════════════════════
     // ANIMACIONES EN BOTONES
     // ══════════════════════════════════════════════════════
-
-    /**
-     * Aplica efecto de escala suave al hacer hover (cualquier nodo).
-     * No modifica el estilo — funciona 100% con clases CSS.
-     */
     public static void applyHoverScale(Node node, double hoverScale) {
         if (node == null) return;
         node.setCursor(Cursor.HAND);
@@ -61,37 +45,19 @@ public final class UIComponents {
         node.setOnMouseReleased(e -> quickScale(node, hoverScale));
     }
 
-    /** Escala instantánea para feedback de press */
     private static void quickScale(Node node, double scale) {
         ScaleTransition st = new ScaleTransition(Duration.millis(60), node);
         st.setToX(scale); st.setToY(scale);
         st.play();
     }
 
-    // ── Variantes para cada tipo de botón ─────────────────
-
-    /** Botón de agregar/primario — escala ligeramente más */
-    public static void applyButtonAdd(Button btn) {
-        applyHoverScale(btn, 1.04);
-    }
-
-    /** Botón de editar */
-    public static void applyButtonEdit(Button btn) {
-        applyHoverScale(btn, 1.03);
-    }
-
-    /** Botón de eliminar — escala mínima para no asustar */
-    public static void applyButtonDelete(Button btn) {
-        applyHoverScale(btn, 1.03);
-    }
-
-    /** Botón ghost/secundario — sin escala, solo cursor */
+    public static void applyButtonAdd(Button btn) { applyHoverScale(btn, 1.04); }
+    public static void applyButtonEdit(Button btn) { applyHoverScale(btn, 1.03); }
+    public static void applyButtonDelete(Button btn) { applyHoverScale(btn, 1.03); }
     public static void applyButtonGhost(Button btn) {
-        if (btn == null) return;
-        btn.setCursor(Cursor.HAND);
+        if (btn != null) btn.setCursor(Cursor.HAND);
     }
 
-    /** Botón con efecto pulse suave (ej. logout) */
     public static void applyButtonPulse(Button btn) {
         if (btn == null) return;
         btn.setCursor(Cursor.HAND);
@@ -103,25 +69,17 @@ public final class UIComponents {
         pulse.setCycleCount(Animation.INDEFINITE);
         pulse.play();
 
-        // Detener pulse en hover para no superponerse
         btn.setOnMouseEntered(e -> pulse.pause());
         btn.setOnMouseExited(e  -> pulse.play());
     }
 
-    /**
-     * Hover sutil para botones de navegación lateral.
-     * Solo cursor — el hover visual lo maneja CSS.
-     */
     public static void applyNavHover(Button btn) {
-        if (btn == null) return;
-        btn.setCursor(Cursor.HAND);
+        if (btn != null) btn.setCursor(Cursor.HAND);
     }
 
     // ══════════════════════════════════════════════════════
     // TRANSICIONES DE CONTENIDO
     // ══════════════════════════════════════════════════════
-
-    /** Fade-in de un nodo desde 0 a 1 */
     public static void fadeIn(Node node, double millis) {
         if (node == null) return;
         node.setOpacity(0);
@@ -131,7 +89,6 @@ public final class UIComponents {
         ft.play();
     }
 
-    /** Fade-out y luego ejecutar acción */
     public static void fadeOutThen(Node node, double millis, Runnable then) {
         if (node == null) { if (then != null) then.run(); return; }
         FadeTransition ft = new FadeTransition(Duration.millis(millis), node);
@@ -141,7 +98,6 @@ public final class UIComponents {
         ft.play();
     }
 
-    /** Slide-in desde abajo (translateY: +20 → 0) con fade */
     public static void slideInFromBottom(Node node, double millis) {
         if (node == null) return;
         node.setOpacity(0);
@@ -157,17 +113,9 @@ public final class UIComponents {
     }
 
     // ══════════════════════════════════════════════════════
-    // NOTIFICACIONES TOAST
+    // NOTIFICACIONES TOAST Y DIÁLOGOS
     // ══════════════════════════════════════════════════════
-
-    /**
-     * Muestra un toast temporal en la esquina de la escena.
-     *
-     * @param message Texto a mostrar
-     * @param type    "success" | "warn" | "info" | "error"
-     */
     public static void showNotification(String message, String type) {
-        // Implementación usando Alert estilizada mientras no existe un StackPane global
         Alert.AlertType alertType = switch (type) {
             case "success" -> Alert.AlertType.INFORMATION;
             case "warn"    -> Alert.AlertType.WARNING;
@@ -181,7 +129,6 @@ public final class UIComponents {
         styleAlert(alert);
         alert.show();
 
-        // Auto-cerrar después de TOAST_DURATION
         PauseTransition delay = new PauseTransition(TOAST_DURATION);
         delay.setOnFinished(e -> {
             if (alert.isShowing()) alert.close();
@@ -189,14 +136,6 @@ public final class UIComponents {
         delay.play();
     }
 
-    /**
-     * Versión con StackPane de overlay: llama a esto si tienes un
-     * StackPane raíz accesible (más elegante que Alert).
-     *
-     * @param container StackPane raíz de la escena
-     * @param message   Texto del toast
-     * @param type      "success" | "warn" | "error" | "info"
-     */
     public static void showToast(StackPane container, String message, String type) {
         String bgColor = switch (type) {
             case "success" -> "rgba(34,197,94,0.15)";
@@ -219,15 +158,15 @@ public final class UIComponents {
 
         Label lbl = new Label(message);
         lbl.setStyle(
-            "-fx-background-color: " + bgColor + ";" +
-            "-fx-border-color: " + borderColor + ";" +
-            "-fx-border-radius: 8;" +
-            "-fx-background-radius: 8;" +
-            "-fx-text-fill: " + textColor + ";" +
-            "-fx-font-size: 12px;" +
-            "-fx-font-weight: bold;" +
-            "-fx-padding: 10 18;" +
-            "-fx-effect: dropshadow(gaussian, rgba(0,0,0,0.5), 12, 0.2, 0, 4);"
+                "-fx-background-color: " + bgColor + ";" +
+                        "-fx-border-color: " + borderColor + ";" +
+                        "-fx-border-radius: 8;" +
+                        "-fx-background-radius: 8;" +
+                        "-fx-text-fill: " + textColor + ";" +
+                        "-fx-font-size: 12px;" +
+                        "-fx-font-weight: bold;" +
+                        "-fx-padding: 10 18;" +
+                        "-fx-effect: dropshadow(gaussian, rgba(0,0,0,0.5), 12, 0.2, 0, 4);"
         );
 
         HBox toast = new HBox(lbl);
@@ -237,7 +176,6 @@ public final class UIComponents {
 
         container.getChildren().add(toast);
 
-        // Animación: fade in → pausa → fade out → remover
         FadeTransition fadeIn = new FadeTransition(Duration.millis(200), toast);
         fadeIn.setFromValue(0); fadeIn.setToValue(1);
 
@@ -250,14 +188,6 @@ public final class UIComponents {
         new SequentialTransition(fadeIn, hold, fadeOut).play();
     }
 
-    // ══════════════════════════════════════════════════════
-    // DIÁLOGOS
-    // ══════════════════════════════════════════════════════
-
-    /**
-     * Diálogo de confirmación estilizado.
-     * @return true si el usuario presionó "Confirmar"
-     */
     public static boolean showConfirmDialog(String title, String content) {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setTitle(title);
@@ -273,99 +203,12 @@ public final class UIComponents {
         return result.isPresent() && result.get() == btnConfirm;
     }
 
-    /** Aplica estilos básicos oscuros al Alert de JavaFX */
     private static void styleAlert(Alert alert) {
         alert.getDialogPane().setStyle(
-            "-fx-background-color: #16181f;" +
-            "-fx-font-family: 'Segoe UI', Arial, sans-serif;"
+                "-fx-background-color: #16181f;" +
+                        "-fx-font-family: 'Segoe UI', Arial, sans-serif;"
         );
         alert.getDialogPane().lookup(".content.label")
                 .setStyle("-fx-text-fill: #d1d5db; -fx-font-size: 13px;");
-    }
-
-    // ══════════════════════════════════════════════════════
-    // NAVEGACIÓN ENTRE VISTAS
-    // ══════════════════════════════════════════════════════
-
-    /**
-     * Navega a una nueva vista FXML cerrando la escena actual.
-     *
-     * @param sourceNode Cualquier nodo de la escena actual (para obtener el Stage)
-     * @param fxmlPath   Ruta del FXML destino (ej. "/gestionmats/views/Login.fxml")
-     * @param title      Título de la nueva ventana
-     */
-    public static void navigateTo(Node sourceNode, String fxmlPath, String title) {
-        try {
-            Stage currentStage = (Stage) sourceNode.getScene().getWindow();
-
-            FXMLLoader loader = new FXMLLoader(UIComponents.class.getResource(fxmlPath));
-            Parent root = loader.load();
-
-            Scene newScene = new Scene(root);
-            Stage newStage = new Stage();
-            newStage.setScene(newScene);
-            newStage.setTitle(title);
-            newStage.setResizable(false);
-
-            // Transición: fade out → abrir nueva escena
-            Node sceneRoot = currentStage.getScene().getRoot();
-            fadeOutThen(sceneRoot, 250, () -> {
-                currentStage.close();
-                newStage.show();
-                fadeIn(root, 300);
-            });
-
-        } catch (IOException e) {
-            e.printStackTrace();
-            showNotification("Error al navegar: " + e.getMessage(), "error");
-        }
-    }
-
-
-    /**
-     * MÉTODO UNIVERSAL (DRY)
-     * Maneja la lógica de cerrar sesión desde cualquier pantalla.
-     */
-    public static void manejarLogout(Button btnLogout, javafx.animation.Timeline relojActivo) {
-        boolean confirmed = showConfirmDialog(
-                "Cerrar sesión",
-                "¿Desea cerrar la sesión actual?"
-        );
-
-        if (confirmed) {
-            // 1. Detenemos el reloj si la vista lo tenía corriendo
-            if (relojActivo != null) {
-                relojActivo.stop();
-            }
-
-            // 2. Limpiamos el usuario del Singleton
-            gestionmats.services.GestorSesion.getInstancia().cerrarSesion();
-
-            // 3. Navegamos de vuelta al Login
-            navigateTo(btnLogout, "/views/Login.fxml", "SDG MDC – Autenticación");
-        }
-    }
-
-    /**
-     * Navega reemplazando la escena en el mismo Stage (sin nueva ventana).
-     */
-    public static void navigateInStage(Node sourceNode, String fxmlPath, String title) {
-        try {
-            Stage stage = (Stage) sourceNode.getScene().getWindow();
-
-            FXMLLoader loader = new FXMLLoader(UIComponents.class.getResource(fxmlPath));
-            Parent root = loader.load();
-
-            Node currentRoot = stage.getScene().getRoot();
-            fadeOutThen(currentRoot, 200, () -> {
-                stage.getScene().setRoot(root);
-                stage.setTitle(title);
-                fadeIn(root, 250);
-            });
-
-        } catch (IOException e) {
-            e.printStackTrace();
-            showNotification("Error de navegación.", "error");
-        }
     }
 }

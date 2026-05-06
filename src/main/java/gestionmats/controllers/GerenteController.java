@@ -1,6 +1,7 @@
 package gestionmats.controllers;
 
 import gestionmats.utils.UIComponents;
+import gestionmats.utils.NavigationTools;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Platform;
@@ -314,7 +315,7 @@ public class GerenteController implements Initializable {
 
     @FXML private void handleLogout() {
         // Llamamos a nuestro método universal pasándole el botón y el reloj
-        UIComponents.manejarLogout(btnLogout, clockTimeline);
+        NavigationTools.manejarLogout(btnLogout, clockTimeline);
     }
 
     // ══════════════════════════════════════════════════════
