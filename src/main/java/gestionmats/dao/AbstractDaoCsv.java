@@ -26,8 +26,8 @@ public abstract class AbstractDaoCsv<T> implements Dao<T> {
         for (int i = 0; i < lineas.size(); i++) {
             String linea = lineas.get(i);
 
-            // Saltamos la fila 0 si detectamos que es el encabezado
-            if (i == 0 && linea.toLowerCase().contains("idusuario")) {
+            // Saltamos la fila 0 si detectamos que es un encabezado (idUsuario o idProducto)
+            if (i == 0 && linea.toLowerCase().startsWith("id")) {
                 continue;
             }
 
