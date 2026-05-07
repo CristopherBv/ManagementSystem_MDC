@@ -61,4 +61,21 @@ public class ProductoDaoCsv extends AbstractDaoCsv<Producto> {
         }
         return null;
     }
+
+    @Override
+    protected String obtenerId(Producto entidad) {
+        return entidad.getIdProducto();
+    }
+
+    /**
+     * Busca un producto por su ID (ej: "M-001")
+     */
+    public Producto buscarPorId(String idProducto) {
+        for (Producto p : this.listarTodos()) {
+            if (p.getIdProducto().equals(idProducto)) {
+                return p;
+            }
+        }
+        return null;
+    }
 }

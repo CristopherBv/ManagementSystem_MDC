@@ -72,4 +72,9 @@ public class UsuarioDaoCsv extends AbstractDaoCsv<Usuario> {
         }
         return null; // Si termina el ciclo y no lo encontró, regresa nulo
     }
+
+    @Override
+    protected String obtenerId(Usuario entidad) {
+        return String.valueOf(entidad.getIdUsuario());
+    }
 }
