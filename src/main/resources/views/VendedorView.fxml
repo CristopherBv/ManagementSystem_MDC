@@ -198,7 +198,7 @@
                         <ComboBox fx:id="cmbMetodoPago" prefWidth="120" styleClass="combo-input"/>
                         <Label text="Tipo de venta:" styleClass="field-label"/>
                         <ComboBox fx:id="cmbTipoVenta" prefWidth="120" styleClass="combo-input"/>
-                        <Button fx:id="btnAplicarDescuento" text=" Aplicar descuento"
+                        <Button fx:id="btnAplicarDescuento" text="Aplicar descuento"
                                 onAction="#handleAplicarDescuento"
                                 prefHeight="36" styleClass="btn-edit"/>
                         <Button fx:id="btnFinalizarVenta" text="💰 Finalizar venta"
