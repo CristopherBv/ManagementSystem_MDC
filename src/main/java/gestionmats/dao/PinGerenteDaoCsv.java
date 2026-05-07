@@ -12,6 +12,28 @@ public class PinGerenteDaoCsv {
     }
 
     /**
+     * Valida si el PIN coincide con EL PIN de CUALQUIER gerente registrado.
+     * Se usa cuando el Vendedor pide autorización y el Gerente escribe su PIN.
+     */
+    public boolean validarCualquierPin(String pin) {
+        List<String> lineas = CsvUtils.leerArchivo(ruta);
+        for (String linea : lineas) {
+            String[] datos = linea.split(",");
+            if (datos.length >= 2) {
+                try {
+                    String pinGuardado = datos[1].trim();
+                    if (pinGuardado.equals(pin)) {
+                        return true;
+                    }
+                } catch (Exception e) {
+                    // ignorar líneas mal formateadas
+                }
+            }
+        }
+        return false;
+    }
+
+    /**
      * Valida si el PIN ingresado corresponde al ID del Gerente.
      */
     public boolean validarPin(int idUsuario, String pin) {

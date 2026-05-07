@@ -9,6 +9,8 @@ import gestionmats.model.Venta;
 import gestionmats.services.GestorSesion;
 import gestionmats.utils.NavigationTools;
 import gestionmats.utils.UIComponents;
+import gestionmats.model.TipoOperacion;
+import gestionmats.services.ServiciosAutorizacion;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.collections.FXCollections;
@@ -95,7 +97,6 @@ public class VendedorController implements Initializable {
         setupCombos();
         cargarProductos();
         setupSearchFilter();
-        setupNavegacion();
 
         activeNavBtn = navVentas;
         viewVentas.setVisible(true);
@@ -210,13 +211,6 @@ public class VendedorController implements Initializable {
         });
     }
 
-    private void setupNavegacion() {
-        // ✅ CORREGIDO: usar setOnAction (JavaFX), no setOnClickListener
-        navVentas.setOnAction(e -> showVentas());
-        navPedidos.setOnAction(e -> showPedidos());
-        navClientes.setOnAction(e -> showClientes());
-    }
-
     @FXML
     private void showVentas() {
         if (activeNavBtn != null) activeNavBtn.getStyleClass().remove("nav-btn-active");
@@ -326,33 +320,40 @@ public class VendedorController implements Initializable {
 
     @FXML
     private void handleAplicarDescuento() {
-        TextInputDialog dialog = new TextInputDialog();
-        dialog.setTitle("Autorización de Gerente");
-        dialog.setHeaderText("Se requiere PIN del Gerente");
-        dialog.setContentText("Ingrese el PIN de autorización:");
-        Optional<String> result = dialog.showAndWait();
-        if (result.isPresent() && "1234".equals(result.get())) {
-            TextInputDialog descDialog = new TextInputDialog("0");
-            descDialog.setTitle("Descuento");
-            descDialog.setHeaderText("Aplicar descuento");
-            descDialog.setContentText("Porcentaje de descuento (%):");
-            Optional<String> descResult = descDialog.showAndWait();
-            if (descResult.isPresent()) {
-                try {
-                    double desc = Double.parseDouble(descResult.get());
-                    if (desc < 0 || desc > 100) {
-                        UIComponents.showNotification("Descuento entre 0 y 100", "warn");
-                        return;
-                    }
-                    descuentoGlobal = desc;
-                    actualizarTotales();
-                    UIComponents.showNotification("Descuento del " + desc + "% aplicado", "success");
-                } catch (NumberFormatException e) {
-                    UIComponents.showNotification("Descuento inválido", "error");
+        TextInputDialog pinDialog = new TextInputDialog();
+        pinDialog.setTitle("Autorización de Gerente");
+        pinDialog.setHeaderText("Se requiere PIN del Gerente");
+        pinDialog.setContentText("Ingrese el PIN de autorización:");
+        Optional<String> pinResult = pinDialog.showAndWait();
+
+        if (pinResult.isEmpty()) return;
+
+        boolean autorizado = gestionmats.services.ServiciosAutorizacion
+                .autorizarOperacion(pinResult.get(), gestionmats.model.TipoOperacion.DESCUENTO);
+
+        if (!autorizado) {
+            UIComponents.showNotification("PIN incorrecto o no autorizado", "error");
+            return;
+        }
+
+        TextInputDialog descDialog = new TextInputDialog("0");
+        descDialog.setTitle("Descuento");
+        descDialog.setHeaderText("Aplicar descuento");
+        descDialog.setContentText("Porcentaje de descuento (%):");
+        Optional<String> descResult = descDialog.showAndWait();
+        if (descResult.isPresent()) {
+            try {
+                double desc = Double.parseDouble(descResult.get());
+                if (desc < 0 || desc > 100) {
+                    UIComponents.showNotification("Descuento entre 0 y 100", "warn");
+                    return;
                 }
+                descuentoGlobal = desc;
+                actualizarTotales();
+                UIComponents.showNotification("Descuento del " + desc + "% aplicado", "success");
+            } catch (NumberFormatException e) {
+                UIComponents.showNotification("Descuento inválido", "error");
             }
-        } else if (result.isPresent()) {
-            UIComponents.showNotification("PIN incorrecto", "error");
         }
     }
 
@@ -408,10 +409,6 @@ public class VendedorController implements Initializable {
 
     @FXML
     private void handleLogout() {
-        boolean confirmed = UIComponents.showConfirmDialog("Cerrar sesión", "¿Desea cerrar la sesión?");
-        if (confirmed) {
-            GestorSesion.getInstancia().cerrarSesion();
-            NavigationTools.navigateTo(btnLogout, "/views/Login.fxml", "SDG MDC - Autenticación");
-        }
+        NavigationTools.manejarLogout(btnLogout, clockTimeline);
     }
 }

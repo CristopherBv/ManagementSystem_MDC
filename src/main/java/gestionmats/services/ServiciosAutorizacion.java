@@ -2,44 +2,30 @@ package gestionmats.services;
 
 import gestionmats.dao.PinGerenteDaoCsv;
 import gestionmats.model.TipoOperacion;
-import gestionmats.model.Usuario;
-import gestionmats.model.Gerente;
 
-/**
- * Servicio para autorizar operaciones restringidas (ej. aplicar descuentos, cancelar tickets).
- */
 public class ServiciosAutorizacion {
 
-    private ServiciosAutorizacion() {
-        // Clase utilitaria, no instanciar
-    }
+    private ServiciosAutorizacion() {}
 
     /**
-     * Verifica si el PIN ingresado corresponde a un Gerente autorizado
-     * para realizar la operación solicitada.
+     * Valida si el PIN ingresado corresponde a CUALQUIER Gerente registrado.
+     * No depende de quién esté logueado — el Gerente escribe su PIN
+     * físicamente en la pantalla del Vendedor.
      */
     public static boolean autorizarOperacion(String pin, TipoOperacion tipo) {
-        // Obtener el usuario actual de la sesión
-        Usuario usuarioActual = GestorSesion.getInstancia().getUsuarioActual();
-
-        // Verificar que sea un Gerente
-        if (usuarioActual == null || !(usuarioActual instanceof Gerente)) {
-            System.err.println("Error: No hay un Gerente logueado para autorizar la operación.");
+        if (pin == null || pin.trim().isEmpty()) {
+            System.out.println("Autorización denegada: PIN vacío.");
             return false;
         }
 
-        int idGerente = usuarioActual.getIdUsuario();
-
-        // Validar el PIN usando PinGerenteDaoCsv
         PinGerenteDaoCsv pinDao = new PinGerenteDaoCsv();
-        boolean pinValido = pinDao.validarPin(idGerente, pin);
+        boolean autorizado = pinDao.validarCualquierPin(pin);
 
-        if (pinValido) {
-            System.out.println("Operación [" + tipo + "] autorizada correctamente por Gerente ID: " + idGerente);
-            return true;
+        if (autorizado) {
+            System.out.println("Operación [" + tipo + "] autorizada.");
+        } else {
+            System.out.println("Autorización denegada para [" + tipo + "]. PIN inválido.");
         }
-
-        System.out.println("Autorización denegada para la operación [" + tipo + "]. PIN inválido.");
-        return false;
+        return autorizado;
     }
 }
