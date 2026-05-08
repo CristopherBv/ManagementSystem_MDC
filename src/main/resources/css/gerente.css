@@ -471,3 +471,36 @@
     -fx-text-fill: #374151;
     -fx-font-size: 12px;
 }
+/* ══════════════════════════════
+   GRÁFICAS (DARK THEME)
+══════════════════════════════ */
+.chart {
+    -fx-padding: 5;
+}
+.chart-plot-background {
+    -fx-background-color: transparent;
+}
+.chart-pie {
+    -fx-border-color: #111318;
+    -fx-border-width: 2px;
+}
+.chart-legend {
+    -fx-background-color: transparent;
+}
+.chart-legend-item {
+    -fx-text-fill: #9ca3af;
+    -fx-font-size: 11px;
+}
+.axis {
+    -fx-tick-label-fill: #9ca3af;
+}
+.axis-tick-mark, .axis-minor-tick-mark {
+    -fx-stroke: transparent;
+}
+.chart-vertical-grid-lines, .chart-horizontal-grid-lines {
+    -fx-stroke: rgba(255,255,255,0.05);
+    -fx-stroke-dash-array: 5, 5;
+}
+.chart-bar {
+    -fx-bar-fill: #F58220; /* Naranja Construct Hub */
+}

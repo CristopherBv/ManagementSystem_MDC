@@ -21,7 +21,7 @@ import java.util.ResourceBundle;
 public class GerenteController implements Initializable {
 
     @FXML private Label lblPageTitle, lblPageSub, lblFecha, lblHora;
-    @FXML private Button navInventario, navPedidos, navClientes, navProveedores, btnLogout;
+    @FXML private Button navDashboard, navInventario, navPedidos, navClientes, navProveedores, btnLogout;
     @FXML private StackPane contentArea;
 
     private Timeline clockTimeline;
@@ -31,8 +31,8 @@ public class GerenteController implements Initializable {
     public void initialize(URL url, ResourceBundle rb) {
         setupClock();
         setupNavButtons();
-        // Cargamos el Inventario por defecto
-        showInventario();
+        // Carga el Dashboard por defecto al iniciar sesión
+        showDashboard();
     }
 
     private void setupClock() {
@@ -49,6 +49,7 @@ public class GerenteController implements Initializable {
     }
 
     private void setupNavButtons() {
+        UIComponents.applyNavHover(navDashboard);
         UIComponents.applyNavHover(navInventario);
         UIComponents.applyNavHover(navPedidos);
         UIComponents.applyNavHover(navClientes);
@@ -81,6 +82,9 @@ public class GerenteController implements Initializable {
             UIComponents.showNotification("Error al cargar módulo: " + fxmlPath, "error");
             e.printStackTrace();
         }
+    }
+    @FXML private void showDashboard() {
+        loadModule("/views/GerenteDashboardView.fxml", navDashboard, "Panel de Control", "Resumen general de operaciones");
     }
 
     @FXML private void showInventario() {

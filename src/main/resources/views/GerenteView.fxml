@@ -30,12 +30,18 @@
             <VBox styleClass="nav-section" spacing="2" VBox.vgrow="ALWAYS">
                 <Label text="MÓDULOS" styleClass="nav-section-label"/>
 
+                <Button fx:id="navDashboard" text="  Panel de Control" onAction="#showDashboard"
+                        prefWidth="220" prefHeight="44" styleClass="nav-btn"/>
+
                 <Button fx:id="navInventario" text="  Inventario" onAction="#showInventario"
                         prefWidth="220" prefHeight="44" styleClass="nav-btn"/>
+
                 <Button fx:id="navPedidos" text="  Pedidos" onAction="#showPedidos"
                         prefWidth="220" prefHeight="44" styleClass="nav-btn"/>
+
                 <Button fx:id="navClientes" text="  Clientes" onAction="#showClientes"
                         prefWidth="220" prefHeight="44" styleClass="nav-btn"/>
+
                 <Button fx:id="navProveedores" text="  Proveedores" onAction="#showProveedores"
                         prefWidth="220" prefHeight="44" styleClass="nav-btn"/>
             </VBox>
