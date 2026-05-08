@@ -123,12 +123,29 @@ public class GerenteInventarioController implements Initializable {
 
     @FXML private void handleEliminar() {
         Producto selected = tableInventario.getSelectionModel().getSelectedItem();
+
         if (selected != null) {
-            allItems.remove(selected);
-            updateKPIs();
-            UIComponents.showNotification("Material eliminado.", "success");
+            // 1. Pedimos confirmación al usuario
+            boolean confirmado = UIComponents.showConfirmDialog(
+                    "Eliminar Material",
+                    "¿Estás seguro de que deseas eliminar permanentemente '" + selected.getNombre() + "'?\nEsta acción no se puede deshacer."
+            );
+
+            if (confirmado) {
+                // 2. Borramos físicamente del CSV usando el DAO (pasando el String "M-XXX")
+                boolean borradoFisico = productoDao.eliminar(selected.getIdProducto());
+
+                if (borradoFisico) {
+                    // 3. Si tuvo éxito en el CSV, lo quitamos de la pantalla
+                    allItems.remove(selected);
+                    updateKPIs();
+                    UIComponents.showNotification("Material eliminado permanentemente.", "success");
+                } else {
+                    UIComponents.showNotification("Error interno al intentar modificar la base de datos.", "error");
+                }
+            }
         } else {
-            UIComponents.showNotification("Seleccione un material.", "warn");
+            UIComponents.showNotification("Seleccione un material primero.", "warn");
         }
     }
 
