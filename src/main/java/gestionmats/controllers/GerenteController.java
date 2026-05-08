@@ -1,5 +1,7 @@
 package gestionmats.controllers;
 
+import gestionmats.services.GestorSesion;
+import gestionmats.model.Usuario;
 import gestionmats.utils.UIComponents;
 import gestionmats.utils.NavigationTools;
 import javafx.animation.KeyFrame;
@@ -20,7 +22,7 @@ import java.util.ResourceBundle;
 
 public class GerenteController implements Initializable {
 
-    @FXML private Label lblPageTitle, lblPageSub, lblFecha, lblHora;
+    @FXML private Label lblPageTitle, lblPageSub, lblFecha, lblHora, lblUserName; // <-- Agregado lblUserName
     @FXML private Button navDashboard, navInventario, navPedidos, navClientes, navProveedores, btnLogout;
     @FXML private StackPane contentArea;
 
@@ -31,6 +33,14 @@ public class GerenteController implements Initializable {
     public void initialize(URL url, ResourceBundle rb) {
         setupClock();
         setupNavButtons();
+
+        // SINGLETON AQUÍ
+        Usuario usuarioLogueado = GestorSesion.getInstancia().getUsuarioActual();
+        if (usuarioLogueado != null) {
+            // Actualizamos el nombre en la barra lateral izquierda
+            lblUserName.setText(usuarioLogueado.getNombre() + " " + usuarioLogueado.getPrimerApellido());
+        }
+
         // Carga el Dashboard por defecto al iniciar sesión
         showDashboard();
     }
@@ -84,7 +94,13 @@ public class GerenteController implements Initializable {
         }
     }
     @FXML private void showDashboard() {
-        loadModule("/views/GerenteDashboardView.fxml", navDashboard, "Panel de Control", "Resumen general de operaciones");
+        String nombre = "Usuario";
+        Usuario u = GestorSesion.getInstancia().getUsuarioActual();
+        if (u != null) {
+            nombre = u.getNombre();
+        }
+
+        loadModule("/views/GerenteDashboardView.fxml", navDashboard, "Panel de Control", "Bienvenido, " + nombre);
     }
 
     @FXML private void showInventario() {

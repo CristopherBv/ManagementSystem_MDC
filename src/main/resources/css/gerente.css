@@ -148,30 +148,32 @@
     -fx-background-color: #111318;
     -fx-border-color: rgba(255,255,255,0.06);
     -fx-border-width: 0 0 1 0;
-    -fx-padding: 0 24;
-    -fx-pref-height: 64;
-    -fx-min-height: 64;
-    -fx-spacing: 14;
+    -fx-padding: 0 30; /* <-- MAGIA: 30px de aire a los lados */
+    -fx-min-height: 75; /* Un poco más alta */
+    -fx-spacing: 16; /* Separación entre la línea naranja y el texto */
 }
 
 .topbar-accent {
     -fx-background-color: #F58220;
-    -fx-background-radius: 2;
+    -fx-background-radius: 3;
 }
 
 .topbar-titles {
-    -fx-padding: 0 0 0 12;
+    -fx-padding: 0;
+    -fx-alignment: CENTER_LEFT;
 }
 
 .page-title {
     -fx-text-fill: white;
-    -fx-font-size: 16px;
+    -fx-font-size: 22px; /* Más grande para que imponga */
     -fx-font-weight: bold;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.3), 4, 0.2, 0, 2);
 }
 
 .page-subtitle {
-    -fx-text-fill: #4b5563;
-    -fx-font-size: 11px;
+    -fx-text-fill: #9ca3af;
+    -fx-font-size: 13px;
+    -fx-font-weight: bold;
 }
 
 .topbar-time {
@@ -179,16 +181,17 @@
 }
 
 .time-date {
-    -fx-text-fill: #4b5563;
-    -fx-font-size: 10.5px;
+    -fx-text-fill: #6b7280;
+    -fx-font-size: 11px;
+    -fx-font-weight: bold;
+    -fx-letter-spacing: 1px;
 }
 
 .time-clock {
     -fx-text-fill: #F58220;
-    -fx-font-size: 16px;
+    -fx-font-size: 18px;
     -fx-font-weight: bold;
 }
-
 /* ══════════════════════════════
    KPI CARDS
 ══════════════════════════════ */
