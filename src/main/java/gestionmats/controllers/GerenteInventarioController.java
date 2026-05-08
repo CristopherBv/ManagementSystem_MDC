@@ -17,7 +17,7 @@ import java.util.ResourceBundle;
 public class GerenteInventarioController implements Initializable {
 
     @FXML private TableView<Producto> tableInventario;
-    @FXML private TableColumn<Producto, String> colId, colNombre, colCategoria, colUnidad, colEstado;
+    @FXML private TableColumn<Producto, String> colId, colNombre, colMarca, colUnidad, colEstado;
     @FXML private TableColumn<Producto, Integer> colCantidad, colStock;
     @FXML private TextField txtSearch;
     @FXML private ComboBox<String> cmbCategoria;
@@ -48,7 +48,7 @@ public class GerenteInventarioController implements Initializable {
     private void setupTable() {
         colId.setCellValueFactory(d -> new javafx.beans.property.SimpleStringProperty(d.getValue().getIdProducto()));
         colNombre.setCellValueFactory(d -> new javafx.beans.property.SimpleStringProperty(d.getValue().getNombre()));
-        colCategoria.setCellValueFactory(d -> new javafx.beans.property.SimpleStringProperty(d.getValue().getCategoria()));
+        colMarca.setCellValueFactory(d -> new javafx.beans.property.SimpleStringProperty(d.getValue().getMarca()));
         colCantidad.setCellValueFactory(d -> new javafx.beans.property.SimpleObjectProperty<>(d.getValue().getStockActual()));
         colUnidad.setCellValueFactory(d -> new javafx.beans.property.SimpleStringProperty(d.getValue().getUnidadMedida()));
         colStock.setCellValueFactory(d -> new javafx.beans.property.SimpleObjectProperty<>(d.getValue().calcularStockMinimo()));
