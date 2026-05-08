@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.chart.*?>
+
+<VBox spacing="18" styleClass="view-panel"
+      xmlns="http://javafx.com/javafx/17.0.2" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="gestionmats.controllers.GerenteDashboardController">
+
+    <GridPane hgap="15" vgap="15">
+        <columnConstraints>
+            <ColumnConstraints percentWidth="33.33"/>
+            <ColumnConstraints percentWidth="33.33"/>
+            <ColumnConstraints percentWidth="33.33"/>
+        </columnConstraints>
+        <rowConstraints>
+            <RowConstraints vgrow="SOMETIMES" />
+            <RowConstraints vgrow="SOMETIMES" />
+        </rowConstraints>
+
+        <VBox styleClass="kpi-card, kpi-orange" GridPane.columnIndex="0" GridPane.rowIndex="0">
+            <Label text="PRODUCTOS EN STOCK" styleClass="kpi-label"/>
+            <Label fx:id="lblTotalProductos" text="0" styleClass="kpi-value"/>
+            <Label text="Sincronizado con Inventario" styleClass="kpi-sub"/>
+        </VBox>
+        <VBox styleClass="kpi-card, kpi-red" GridPane.columnIndex="1" GridPane.rowIndex="0">
+            <Label text="ALERTAS CRÍTICAS" styleClass="kpi-label"/>
+            <Label fx:id="lblAlertas" text="0" styleClass="kpi-value"/>
+            <Label text="Bajo el mínimo permitido" styleClass="kpi-sub"/>
+        </VBox>
+        <VBox styleClass="kpi-card, kpi-green" GridPane.columnIndex="2" GridPane.rowIndex="0">
+            <Label text="VENTAS DEL DÍA" styleClass="kpi-label"/>
+            <Label fx:id="lblVentasHoy" text="0.00" styleClass="kpi-value"/>
+            <Label text="Ingresos brutos hoy" styleClass="kpi-sub"/>
+        </VBox>
+
+        <VBox styleClass="kpi-card, kpi-blue" GridPane.columnIndex="0" GridPane.rowIndex="1">
+            <Label text="CLIENTES REGISTRADOS" styleClass="kpi-label"/>
+            <Label fx:id="lblClientes" text="--" styleClass="kpi-value"/>
+            <Label text="Cartera activa" styleClass="kpi-sub"/>
+        </VBox>
+        <VBox styleClass="kpi-card, kpi-orange" GridPane.columnIndex="1" GridPane.rowIndex="1">
+            <Label text="PROVEEDORES" styleClass="kpi-label"/>
+            <Label fx:id="lblProveedores" text="--" styleClass="kpi-value"/>
+            <Label text="Contactos directos" styleClass="kpi-sub"/>
+        </VBox>
+        <VBox styleClass="kpi-card, kpi-blue" GridPane.columnIndex="2" GridPane.rowIndex="1">
+            <Label text="PEDIDOS PENDIENTES" styleClass="kpi-label"/>
+            <Label fx:id="lblPedidos" text="--" styleClass="kpi-value"/>
+            <Label text="Órdenes de compra" styleClass="kpi-sub"/>
+        </VBox>
+    </GridPane>
+
+    <HBox spacing="15" VBox.vgrow="ALWAYS">
+        <VBox styleClass="toolbar" HBox.hgrow="ALWAYS" spacing="5" maxHeight="280">
+            <Label text="Distribución del Inventario" styleClass="page-title" style="-fx-font-size: 13px; -fx-padding: 5 0 0 10;"/>
+            <PieChart fx:id="chartInventario" legendSide="BOTTOM" VBox.vgrow="ALWAYS" labelsVisible="false"/>
+        </VBox>
+
+        <VBox styleClass="toolbar" HBox.hgrow="ALWAYS" spacing="5" maxHeight="280">
+            <Label text="Rendimiento de Ventas (7 días)" styleClass="page-title" style="-fx-font-size: 13px; -fx-padding: 5 0 0 10;"/>
+            <BarChart fx:id="chartVentas" legendVisible="false" VBox.vgrow="ALWAYS">
+                <xAxis><CategoryAxis side="BOTTOM" /></xAxis>
+                <yAxis><NumberAxis side="LEFT" /></yAxis>
+            </BarChart>
+        </VBox>
+    </HBox>
+
+</VBox>

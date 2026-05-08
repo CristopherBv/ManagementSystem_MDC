@@ -78,4 +78,12 @@ public class ProductoDaoCsv extends AbstractDaoCsv<Producto> {
         }
         return null;
     }
+
+    /**
+     * Elimina un producto por su ID alfanumérico (ej: "M-001")
+     */
+    public boolean eliminar(String idProducto) {
+        return gestionmats.utils.CsvUtils.eliminarLinea(this.ruta, idProducto);
+    }
+
 }
