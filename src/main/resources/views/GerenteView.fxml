@@ -56,12 +56,17 @@
 
     <center>
         <VBox styleClass="main-content">
-            <HBox styleClass="topbar" alignment="CENTER_LEFT" prefHeight="64">
+            <HBox styleClass="topbar" alignment="CENTER_LEFT">
+
+                <Pane styleClass="topbar-accent" prefWidth="5" maxHeight="40"/>
+
                 <VBox styleClass="topbar-titles" spacing="2">
                     <Label fx:id="lblPageTitle" text="Panel de Control" styleClass="page-title"/>
-                    <Label fx:id="lblPageSub" text="Bienvenido, Diego Gervacio" styleClass="page-subtitle"/>
+                    <Label fx:id="lblPageSub" text="Bienvenido, Usuario" styleClass="page-subtitle"/>
                 </VBox>
+
                 <Pane HBox.hgrow="ALWAYS"/>
+
                 <VBox alignment="CENTER_RIGHT" spacing="2" styleClass="topbar-time">
                     <Label fx:id="lblFecha" text="--" styleClass="time-date"/>
                     <Label fx:id="lblHora" text="00:00" styleClass="time-clock"/>
