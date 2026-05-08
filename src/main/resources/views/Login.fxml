@@ -201,7 +201,7 @@
                 <!-- BOTÓN DE INGRESO -->
                 <StackPane prefWidth="300" prefHeight="48">
                     <Button fx:id="btnLogin"
-                            text="INGRESAR AL SISTEMA"
+                            text="INGRESAR"
                             prefWidth="300"
                             prefHeight="48"
                             onAction="#handleLogin"
