@@ -6,7 +6,7 @@
 
 <VBox spacing="18" styleClass="view-panel"
       xmlns="http://javafx.com/javafx/17.0.2" xmlns:fx="http://javafx.com/fxml/1"
-      fx:controller="gestionmats.controllers.GerenteDashboardController">
+      fx:controller="gestionmats.controllers.gerente.GerenteDashboardController">
 
     <GridPane hgap="15" vgap="15">
         <columnConstraints>

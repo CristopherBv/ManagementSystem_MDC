@@ -6,10 +6,10 @@
 
 <BorderPane prefHeight="680.0" prefWidth="1160.0"
             styleClass="root-pane"
-            stylesheets="@../css/gerente.css"
+            stylesheets="@../../css/gerente.css"
             xmlns="http://javafx.com/javafx/17.0.2"
             xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="gestionmats.controllers.GerenteController">
+            fx:controller="gestionmats.controllers.gerente.GerenteController">
 
     <left>
         <VBox styleClass="sidebar" prefWidth="220" spacing="0">

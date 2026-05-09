@@ -86,4 +86,36 @@ public class ProductoDaoCsv extends AbstractDaoCsv<Producto> {
         return gestionmats.utils.CsvUtils.eliminarLinea(this.ruta, idProducto);
     }
 
+    /**
+     * Genera automáticamente el siguiente ID disponible (ej. si existe M008, devuelve M009).
+     */
+    public String generarSiguienteId() {
+        int maxNumero = 0;
+        for (Producto p : this.listarTodos()) {
+            try {
+                // Quitamos la "M" y convertimos el resto a número ("M008" -> 8)
+                int numeroActual = Integer.parseInt(p.getIdProducto().replace("M", ""));
+                if (numeroActual > maxNumero) {
+                    maxNumero = numeroActual;
+                }
+            } catch (NumberFormatException e) {
+                // Ignorar si hay algún ID con formato extraño
+            }
+        }
+        // Retornamos el máximo + 1 con formato de 3 dígitos (ej. M009)
+        return String.format("M%03d", maxNumero + 1);
+    }
+
+    /**
+     * Verifica si ya existe un producto con exactamente el mismo nombre (ignorando mayúsculas).
+     */
+    public boolean existeProductoPorNombreExacto(String nombreNuevo) {
+        for (Producto p : this.listarTodos()) {
+            if (p.getNombre().equalsIgnoreCase(nombreNuevo.trim())) {
+                return true;
+            }
+        }
+        return false;
+    }
+
 }

@@ -6,7 +6,7 @@
 <VBox spacing="14" styleClass="view-panel"
       xmlns="http://javafx.com/javafx/17.0.2"
       xmlns:fx="http://javafx.com/fxml/1"
-      fx:controller="gestionmats.controllers.GerenteInventarioController">
+      fx:controller="gestionmats.controllers.gerente.GerenteInventarioController">
 
     <HBox spacing="14">
         <VBox styleClass="kpi-card, kpi-orange" HBox.hgrow="ALWAYS">

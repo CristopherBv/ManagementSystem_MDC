@@ -1,9 +1,9 @@
 idProducto,nombre,marca,categoria,precioVenta,stockMaximo,stockActual,unidadMedida,descuento
-M-001,Cemento Portland,Cemex,Cemento y concreto,240.0,200,200,Sacos,0.0
-M-002,Varilla 3/8 Grado 40,Sicartsa,Acero y metales,180.0,150,140,Barras,0.0
-M-003,Block de 15x20x40,Mitza,Cemento y concreto,15.5,500,60,Piezas,0.0
-M-004,Madera pino 2x4,Local,Madera y derivados,120.0,100,8,Tablas,0.0
-M-005,Impermeabilizante 19L,Fester,Impermeabilizantes,850.0,50,45,Cubetas,0.0
-M-006,Tubo PVC 4 hidráulico,Amanco,Tubería y plomería,160.0,100,10,Piezas,0.0
-M-007,Arena fina (m3),Triturados Mid,Cemento y concreto,400.0,50,2,m3,0.0
-M-008,Grava 3/4 (m3),Triturados Mid,Cemento y concreto,420.0,50,12,m3,0.0
+M001,Cemento Portland,Cemex,Cemento y concreto,240.0,200,200,Sacos,0.0
+M002,Varilla 3/8 Grado 40,Sicartsa,Acero y metales,180.0,150,140,Barras,0.0
+M003,Block de 15x20x40,Mitza,Cemento y concreto,15.5,500,60,Piezas,0.0
+M004,Madera pino 2x4,Local,Madera y derivados,120.0,100,8,Tablas,0.0
+M005,Impermeabilizante 19L,Fester,Impermeabilizantes,850.0,50,45,Cubetas,0.0
+M006,Tubo PVC 4 hidráulico,Amanco,Tubería y plomería,160.0,100,10,Piezas,0.0
+M007,Arena fina (m3),Triturados Mid,Cemento y concreto,400.0,50,2,m3,0.0
+M008,Grava 3/4 (m3),Triturados Mid,Cemento y concreto,420.0,50,12,m3,0.0
