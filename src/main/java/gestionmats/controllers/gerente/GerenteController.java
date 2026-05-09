@@ -112,8 +112,10 @@ public class GerenteController implements Initializable {
         UIComponents.showNotification("Módulo de Clientes en desarrollo", "info");
     }
 
-    @FXML private void showPedidos() { UIComponents.showNotification("Próximamente", "info"); }
-    @FXML private void showProveedores() {
+    @FXML private void showPedidos() {
+        loadModule("/views/gerente/GerentePedidosView.fxml", navPedidos, "Historial de Pedidos", "Gestión de abastecimiento y órdenes de compra");
+    }
+     @FXML private void showProveedores() {
         loadModule("/views/gerente/GerenteProveedorView.fxml", navProveedores, "Directorio de Proveedores", "Gestión de empresas suministradoras");
     }
 
