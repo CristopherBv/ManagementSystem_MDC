@@ -23,6 +23,7 @@ public class GerenteInventarioController implements Initializable {
     @FXML private ComboBox<String> cmbCategoria;
     @FXML private Label kpiStock, kpiAlertas, lblTotal;
     @FXML private Button btnAgregar, btnEditar, btnEliminar, btnExportar, btnActualizar;
+    @FXML private TableColumn<Producto, String> colPrecio, colPrecioDesc;
 
     private ObservableList<Producto> allItems;
     private FilteredList<Producto> filteredItems;
@@ -49,6 +50,37 @@ public class GerenteInventarioController implements Initializable {
         colId.setCellValueFactory(d -> new javafx.beans.property.SimpleStringProperty(d.getValue().getIdProducto()));
         colNombre.setCellValueFactory(d -> new javafx.beans.property.SimpleStringProperty(d.getValue().getNombre()));
         colMarca.setCellValueFactory(d -> new javafx.beans.property.SimpleStringProperty(d.getValue().getMarca()));
+        // Precio Regular formateado con el símbolo de pesos
+        colPrecio.setCellValueFactory(d -> new javafx.beans.property.SimpleStringProperty(String.format("$%.2f", d.getValue().getPrecioVenta())));
+
+        // Precio Final (Calculando el descuento al vuelo)
+        colPrecioDesc.setCellValueFactory(d -> {
+            double precio = d.getValue().getPrecioVenta();
+            double descuento = d.getValue().getDescuento(); // Asumiendo que es porcentaje (ej. 10.0)
+            double precioFinal = precio - (precio * (descuento / 100.0));
+            return new javafx.beans.property.SimpleStringProperty(String.format("$%.2f", precioFinal));
+        });
+
+        // Darle color verde al Precio Final si tiene un descuento activo
+        colPrecioDesc.setCellFactory(column -> new TableCell<>() {
+            @Override
+            protected void updateItem(String item, boolean empty) {
+                super.updateItem(item, empty);
+                if (empty || item == null) {
+                    setText(null);
+                    setStyle("");
+                } else {
+                    setText(item);
+                    // Obtenemos el producto de esta fila
+                    Producto p = getTableView().getItems().get(getIndex());
+                    if (p.getDescuento() > 0) {
+                        setStyle("-fx-text-fill: #4ade80; -fx-font-weight: bold;"); // Verde resaltado
+                    } else {
+                        setStyle("-fx-text-fill: #9ca3af;"); // Gris normal
+                    }
+                }
+            }
+        });
         colCantidad.setCellValueFactory(d -> new javafx.beans.property.SimpleObjectProperty<>(d.getValue().getStockActual()));
         colUnidad.setCellValueFactory(d -> new javafx.beans.property.SimpleStringProperty(d.getValue().getUnidadMedida()));
         colStock.setCellValueFactory(d -> new javafx.beans.property.SimpleObjectProperty<>(d.getValue().calcularStockMinimo()));
