@@ -179,7 +179,7 @@
                         <VBox alignment="CENTER_RIGHT" spacing="4">
                             <HBox spacing="15">
                                 <Label text="Subtotal:" styleClass="footer-info"/>
-                                <Label fx:id="lblSubtotal" text="$ 0.00" styleClass="kpi-value" style="-fx-font-size: 18px;"/>
+                                <Label fx:id="lblSubtotal" text=" 0.00" styleClass="kpi-value" style="-fx-font-size: 18px;"/>
                             </HBox>
                             <HBox spacing="15">
                                 <Label text="Descuento:" styleClass="footer-info"/>
@@ -187,7 +187,7 @@
                             </HBox>
                             <HBox spacing="15">
                                 <Label text="TOTAL:" styleClass="footer-info" style="-fx-font-weight: bold;"/>
-                                <Label fx:id="lblTotal" text="$ 0.00" styleClass="kpi-value" style="-fx-font-size: 24px; -fx-text-fill: #F58220;"/>
+                                <Label fx:id="lblTotal" text=" 0.00" styleClass="kpi-value" style="-fx-font-size: 24px; -fx-text-fill: #F58220;"/>
                             </HBox>
                         </VBox>
                     </HBox>
@@ -198,7 +198,7 @@
                         <ComboBox fx:id="cmbMetodoPago" prefWidth="120" styleClass="combo-input"/>
                         <Label text="Tipo de venta:" styleClass="field-label"/>
                         <ComboBox fx:id="cmbTipoVenta" prefWidth="120" styleClass="combo-input"/>
-                        <Button fx:id="btnAplicarDescuento" text="% Aplicar descuento"
+                        <Button fx:id="btnAplicarDescuento" text="Aplicar descuento"
                                 onAction="#handleAplicarDescuento"
                                 prefHeight="36" styleClass="btn-edit"/>
                         <Button fx:id="btnFinalizarVenta" text="💰 Finalizar venta"

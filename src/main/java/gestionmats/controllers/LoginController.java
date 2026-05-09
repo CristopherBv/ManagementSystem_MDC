@@ -98,7 +98,7 @@ public class LoginController implements Initializable {
             // 3. Redirigimos según el rol
             switch (rol) {
                 case GERENTE:
-                    cargarVistaUsuario("/views/GerenteView.fxml", "SDG MDC - Panel de Gerente");
+                    cargarVistaUsuario("/views/gerente/GerenteView.fxml", "SDG MDC - Panel de Gerente");
                     break;
                 case VENDEDOR:
                     cargarVistaUsuario("/views/VendedorView.fxml", "SDG MDC - Punto de Venta");

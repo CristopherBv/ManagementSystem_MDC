@@ -4,6 +4,7 @@ module gestionmats {
 
     // Permitir que JavaFX acceda a los archivos FXML y CSS en resources
     opens gestionmats to javafx.fxml;
+    opens gestionmats.model to javafx.base;
 
     // CRUCIAL: Abre el paquete de controladores para que el FXMLLoader
     // pueda inyectar los @FXML de LoginController y otros.
@@ -15,4 +16,5 @@ module gestionmats {
 
     // Exporta el paquete principal para que el launcher funcione
     exports gestionmats;
+    opens gestionmats.controllers.gerente to javafx.fxml;
 }
