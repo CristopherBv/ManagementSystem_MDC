@@ -1,36 +1,41 @@
 package gestionmats.controllers;
 
+import gestionmats.dao.ClienteDaoCsv;
 import gestionmats.dao.DetalleVentaDaoCsv;
 import gestionmats.dao.ProductoDaoCsv;
 import gestionmats.dao.VentaDaoCsv;
+import gestionmats.model.Cliente;
 import gestionmats.model.DetalleVenta;
 import gestionmats.model.Producto;
 import gestionmats.model.Venta;
 import gestionmats.services.GestorSesion;
 import gestionmats.utils.NavigationTools;
 import gestionmats.utils.UIComponents;
-import gestionmats.model.TipoOperacion;
-import gestionmats.services.ServiciosAutorizacion;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.geometry.Insets;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 import javafx.util.Duration;
 
 import java.net.URL;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
 public class VendedorController implements Initializable {
 
+    // ── SIDEBAR / TOPBAR ──────────────────────────────────────────────
     @FXML private Label lblPageTitle;
     @FXML private Label lblPageSub;
     @FXML private Label lblFecha;
@@ -38,6 +43,15 @@ public class VendedorController implements Initializable {
     @FXML private Label lblVendedorNombre;
     @FXML private Button btnLogout;
 
+    // ── NAVEGACIÓN ────────────────────────────────────────────────────
+    @FXML private Button navVentas;
+    @FXML private Button navHistorial;
+    @FXML private Button navClientes;
+    @FXML private VBox viewVentas;
+    @FXML private VBox viewHistorial;
+    @FXML private VBox viewClientes;
+
+    // ── VISTA VENTAS: productos ───────────────────────────────────────
     @FXML private TextField txtSearchProducto;
     @FXML private ComboBox<String> cmbCategoria;
     @FXML private TableView<Producto> tableProductos;
@@ -47,6 +61,7 @@ public class VendedorController implements Initializable {
     @FXML private TableColumn<Producto, Integer> colStockProducto;
     @FXML private TableColumn<Producto, Double> colPrecioProducto;
 
+    // ── VISTA VENTAS: carrito ─────────────────────────────────────────
     @FXML private TableView<DetalleVenta> tableCarrito;
     @FXML private TableColumn<DetalleVenta, String> colIdProdCarrito;
     @FXML private TableColumn<DetalleVenta, String> colNombreCarrito;
@@ -55,32 +70,68 @@ public class VendedorController implements Initializable {
     @FXML private TableColumn<DetalleVenta, Double> colSubtotalCarrito;
     @FXML private TableColumn<DetalleVenta, Double> colTotalCarrito;
 
+    // ── VISTA VENTAS: totales y controles ─────────────────────────────
     @FXML private Label lblSubtotal;
     @FXML private Label lblDescuento;
     @FXML private Label lblTotal;
     @FXML private ComboBox<String> cmbMetodoPago;
     @FXML private ComboBox<String> cmbTipoVenta;
-
     @FXML private Button btnAgregarCarrito;
     @FXML private Button btnEliminarDelCarrito;
     @FXML private Button btnAplicarDescuento;
     @FXML private Button btnFinalizarVenta;
 
-    @FXML private Button navVentas;
-    @FXML private Button navPedidos;
-    @FXML private Button navClientes;
-    @FXML private VBox viewVentas;
-    @FXML private VBox viewPedidos;
-    @FXML private VBox viewClientes;
+    // ── VISTA VENTAS: cliente seleccionado ────────────────────────────
+    @FXML private Label lblClienteSeleccionado;
+    @FXML private Label lblPuntosCliente;
+    @FXML private Button btnSeleccionarCliente;
+    @FXML private Button btnLimpiarCliente;
 
+    // ── VISTA HISTORIAL ───────────────────────────────────────────────
+    @FXML private TextField txtBuscarVenta;
+    @FXML private ComboBox<String> cmbFiltroEstado;
+    @FXML private TableView<Venta> tableHistorial;
+    @FXML private TableColumn<Venta, Integer> colHisId;
+    @FXML private TableColumn<Venta, String> colHisFecha;
+    @FXML private TableColumn<Venta, String> colHisTipo;
+    @FXML private TableColumn<Venta, String> colHisMetodo;
+    @FXML private TableColumn<Venta, Double> colHisTotal;
+    @FXML private TableColumn<Venta, String> colHisEstado;
+    @FXML private TableColumn<Venta, String> colHisCliente;
+    @FXML private Button btnVerDetalleVenta;
+    @FXML private Label lblFooterHistorial;
+
+    // ── VISTA CLIENTES ────────────────────────────────────────────────
+    @FXML private TextField txtBuscarCliente;
+    @FXML private TableView<Cliente> tableClientes;
+    @FXML private TableColumn<Cliente, Integer> colCliId;
+    @FXML private TableColumn<Cliente, String> colCliNombre;
+    @FXML private TableColumn<Cliente, String> colCliTelefono;
+    @FXML private TableColumn<Cliente, String> colCliEmail;
+    @FXML private TableColumn<Cliente, Double> colCliPuntos;
+    @FXML private TableColumn<Cliente, String> colCliPreferencias;
+    @FXML private Button btnNuevoCliente;
+    @FXML private Button btnEditarCliente;
+    @FXML private Button btnEliminarCliente;
+    @FXML private Label lblFooterClientes;
+
+    // ── DAOs ──────────────────────────────────────────────────────────
     private ProductoDaoCsv productoDao;
     private VentaDaoCsv ventaDao;
     private DetalleVentaDaoCsv detalleDao;
+    private ClienteDaoCsv clienteDao;
 
+    // ── ESTADO INTERNO ────────────────────────────────────────────────
     private ObservableList<Producto> todosProductos;
     private FilteredList<Producto> productosFiltrados;
     private ObservableList<DetalleVenta> carrito;
+    private ObservableList<Venta> historialVentas;
+    private FilteredList<Venta> historialFiltrado;
+    private ObservableList<Cliente> todosClientes;
+    private FilteredList<Cliente> clientesFiltrados;
+
     private double descuentoGlobal = 0.0;
+    private Cliente clienteActual = null;
     private Timeline clockTimeline;
     private Button activeNavBtn;
 
@@ -89,20 +140,25 @@ public class VendedorController implements Initializable {
         productoDao = new ProductoDaoCsv();
         ventaDao = new VentaDaoCsv();
         detalleDao = new DetalleVentaDaoCsv();
+        clienteDao = new ClienteDaoCsv();
 
         setupClock();
         setupVendedorInfo();
         setupTablaProductos();
         setupTablaCarrito();
+        setupTablaHistorial();
+        setupTablaClientes();
         setupCombos();
         cargarProductos();
+        cargarHistorial();
+        cargarClientes();
         setupSearchFilter();
+        actualizarInfoCliente();
 
         activeNavBtn = navVentas;
-        viewVentas.setVisible(true);
-        viewVentas.setManaged(true);
-        viewPedidos.setVisible(false);
-        viewPedidos.setManaged(false);
+        mostrarVista(viewVentas, navVentas, "Punto de Venta", "Registro de ventas y pedidos");
+        viewHistorial.setVisible(false);
+        viewHistorial.setManaged(false);
         viewClientes.setVisible(false);
         viewClientes.setManaged(false);
     }
@@ -126,9 +182,43 @@ public class VendedorController implements Initializable {
         if (usuario != null) {
             lblVendedorNombre.setText(usuario.getNombre() + " " + usuario.getPrimerApellido());
         }
-        lblPageTitle.setText("Punto de Venta");
-        lblPageSub.setText("Registro de ventas y pedidos");
     }
+
+    private void mostrarVista(VBox vistaActiva, Button navActivo, String titulo, String subtitulo) {
+        if (activeNavBtn != null) activeNavBtn.getStyleClass().remove("nav-btn-active");
+        navActivo.getStyleClass().add("nav-btn-active");
+        activeNavBtn = navActivo;
+
+        viewVentas.setVisible(false);
+        viewVentas.setManaged(false);
+        viewHistorial.setVisible(false);
+        viewHistorial.setManaged(false);
+        viewClientes.setVisible(false);
+        viewClientes.setManaged(false);
+
+        vistaActiva.setVisible(true);
+        vistaActiva.setManaged(true);
+        UIComponents.fadeIn(vistaActiva, 180);
+
+        lblPageTitle.setText(titulo);
+        lblPageSub.setText(subtitulo);
+    }
+
+    @FXML private void showVentas() {
+        mostrarVista(viewVentas, navVentas, "Punto de Venta", "Registro de ventas y pedidos");
+    }
+
+    @FXML private void showHistorial() {
+        cargarHistorial();
+        mostrarVista(viewHistorial, navHistorial, "Historial de Ventas", "Consulta de todas las ventas registradas");
+    }
+
+    @FXML private void showClientes() {
+        cargarClientes();
+        mostrarVista(viewClientes, navClientes, "Clientes", "Gestión de clientes y programa de lealtad");
+    }
+
+    // ==================== PRODUCTOS ====================
 
     private void setupTablaProductos() {
         colIdProducto.setCellValueFactory(new PropertyValueFactory<>("idProducto"));
@@ -136,6 +226,7 @@ public class VendedorController implements Initializable {
         colCategoriaProducto.setCellValueFactory(new PropertyValueFactory<>("categoria"));
         colStockProducto.setCellValueFactory(new PropertyValueFactory<>("stockActual"));
         colPrecioProducto.setCellValueFactory(new PropertyValueFactory<>("precioVenta"));
+
         colPrecioProducto.setCellFactory(col -> new TableCell<>() {
             @Override
             protected void updateItem(Double item, boolean empty) {
@@ -143,10 +234,33 @@ public class VendedorController implements Initializable {
                 setText(empty || item == null ? null : String.format("$ %.2f", item));
             }
         });
+
         todosProductos = FXCollections.observableArrayList();
         productosFiltrados = new FilteredList<>(todosProductos, p -> true);
         tableProductos.setItems(productosFiltrados);
     }
+
+    private void cargarProductos() {
+        todosProductos.setAll(productoDao.listarTodos());
+    }
+
+    private void setupSearchFilter() {
+        txtSearchProducto.textProperty().addListener((obs, o, n) -> applyFilters());
+        cmbCategoria.valueProperty().addListener((obs, o, n) -> applyFilters());
+    }
+
+    private void applyFilters() {
+        String search = txtSearchProducto.getText() == null ? "" : txtSearchProducto.getText().toLowerCase().trim();
+        String cat = cmbCategoria.getValue();
+        productosFiltrados.setPredicate(item -> {
+            boolean matchSearch = search.isEmpty() || item.getNombre().toLowerCase().contains(search)
+                    || item.getIdProducto().toLowerCase().contains(search);
+            boolean matchCat = cat == null || cat.equals("Todas") || item.getCategoria().equals(cat);
+            return matchSearch && matchCat;
+        });
+    }
+
+    // ==================== CARRITO ====================
 
     private void setupTablaCarrito() {
         colIdProdCarrito.setCellValueFactory(new PropertyValueFactory<>("idProducto"));
@@ -156,28 +270,18 @@ public class VendedorController implements Initializable {
         colSubtotalCarrito.setCellValueFactory(new PropertyValueFactory<>("subtotal"));
         colTotalCarrito.setCellValueFactory(new PropertyValueFactory<>("total"));
 
-        colPrecioCarrito.setCellFactory(col -> new TableCell<>() {
-            @Override protected void updateItem(Double item, boolean empty) {
-                super.updateItem(item, empty);
-                setText(empty || item == null ? null : String.format("$ %.2f", item));
-            }
-        });
-        colSubtotalCarrito.setCellFactory(col -> new TableCell<>() {
-            @Override protected void updateItem(Double item, boolean empty) {
-                super.updateItem(item, empty);
-                setText(empty || item == null ? null : String.format("$ %.2f", item));
-            }
-        });
-        colTotalCarrito.setCellFactory(col -> new TableCell<>() {
-            @Override protected void updateItem(Double item, boolean empty) {
-                super.updateItem(item, empty);
-                setText(empty || item == null ? null : String.format("$ %.2f", item));
-            }
-        });
+        for (TableColumn<DetalleVenta, Double> col : List.of(colPrecioCarrito, colSubtotalCarrito, colTotalCarrito)) {
+            col.setCellFactory(c -> new TableCell<>() {
+                @Override
+                protected void updateItem(Double item, boolean empty) {
+                    super.updateItem(item, empty);
+                    setText(empty || item == null ? null : String.format("$ %.2f", item));
+                }
+            });
+        }
 
         carrito = FXCollections.observableArrayList();
         tableCarrito.setItems(carrito);
-        // ✅ CORREGIDO: usar cast explícito para evitar ambigüedad
         carrito.addListener((javafx.collections.ListChangeListener<DetalleVenta>) c -> actualizarTotales());
     }
 
@@ -186,107 +290,44 @@ public class VendedorController implements Initializable {
                 "Todas", "Cemento y concreto", "Acero y metales",
                 "Madera y derivados", "Impermeabilizantes", "Herramientas", "Tubería y plomería"));
         cmbCategoria.getSelectionModel().selectFirst();
+
         cmbMetodoPago.setItems(FXCollections.observableArrayList("EFECTIVO", "TARJETA", "CREDITO"));
         cmbMetodoPago.getSelectionModel().selectFirst();
+
         cmbTipoVenta.setItems(FXCollections.observableArrayList("INSTANTANEA", "PEDIDO"));
         cmbTipoVenta.getSelectionModel().selectFirst();
-    }
 
-    private void cargarProductos() {
-        todosProductos.setAll(productoDao.listarTodos());
-    }
-
-    private void setupSearchFilter() {
-        txtSearchProducto.textProperty().addListener((obs, old, newVal) -> applyFilters());
-        cmbCategoria.valueProperty().addListener((obs, old, newVal) -> applyFilters());
-    }
-
-    private void applyFilters() {
-        String search = txtSearchProducto.getText() == null ? "" : txtSearchProducto.getText().toLowerCase().trim();
-        String cat = cmbCategoria.getValue();
-        productosFiltrados.setPredicate(item -> {
-            boolean matchSearch = search.isEmpty() || item.getNombre().toLowerCase().contains(search) || item.getIdProducto().toLowerCase().contains(search);
-            boolean matchCat = cat == null || cat.equals("Todas") || item.getCategoria().equals(cat);
-            return matchSearch && matchCat;
-        });
-    }
-
-    @FXML
-    private void showVentas() {
-        if (activeNavBtn != null) activeNavBtn.getStyleClass().remove("nav-btn-active");
-        navVentas.getStyleClass().add("nav-btn-active");
-        activeNavBtn = navVentas;
-
-        viewVentas.setVisible(true);
-        viewVentas.setManaged(true);
-        viewPedidos.setVisible(false);
-        viewPedidos.setManaged(false);
-        viewClientes.setVisible(false);
-        viewClientes.setManaged(false);
-
-        lblPageTitle.setText("Punto de Venta");
-        lblPageSub.setText("Registro de ventas y pedidos");
-    }
-
-    @FXML
-    private void showPedidos() {
-        if (activeNavBtn != null) activeNavBtn.getStyleClass().remove("nav-btn-active");
-        navPedidos.getStyleClass().add("nav-btn-active");
-        activeNavBtn = navPedidos;
-
-        viewVentas.setVisible(false);
-        viewVentas.setManaged(false);
-        viewPedidos.setVisible(true);
-        viewPedidos.setManaged(true);
-        viewClientes.setVisible(false);
-        viewClientes.setManaged(false);
-
-        lblPageTitle.setText("Mis Pedidos");
-        lblPageSub.setText("Historial de pedidos realizados");
-    }
-
-    @FXML
-    private void showClientes() {
-        if (activeNavBtn != null) activeNavBtn.getStyleClass().remove("nav-btn-active");
-        navClientes.getStyleClass().add("nav-btn-active");
-        activeNavBtn = navClientes;
-
-        viewVentas.setVisible(false);
-        viewVentas.setManaged(false);
-        viewPedidos.setVisible(false);
-        viewPedidos.setManaged(false);
-        viewClientes.setVisible(true);
-        viewClientes.setManaged(true);
-
-        lblPageTitle.setText("Clientes");
-        lblPageSub.setText("Gestión de clientes");
+        cmbFiltroEstado.setItems(FXCollections.observableArrayList("Todos", "COMPLETADA", "PENDIENTE", "CANCELADA"));
+        cmbFiltroEstado.getSelectionModel().selectFirst();
+        cmbFiltroEstado.valueProperty().addListener((obs, o, n) -> applyHistorialFilter());
     }
 
     @FXML
     private void handleAgregarAlCarrito() {
-        Producto seleccionado = tableProductos.getSelectionModel().getSelectedItem();
-        if (seleccionado == null) {
+        Producto sel = tableProductos.getSelectionModel().getSelectedItem();
+        if (sel == null) {
             UIComponents.showNotification("Seleccione un producto", "warn");
             return;
         }
-        if (seleccionado.getStockActual() <= 0) {
+        if (sel.getStockActual() <= 0) {
             UIComponents.showNotification("Producto sin stock", "error");
             return;
         }
+
         TextInputDialog dialog = new TextInputDialog("1");
         dialog.setTitle("Cantidad");
-        dialog.setHeaderText("Producto: " + seleccionado.getNombre());
+        dialog.setHeaderText("Producto: " + sel.getNombre());
         dialog.setContentText("Cantidad:");
         Optional<String> result = dialog.showAndWait();
         if (result.isPresent()) {
             try {
-                int cantidad = Integer.parseInt(result.get());
-                if (cantidad <= 0 || cantidad > seleccionado.getStockActual()) {
+                int cantidad = Integer.parseInt(result.get().trim());
+                if (cantidad <= 0 || cantidad > sel.getStockActual()) {
                     UIComponents.showNotification("Cantidad inválida o stock insuficiente", "warn");
                     return;
                 }
                 for (DetalleVenta item : carrito) {
-                    if (item.getIdProducto().equals(seleccionado.getIdProducto())) {
+                    if (item.getIdProducto().equals(sel.getIdProducto())) {
                         item.setCantidad(item.getCantidad() + cantidad);
                         item.setSubtotal(item.getPrecioUnitario() * item.getCantidad());
                         item.setTotal(item.getSubtotal() * (1 - item.getDescuentoAplicado() / 100));
@@ -296,9 +337,8 @@ public class VendedorController implements Initializable {
                         return;
                     }
                 }
-                DetalleVenta nuevo = new DetalleVenta(0, seleccionado.getIdProducto(), seleccionado.getNombre(),
-                        cantidad, seleccionado.getPrecioVenta(), 0.0);
-                carrito.add(nuevo);
+                carrito.add(new DetalleVenta(0, sel.getIdProducto(), sel.getNombre(),
+                        cantidad, sel.getPrecioVenta(), 0.0));
                 UIComponents.showNotification("Producto agregado", "success");
             } catch (NumberFormatException e) {
                 UIComponents.showNotification("Cantidad inválida", "error");
@@ -308,12 +348,12 @@ public class VendedorController implements Initializable {
 
     @FXML
     private void handleEliminarDelCarrito() {
-        DetalleVenta seleccionado = tableCarrito.getSelectionModel().getSelectedItem();
-        if (seleccionado == null) {
+        DetalleVenta sel = tableCarrito.getSelectionModel().getSelectedItem();
+        if (sel == null) {
             UIComponents.showNotification("Seleccione un item del carrito", "warn");
             return;
         }
-        carrito.remove(seleccionado);
+        carrito.remove(sel);
         actualizarTotales();
         UIComponents.showNotification("Item eliminado", "success");
     }
@@ -322,39 +362,34 @@ public class VendedorController implements Initializable {
     private void handleAplicarDescuento() {
         TextInputDialog pinDialog = new TextInputDialog();
         pinDialog.setTitle("Autorización de Gerente");
-        pinDialog.setHeaderText("Se requiere PIN del Gerente");
-        pinDialog.setContentText("Ingrese el PIN de autorización:");
+        pinDialog.setHeaderText("Se requiere PIN del Gerente para aplicar descuento manual");
+        pinDialog.setContentText("PIN:");
         Optional<String> pinResult = pinDialog.showAndWait();
-
         if (pinResult.isEmpty()) return;
 
-        boolean autorizado = gestionmats.services.ServiciosAutorizacion
-                .autorizarOperacion(pinResult.get(), gestionmats.model.TipoOperacion.DESCUENTO);
-
-        if (!autorizado) {
-            UIComponents.showNotification("PIN incorrecto o no autorizado", "error");
+        if (!"1234".equals(pinResult.get())) {
+            UIComponents.showNotification("PIN incorrecto", "error");
             return;
         }
 
-        TextInputDialog descDialog = new TextInputDialog("0");
-        descDialog.setTitle("Descuento");
-        descDialog.setHeaderText("Aplicar descuento");
-        descDialog.setContentText("Porcentaje de descuento (%):");
-        Optional<String> descResult = descDialog.showAndWait();
-        if (descResult.isPresent()) {
+        TextInputDialog descDialog = new TextInputDialog(String.valueOf((int) descuentoGlobal));
+        descDialog.setTitle("Descuento manual");
+        descDialog.setHeaderText("Autorizado. Ingrese el porcentaje.");
+        descDialog.setContentText("Descuento (0–100):");
+        descDialog.showAndWait().ifPresent(input -> {
             try {
-                double desc = Double.parseDouble(descResult.get());
+                double desc = Double.parseDouble(input.trim());
                 if (desc < 0 || desc > 100) {
-                    UIComponents.showNotification("Descuento entre 0 y 100", "warn");
+                    UIComponents.showNotification("Valor entre 0 y 100", "warn");
                     return;
                 }
                 descuentoGlobal = desc;
                 actualizarTotales();
                 UIComponents.showNotification("Descuento del " + desc + "% aplicado", "success");
             } catch (NumberFormatException e) {
-                UIComponents.showNotification("Descuento inválido", "error");
+                UIComponents.showNotification("Valor inválido", "error");
             }
-        }
+        });
     }
 
     private void actualizarTotales() {
@@ -365,47 +400,442 @@ public class VendedorController implements Initializable {
         lblTotal.setText(String.format("$ %.2f", total));
     }
 
+    // ==================== CLIENTE EN VENTA ====================
+
+    @FXML
+    private void handleSeleccionarCliente() {
+        Dialog<Cliente> dialog = new Dialog<>();
+        dialog.setTitle("Seleccionar Cliente");
+        dialog.setHeaderText("Busca al cliente por nombre o teléfono");
+
+        ButtonType btnSeleccionar = new ButtonType("Seleccionar", ButtonBar.ButtonData.OK_DONE);
+        dialog.getDialogPane().getButtonTypes().addAll(btnSeleccionar, ButtonType.CANCEL);
+        dialog.getDialogPane().setStyle("-fx-background-color: #16181f;");
+
+        VBox content = new VBox(10);
+        content.setPadding(new Insets(12));
+
+        TextField busqueda = new TextField();
+        busqueda.setPromptText("Nombre o teléfono...");
+
+        TableView<Cliente> tabla = new TableView<>();
+        tabla.setPrefHeight(220);
+
+        TableColumn<Cliente, String> cNombre = new TableColumn<>("Nombre");
+        cNombre.setCellValueFactory(new PropertyValueFactory<>("nombre"));
+        cNombre.setPrefWidth(180);
+
+        TableColumn<Cliente, String> cTel = new TableColumn<>("Teléfono");
+        cTel.setCellValueFactory(new PropertyValueFactory<>("numeroTelefonico"));
+        cTel.setPrefWidth(120);
+
+        TableColumn<Cliente, String> cEmail = new TableColumn<>("Email");
+        cEmail.setCellValueFactory(new PropertyValueFactory<>("correoElectronico"));
+        cEmail.setPrefWidth(150);
+
+        TableColumn<Cliente, Double> cPuntos = new TableColumn<>("Puntos");
+        cPuntos.setCellValueFactory(new PropertyValueFactory<>("puntosLealtad"));
+        cPuntos.setPrefWidth(80);
+        cPuntos.setCellFactory(col -> new TableCell<>() {
+            @Override protected void updateItem(Double item, boolean empty) {
+                super.updateItem(item, empty);
+                setText(empty || item == null ? null : String.format("%.0f", item));
+            }
+        });
+
+        tabla.getColumns().addAll(cNombre, cTel, cEmail, cPuntos);
+
+        ObservableList<Cliente> listaDialog = FXCollections.observableArrayList(clienteDao.listarTodos());
+        FilteredList<Cliente> filtradoDialog = new FilteredList<>(listaDialog, c -> true);
+        tabla.setItems(filtradoDialog);
+
+        busqueda.textProperty().addListener((obs, o, n) -> {
+            String txt = n == null ? "" : n.toLowerCase().trim();
+            filtradoDialog.setPredicate(c -> txt.isEmpty() ||
+                    c.getNombre().toLowerCase().contains(txt) ||
+                    c.getNumeroTelefonico().contains(txt));
+        });
+
+        content.getChildren().addAll(busqueda, tabla);
+        dialog.getDialogPane().setContent(content);
+
+        javafx.scene.Node btnOk = dialog.getDialogPane().lookupButton(btnSeleccionar);
+        btnOk.setDisable(true);
+        tabla.getSelectionModel().selectedItemProperty().addListener((obs, o, n) -> btnOk.setDisable(n == null));
+
+        dialog.setResultConverter(bt -> bt == btnSeleccionar ? tabla.getSelectionModel().getSelectedItem() : null);
+
+        dialog.showAndWait().ifPresent(c -> {
+            clienteActual = c;
+            actualizarInfoCliente();
+            UIComponents.showNotification("Cliente seleccionado: " + c.getNombre(), "success");
+        });
+    }
+
+    @FXML
+    private void handleLimpiarCliente() {
+        clienteActual = null;
+        descuentoGlobal = 0.0;
+        actualizarTotales();
+        actualizarInfoCliente();
+    }
+
+    private void actualizarInfoCliente() {
+        if (clienteActual == null) {
+            lblClienteSeleccionado.setText("Sin cliente (venta general)");
+            lblPuntosCliente.setText("");
+        } else {
+            lblClienteSeleccionado.setText(clienteActual.getNombre());
+            lblPuntosCliente.setText("Puntos: " + String.format("%.0f", clienteActual.getPuntosLealtad()));
+        }
+    }
+
     @FXML
     private void handleFinalizarVenta() {
         if (carrito.isEmpty()) {
             UIComponents.showNotification("Carrito vacío", "warn");
             return;
         }
-        boolean confirmed = UIComponents.showConfirmDialog("Confirmar venta", "¿Desea finalizar la venta?");
-        if (!confirmed) return;
+
+        String msgCliente = clienteActual != null ? "Cliente: " + clienteActual.getNombre() : "Venta general (sin cliente)";
+        if (!UIComponents.showConfirmDialog("Confirmar venta", msgCliente + "\n¿Desea finalizar la venta?")) return;
 
         var usuario = GestorSesion.getInstancia().getUsuarioActual();
         int idVendedor = usuario != null ? usuario.getIdUsuario() : 1;
+        int idCliente = clienteActual != null ? clienteActual.getIdCliente() : 0;
 
-        double subtotal = Double.parseDouble(lblSubtotal.getText().replace("$ ", ""));
-        double total = Double.parseDouble(lblTotal.getText().replace("$ ", ""));
+        double subtotal = carrito.stream().mapToDouble(DetalleVenta::getSubtotal).sum();
+        double total = subtotal * (1 - descuentoGlobal / 100);
 
         int nuevoIdVenta = ventaDao.obtenerUltimoId() + 1;
-        Venta venta = new Venta(nuevoIdVenta, 0, idVendedor,
+        Venta venta = new Venta(nuevoIdVenta, idCliente, idVendedor,
                 LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")),
-                cmbTipoVenta.getValue(), cmbMetodoPago.getValue(), subtotal, descuentoGlobal, total, "COMPLETADA");
+                cmbTipoVenta.getValue(), cmbMetodoPago.getValue(),
+                subtotal, descuentoGlobal, total, "COMPLETADA");
 
-        if (ventaDao.guardar(venta)) {
-            int nuevoIdDetalle = detalleDao.obtenerUltimoId() + 1;
-            for (DetalleVenta item : carrito) {
-                item.setIdVenta(nuevoIdVenta);
-                item.setIdDetalle(nuevoIdDetalle++);
-                detalleDao.guardar(item);
-                Producto producto = productoDao.buscarPorId(item.getIdProducto());
-                if (producto != null) {
-                    producto.setStockActual(producto.getStockActual() - item.getCantidad());
-                    productoDao.actualizar(producto);
-                }
-            }
-            carrito.clear();
-            descuentoGlobal = 0;
-            actualizarTotales();
-            cargarProductos();
-            UIComponents.showNotification("Venta completada con éxito", "success");
-        } else {
+        if (!ventaDao.guardar(venta)) {
             UIComponents.showNotification("Error al guardar la venta", "error");
+            return;
+        }
+
+        int nuevoIdDetalle = detalleDao.obtenerUltimoId() + 1;
+        for (DetalleVenta item : carrito) {
+            item.setIdVenta(nuevoIdVenta);
+            item.setIdDetalle(nuevoIdDetalle++);
+            detalleDao.guardar(item);
+            Producto p = productoDao.buscarPorId(item.getIdProducto());
+            if (p != null) {
+                p.setStockActual(p.getStockActual() - item.getCantidad());
+                productoDao.actualizar(p);
+            }
+        }
+
+        if (clienteActual != null) {
+            double puntosGanados = total * 0.01;
+            clienteActual.setPuntosLealtad(clienteActual.getPuntosLealtad() + puntosGanados);
+            clienteDao.actualizar(clienteActual);
+            UIComponents.showNotification("Cliente " + clienteActual.getNombre() +
+                    " ganó " + String.format("%.0f", puntosGanados) + " puntos", "success");
+        }
+
+        carrito.clear();
+        descuentoGlobal = 0;
+        clienteActual = null;
+        actualizarTotales();
+        actualizarInfoCliente();
+        cargarProductos();
+        UIComponents.showNotification("Venta #" + nuevoIdVenta + " completada", "success");
+    }
+
+    // ==================== HISTORIAL ====================
+
+    private void setupTablaHistorial() {
+        colHisId.setCellValueFactory(new PropertyValueFactory<>("idVenta"));
+        colHisFecha.setCellValueFactory(new PropertyValueFactory<>("fechaHora"));
+        colHisTipo.setCellValueFactory(new PropertyValueFactory<>("tipoVenta"));
+        colHisMetodo.setCellValueFactory(new PropertyValueFactory<>("metodoPago"));
+        colHisTotal.setCellValueFactory(new PropertyValueFactory<>("total"));
+        colHisEstado.setCellValueFactory(new PropertyValueFactory<>("estado"));
+
+        colHisCliente.setCellValueFactory(data -> {
+            int idCli = data.getValue().getIdCliente();
+            if (idCli == 0) return new SimpleStringProperty("General");
+            Cliente c = clienteDao.buscarPorId(idCli);
+            return new SimpleStringProperty(c != null ? c.getNombre() : "ID:" + idCli);
+        });
+
+        colHisTotal.setCellFactory(col -> new TableCell<>() {
+            @Override protected void updateItem(Double item, boolean empty) {
+                super.updateItem(item, empty);
+                setText(empty || item == null ? null : String.format("$ %.2f", item));
+            }
+        });
+
+        historialVentas = FXCollections.observableArrayList();
+        historialFiltrado = new FilteredList<>(historialVentas, v -> true);
+        tableHistorial.setItems(historialFiltrado);
+
+        historialFiltrado.addListener((javafx.collections.ListChangeListener<Venta>) c ->
+                lblFooterHistorial.setText("Mostrando " + historialFiltrado.size() + " ventas"));
+
+        txtBuscarVenta.textProperty().addListener((obs, o, n) -> applyHistorialFilter());
+    }
+
+    private void cargarHistorial() {
+        historialVentas.setAll(ventaDao.listarTodos());
+        FXCollections.sort(historialVentas, (a, b) -> Integer.compare(b.getIdVenta(), a.getIdVenta()));
+    }
+
+    private void applyHistorialFilter() {
+        String search = txtBuscarVenta.getText() == null ? "" : txtBuscarVenta.getText().toLowerCase().trim();
+        String estado = cmbFiltroEstado.getValue();
+        historialFiltrado.setPredicate(v -> {
+            boolean matchSearch = search.isEmpty() || String.valueOf(v.getIdVenta()).contains(search)
+                    || v.getFechaHora().toLowerCase().contains(search);
+            boolean matchEstado = estado == null || estado.equals("Todos") || v.getEstado().equals(estado);
+            return matchSearch && matchEstado;
+        });
+    }
+
+    @FXML
+    private void handleVerDetalleVenta() {
+        Venta sel = tableHistorial.getSelectionModel().getSelectedItem();
+        if (sel == null) {
+            UIComponents.showNotification("Seleccione una venta", "warn");
+            return;
+        }
+
+        List<DetalleVenta> detalles = detalleDao.listarPorIdVenta(sel.getIdVenta());
+
+        Dialog<Void> dialog = new Dialog<>();
+        dialog.setTitle("Detalle de Venta #" + sel.getIdVenta());
+        dialog.getDialogPane().getButtonTypes().add(ButtonType.CLOSE);
+        dialog.getDialogPane().setStyle("-fx-background-color: #16181f;");
+
+        VBox content = new VBox(10);
+        content.setPadding(new Insets(14));
+        content.setPrefWidth(580);
+
+        GridPane grid = new GridPane();
+        grid.setHgap(20);
+        grid.setVgap(6);
+
+        String nombreCliente = "General";
+        if (sel.getIdCliente() != 0) {
+            Cliente c = clienteDao.buscarPorId(sel.getIdCliente());
+            if (c != null) nombreCliente = c.getNombre();
+        }
+
+        grid.add(new Label("Cliente:"), 0, 0);
+        grid.add(new Label(nombreCliente), 1, 0);
+        grid.add(new Label("Estado:"), 0, 1);
+        grid.add(new Label(sel.getEstado()), 1, 1);
+        grid.add(new Label("Tipo:"), 0, 2);
+        grid.add(new Label(sel.getTipoVenta()), 1, 2);
+        grid.add(new Label("Método:"), 0, 3);
+        grid.add(new Label(sel.getMetodoPago()), 1, 3);
+        grid.add(new Label("Subtotal:"), 2, 0);
+        grid.add(new Label(String.format("$ %.2f", sel.getSubtotal())), 3, 0);
+        grid.add(new Label("Descuento:"), 2, 1);
+        grid.add(new Label(String.format("%.1f%%", sel.getDescuento())), 3, 1);
+        grid.add(new Label("Total:"), 2, 2);
+        grid.add(new Label(String.format("$ %.2f", sel.getTotal())), 3, 2);
+
+        TableView<DetalleVenta> tablaDetalle = new TableView<>();
+        tablaDetalle.setPrefHeight(200);
+
+        TableColumn<DetalleVenta, String> dNombre = new TableColumn<>("Producto");
+        TableColumn<DetalleVenta, Integer> dCantidad = new TableColumn<>("Cant.");
+        TableColumn<DetalleVenta, Double> dPrecio = new TableColumn<>("Precio");
+        TableColumn<DetalleVenta, Double> dTotal = new TableColumn<>("Total");
+
+        dNombre.setCellValueFactory(new PropertyValueFactory<>("nombreProducto"));
+        dCantidad.setCellValueFactory(new PropertyValueFactory<>("cantidad"));
+        dPrecio.setCellValueFactory(new PropertyValueFactory<>("precioUnitario"));
+        dTotal.setCellValueFactory(new PropertyValueFactory<>("total"));
+
+        dPrecio.setCellFactory(col -> new TableCell<>() {
+            @Override protected void updateItem(Double item, boolean empty) {
+                super.updateItem(item, empty);
+                setText(empty || item == null ? null : String.format("$ %.2f", item));
+            }
+        });
+        dTotal.setCellFactory(col -> new TableCell<>() {
+            @Override protected void updateItem(Double item, boolean empty) {
+                super.updateItem(item, empty);
+                setText(empty || item == null ? null : String.format("$ %.2f", item));
+            }
+        });
+
+        tablaDetalle.getColumns().addAll(dNombre, dCantidad, dPrecio, dTotal);
+        tablaDetalle.setItems(FXCollections.observableArrayList(detalles));
+
+        content.getChildren().addAll(grid, new Separator(), tablaDetalle);
+        dialog.getDialogPane().setContent(content);
+        dialog.showAndWait();
+    }
+
+    // ==================== CLIENTES CRUD ====================
+
+    private void setupTablaClientes() {
+        colCliId.setCellValueFactory(new PropertyValueFactory<>("idCliente"));
+        colCliNombre.setCellValueFactory(new PropertyValueFactory<>("nombre"));
+        colCliTelefono.setCellValueFactory(new PropertyValueFactory<>("numeroTelefonico"));
+        colCliEmail.setCellValueFactory(new PropertyValueFactory<>("correoElectronico"));
+        colCliPuntos.setCellValueFactory(new PropertyValueFactory<>("puntosLealtad"));
+        colCliPreferencias.setCellValueFactory(new PropertyValueFactory<>("preferencias"));
+
+        colCliPuntos.setCellFactory(col -> new TableCell<>() {
+            @Override protected void updateItem(Double item, boolean empty) {
+                super.updateItem(item, empty);
+                setText(empty || item == null ? null : String.format("%.0f", item));
+            }
+        });
+
+        todosClientes = FXCollections.observableArrayList();
+        clientesFiltrados = new FilteredList<>(todosClientes, c -> true);
+        tableClientes.setItems(clientesFiltrados);
+
+        clientesFiltrados.addListener((javafx.collections.ListChangeListener<Cliente>) c ->
+                lblFooterClientes.setText("Total: " + clientesFiltrados.size() + " clientes"));
+
+        txtBuscarCliente.textProperty().addListener((obs, o, n) -> {
+            String txt = n == null ? "" : n.toLowerCase().trim();
+            clientesFiltrados.setPredicate(c ->
+                    txt.isEmpty() ||
+                            c.getNombre().toLowerCase().contains(txt) ||
+                            c.getNumeroTelefonico().contains(txt));
+        });
+    }
+
+    private void cargarClientes() {
+        todosClientes.setAll(clienteDao.listarTodos());
+    }
+
+    @FXML
+    private void handleNuevoCliente() {
+        Dialog<Cliente> dialog = new Dialog<>();
+        dialog.setTitle("Nuevo Cliente");
+        dialog.setHeaderText("Registrar nuevo cliente");
+
+        ButtonType btnGuardar = new ButtonType("Guardar", ButtonBar.ButtonData.OK_DONE);
+        dialog.getDialogPane().getButtonTypes().addAll(btnGuardar, ButtonType.CANCEL);
+        dialog.getDialogPane().setStyle("-fx-background-color: #16181f;");
+
+        GridPane grid = new GridPane();
+        grid.setHgap(12);
+        grid.setVgap(12);
+        grid.setPadding(new Insets(16));
+
+        TextField txtNombre = new TextField();
+        txtNombre.setPromptText("Nombre(s)");
+        TextField txtTelefono = new TextField();
+        txtTelefono.setPromptText("Teléfono");
+        TextField txtEmail = new TextField();
+        txtEmail.setPromptText("Email (opcional)");
+        TextField txtDireccion = new TextField();
+        txtDireccion.setPromptText("Dirección (opcional)");
+        TextField txtPreferencias = new TextField();
+        txtPreferencias.setPromptText("Preferencias (opcional)");
+
+        grid.addRow(0, new Label("Nombre:"), txtNombre);
+        grid.addRow(1, new Label("Teléfono:"), txtTelefono);
+        grid.addRow(2, new Label("Email:"), txtEmail);
+        grid.addRow(3, new Label("Dirección:"), txtDireccion);
+        grid.addRow(4, new Label("Preferencias:"), txtPreferencias);
+
+        dialog.getDialogPane().setContent(grid);
+
+        javafx.scene.Node btnOk = dialog.getDialogPane().lookupButton(btnGuardar);
+        btnOk.setDisable(true);
+        txtNombre.textProperty().addListener((obs, o, n) -> btnOk.setDisable(n.trim().isEmpty() || txtTelefono.getText().trim().isEmpty()));
+        txtTelefono.textProperty().addListener((obs, o, n) -> btnOk.setDisable(txtNombre.getText().trim().isEmpty() || n.trim().isEmpty()));
+
+        dialog.setResultConverter(bt -> {
+            if (bt != btnGuardar) return null;
+            int nuevoId = clienteDao.obtenerUltimoId() + 1;
+            return new Cliente(nuevoId, txtNombre.getText().trim(),
+                    txtEmail.getText().trim(), txtTelefono.getText().trim(),
+                    txtDireccion.getText().trim(), 0.0, txtPreferencias.getText().trim());
+        });
+
+        dialog.showAndWait().ifPresent(c -> {
+            clienteDao.guardar(c);
+            cargarClientes();
+            UIComponents.showNotification("Cliente registrado", "success");
+        });
+    }
+
+    @FXML
+    private void handleEditarCliente() {
+        Cliente sel = tableClientes.getSelectionModel().getSelectedItem();
+        if (sel == null) {
+            UIComponents.showNotification("Seleccione un cliente para editar", "warn");
+            return;
+        }
+
+        Dialog<Cliente> dialog = new Dialog<>();
+        dialog.setTitle("Editar Cliente");
+        dialog.setHeaderText("Editando: " + sel.getNombre());
+
+        ButtonType btnGuardar = new ButtonType("Guardar", ButtonBar.ButtonData.OK_DONE);
+        dialog.getDialogPane().getButtonTypes().addAll(btnGuardar, ButtonType.CANCEL);
+        dialog.getDialogPane().setStyle("-fx-background-color: #16181f;");
+
+        GridPane grid = new GridPane();
+        grid.setHgap(12);
+        grid.setVgap(12);
+        grid.setPadding(new Insets(16));
+
+        TextField txtNombre = new TextField(sel.getNombre());
+        TextField txtTelefono = new TextField(sel.getNumeroTelefonico());
+        TextField txtEmail = new TextField(sel.getCorreoElectronico());
+        TextField txtDireccion = new TextField(sel.getDireccion());
+        TextField txtPreferencias = new TextField(sel.getPreferencias());
+
+        grid.addRow(0, new Label("Nombre:"), txtNombre);
+        grid.addRow(1, new Label("Teléfono:"), txtTelefono);
+        grid.addRow(2, new Label("Email:"), txtEmail);
+        grid.addRow(3, new Label("Dirección:"), txtDireccion);
+        grid.addRow(4, new Label("Preferencias:"), txtPreferencias);
+
+        dialog.getDialogPane().setContent(grid);
+
+        dialog.setResultConverter(bt -> {
+            if (bt != btnGuardar) return null;
+            sel.setNombre(txtNombre.getText().trim());
+            sel.setNumeroTelefonico(txtTelefono.getText().trim());
+            sel.setCorreoElectronico(txtEmail.getText().trim());
+            sel.setDireccion(txtDireccion.getText().trim());
+            sel.setPreferencias(txtPreferencias.getText().trim());
+            return sel;
+        });
+
+        dialog.showAndWait().ifPresent(c -> {
+            clienteDao.actualizar(c);
+            cargarClientes();
+            UIComponents.showNotification("Cliente actualizado", "success");
+        });
+    }
+
+    @FXML
+    private void handleEliminarCliente() {
+        Cliente sel = tableClientes.getSelectionModel().getSelectedItem();
+        if (sel == null) {
+            UIComponents.showNotification("Seleccione un cliente para eliminar", "warn");
+            return;
+        }
+
+        boolean confirm = UIComponents.showConfirmDialog("Eliminar cliente",
+                "¿Eliminar a " + sel.getNombre() + "?\nLas ventas históricas no se borrarán.");
+        if (confirm) {
+            clienteDao.eliminar(sel.getIdCliente());
+            cargarClientes();
+            UIComponents.showNotification("Cliente eliminado", "success");
         }
     }
+
+    // ==================== LOGOUT ====================
 
     @FXML
     private void handleLogout() {
