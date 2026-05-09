@@ -108,8 +108,7 @@ public class GerenteController implements Initializable {
     }
 
     @FXML private void showClientes() {
-        // Cuando esté listo: loadModule("/views/GerenteClienteView.fxml", navClientes, "Clientes", "Cartera de clientes");
-        UIComponents.showNotification("Módulo de Clientes en desarrollo", "info");
+        loadModule("/views/gerente/GerenteClienteView.fxml", navClientes, "Cartera de Clientes", "Gestión de clientes y programa de lealtad");
     }
 
     @FXML private void showPedidos() {
