@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox spacing="20" stylesheets="@../../css/gerente.css"
+      xmlns="http://javafx.com/javafx/17.0.2" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="gestionmats.controllers.gerente.GerenteProductoFormController"
+      style="-fx-background-color: #111318; -fx-padding: 25; -fx-border-color: #F58220; -fx-border-width: 3 0 0 0;">
+
+    <Label text="Registrar Nuevo Material" styleClass="page-title"/>
+
+    <GridPane hgap="15" vgap="15">
+        <columnConstraints>
+            <ColumnConstraints percentWidth="50"/>
+            <ColumnConstraints percentWidth="50"/>
+        </columnConstraints>
+
+        <VBox spacing="5" GridPane.columnIndex="0" GridPane.rowIndex="0">
+            <Label text="ID Generado" styleClass="kpi-sub"/>
+            <TextField fx:id="txtId" disable="true" prefHeight="38" styleClass="form-input"/>
+        </VBox>
+        <VBox spacing="5" GridPane.columnIndex="1" GridPane.rowIndex="0">
+            <Label text="Categoría" styleClass="kpi-sub"/>
+            <ComboBox fx:id="cmbCategoria" prefWidth="250" prefHeight="38" styleClass="form-input"/>
+        </VBox>
+
+        <VBox spacing="5" GridPane.columnIndex="0" GridPane.rowIndex="1" GridPane.columnSpan="2">
+            <Label text="Nombre del Material" styleClass="kpi-sub"/>
+            <TextField fx:id="txtNombre" promptText="Ej. Cemento Cruz Azul 50kg" prefHeight="38" styleClass="form-input"/>
+        </VBox>
+
+        <VBox spacing="5" GridPane.columnIndex="0" GridPane.rowIndex="2">
+            <Label text="Marca" styleClass="kpi-sub"/>
+            <TextField fx:id="txtMarca" promptText="Ej. Cemex" prefHeight="38" styleClass="form-input"/>
+        </VBox>
+        <VBox spacing="5" GridPane.columnIndex="1" GridPane.rowIndex="2">
+            <Label text="Unidad de Medida" styleClass="kpi-sub"/>
+            <TextField fx:id="txtUnidad" promptText="Ej. Sacos, Piezas, m3" prefHeight="38" styleClass="form-input"/>
+        </VBox>
+
+        <VBox spacing="5" GridPane.columnIndex="0" GridPane.rowIndex="3">
+            <Label text="Precio de Venta ($)" styleClass="kpi-sub"/>
+            <TextField fx:id="txtPrecio" promptText="0.00" prefHeight="38" styleClass="form-input"/>
+        </VBox>
+        <VBox spacing="5" GridPane.columnIndex="1" GridPane.rowIndex="3">
+            <Label text="Descuento (%)" styleClass="kpi-sub"/>
+            <TextField fx:id="txtDescuento" text="0.0" prefHeight="38" styleClass="form-input"/>
+        </VBox>
+
+        <VBox spacing="5" GridPane.columnIndex="0" GridPane.rowIndex="4">
+            <Label text="Stock Inicial" styleClass="kpi-sub"/>
+            <TextField fx:id="txtStockActual" promptText="Ej. 100" prefHeight="38" styleClass="form-input"/>
+        </VBox>
+        <VBox spacing="5" GridPane.columnIndex="1" GridPane.rowIndex="4">
+            <Label text="Stock Máximo Permitido" styleClass="kpi-sub"/>
+            <TextField fx:id="txtStockMaximo" promptText="Ej. 200" prefHeight="38" styleClass="form-input"/>
+        </VBox>
+    </GridPane>
+
+    <HBox spacing="10" alignment="CENTER_RIGHT" style="-fx-padding: 10 0 0 0;">
+        <Button fx:id="btnCancelar" text="Cancelar" onAction="#handleCancelar" styleClass="btn-ghost" prefHeight="35"/>
+        <Button fx:id="btnGuardar" text="Guardar Material" onAction="#handleGuardar" styleClass="btn-add" prefHeight="35"/>
+    </HBox>
+</VBox>

@@ -16,4 +16,5 @@ module gestionmats {
 
     // Exporta el paquete principal para que el launcher funcione
     exports gestionmats;
+    opens gestionmats.controllers.gerente to javafx.fxml;
 }
