@@ -1,4 +1,4 @@
 idCliente,nombre,correoElectronico,numeroTelefonico,direccion,puntosLealtad,preferencias
 1,Juan Perez,juan@mail.com,555-1234,Calle 123,150,Herramientas
-2,Ana Lopez,ana@mail.com,555-5678,Av. Central 456,80,Materiales eléctricos
-3,Luis Garcia,luis@mail.com,555-9999,Blvd. Sur 789,320,Pinturas
+2,Ana Lopez,ana@mail.com,555-5678,Av. Central 456,87.75,Materiales eléctricos
+3,Luis Garcia,luis@mail.com,555-9999,Blvd. Sur 789,104.97,Pinturas
