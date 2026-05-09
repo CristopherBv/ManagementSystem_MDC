@@ -35,8 +35,8 @@ public class GerenteClienteController implements Initializable {
         clienteDao = new ClienteDaoCsv();
         setupStyles();
         setupTable();
-        setupFilters();
         loadData();
+        setupFilters();
     }
 
     private void setupStyles() {
@@ -68,21 +68,32 @@ public class GerenteClienteController implements Initializable {
 
     private void loadData() {
         allItems = FXCollections.observableArrayList(clienteDao.listarTodos());
-        filteredItems = new FilteredList<>(allItems, p -> true);
+        // FIX: Al crear la lista filtrada, le damos la condición inicial de ocultar el ID 0
+        filteredItems = new FilteredList<>(allItems, c -> c.getIdCliente() != 0);
+
         tableClientes.setItems(filteredItems);
 
         filteredItems.addListener((javafx.collections.ListChangeListener<Cliente>) c ->
                 lblTotal.setText("Total: " + filteredItems.size() + " clientes"));
+        // El total ahora reflejará solo los clientes reales (sin el 0)
         lblTotal.setText("Total: " + filteredItems.size() + " clientes");
     }
 
     private void setupFilters() {
         txtSearch.textProperty().addListener((obs, old, newVal) -> {
             String filter = newVal.toLowerCase().trim();
-            filteredItems.setPredicate(c -> filter.isEmpty() ||
-                    c.getNombre().toLowerCase().contains(filter) ||
-                    c.getNumeroTelefonico().contains(filter)
-            );
+
+            filteredItems.setPredicate(c -> {
+                // REGLA DE ORO: Si es el cliente 0, nunca se muestra, sin importar la búsqueda
+                if (c.getIdCliente() == 0) return false;
+
+                // Si el buscador está vacío, mostramos todos los demás (que no son el 0)
+                if (filter.isEmpty()) return true;
+
+                // Si hay texto, buscamos por nombre o teléfono
+                return c.getNombre().toLowerCase().contains(filter) ||
+                        c.getNumeroTelefonico().contains(filter);
+            });
         });
     }
 
