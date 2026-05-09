@@ -1,4 +1,4 @@
-package gestionmats.controllers;
+package gestionmats.controllers.gerente;
 
 import gestionmats.services.GestorSesion;
 import gestionmats.model.Usuario;
@@ -100,11 +100,11 @@ public class GerenteController implements Initializable {
             nombre = u.getNombre();
         }
 
-        loadModule("/views/GerenteDashboardView.fxml", navDashboard, "Panel de Control", "Bienvenido, " + nombre);
+        loadModule("/views/gerente/GerenteDashboardView.fxml", navDashboard, "Panel de Control", "Bienvenido, " + nombre);
     }
 
     @FXML private void showInventario() {
-        loadModule("/views/GerenteInventarioView.fxml", navInventario, "Inventario", "Gestión de stock físico");
+        loadModule("/views/gerente/GerenteInventarioView.fxml", navInventario, "Inventario", "Gestión de stock físico");
     }
 
     @FXML private void showClientes() {

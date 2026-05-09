@@ -2,9 +2,9 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<VBox spacing="20" stylesheets="@../css/gerente.css"
+<VBox spacing="20" stylesheets="@../../css/gerente.css"
       xmlns="http://javafx.com/javafx/17.0.2" xmlns:fx="http://javafx.com/fxml/1"
-      fx:controller="gestionmats.controllers.GerenteProductoFormController"
+      fx:controller="gestionmats.controllers.gerente.GerenteProductoFormController"
       style="-fx-background-color: #111318; -fx-padding: 25; -fx-border-color: #F58220; -fx-border-width: 3 0 0 0;">
 
     <Label text="Registrar Nuevo Material" styleClass="page-title"/>

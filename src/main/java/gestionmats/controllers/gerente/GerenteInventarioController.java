@@ -1,4 +1,4 @@
-package gestionmats.controllers;
+package gestionmats.controllers.gerente;
 
 import gestionmats.dao.ProductoDaoCsv;
 import gestionmats.model.Producto;
@@ -121,7 +121,7 @@ public class GerenteInventarioController implements Initializable {
     @FXML private void handleAgregar() {
         try {
             // Cargamos la vista del formulario
-            javafx.fxml.FXMLLoader loader = new javafx.fxml.FXMLLoader(getClass().getResource("/views/GerenteProductoFormView.fxml"));
+            javafx.fxml.FXMLLoader loader = new javafx.fxml.FXMLLoader(getClass().getResource("/views/gerente/GerenteProductoFormView.fxml"));
             javafx.scene.Parent root = loader.load();
 
             // Obtenemos el controlador de esa vista

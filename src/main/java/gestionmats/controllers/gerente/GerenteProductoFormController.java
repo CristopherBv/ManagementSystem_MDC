@@ -1,4 +1,4 @@
-package gestionmats.controllers;
+package gestionmats.controllers.gerente;
 
 import gestionmats.dao.ProductoDaoCsv;
 import gestionmats.model.Producto;
