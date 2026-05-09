@@ -14,7 +14,6 @@
     <!-- SIDEBAR IZQUIERDO -->
     <left>
         <VBox styleClass="sidebar" prefWidth="220" spacing="0">
-            <!-- ... (sidebar igual que antes, sin cambios) ... -->
             <Pane styleClass="sidebar-accent" prefHeight="4"/>
             <VBox styleClass="sidebar-profile" alignment="CENTER" spacing="10">
                 <StackPane styleClass="avatar-ring" prefWidth="64" prefHeight="64">
@@ -52,7 +51,6 @@
     <!-- CONTENIDO PRINCIPAL -->
     <center>
         <VBox styleClass="main-content" spacing="0">
-            <!-- TOPBAR -->
             <HBox styleClass="topbar" alignment="CENTER_LEFT" spacing="0">
                 <Pane styleClass="topbar-accent" prefWidth="3" prefHeight="44"/>
                 <VBox styleClass="topbar-titles" spacing="2">
@@ -70,13 +68,13 @@
 
                 <!-- ================= VISTA VENTAS ================= -->
                 <VBox fx:id="viewVentas" spacing="14" styleClass="view-panel">
+
                     <HBox alignment="CENTER_LEFT" spacing="10">
                         <TextField fx:id="txtSearchProducto" promptText="Buscar producto..." prefHeight="36" prefWidth="260" styleClass="search-input"/>
                         <ComboBox fx:id="cmbCategoria" promptText="Categoría" prefHeight="36" prefWidth="180" styleClass="combo-input"/>
                         <Pane HBox.hgrow="ALWAYS"/>
                     </HBox>
 
-                    <!-- Tabla Productos (Ajustada) -->
                     <TableView fx:id="tableProductos" VBox.vgrow="ALWAYS" styleClass="data-table">
                         <placeholder><Label text="Sin productos registrados"/></placeholder>
                         <columnResizePolicy>
@@ -95,7 +93,6 @@
                         <Button fx:id="btnAgregarCarrito" text="+ Agregar al carrito" onAction="#handleAgregarAlCarrito" prefHeight="36" styleClass="btn-add"/>
                     </HBox>
 
-                    <!-- Tabla Carrito (Ajustada) -->
                     <TableView fx:id="tableCarrito" prefHeight="180" VBox.vgrow="NEVER" styleClass="data-table">
                         <placeholder><Label text="Carrito vacío"/></placeholder>
                         <columnResizePolicy>
@@ -111,7 +108,6 @@
                         </columns>
                     </TableView>
 
-                    <!-- Totales y Cliente -->
                     <HBox alignment="CENTER_RIGHT" spacing="15" styleClass="table-footer">
                         <Button fx:id="btnEliminarDelCarrito" text="Eliminar" onAction="#handleEliminarDelCarrito" prefHeight="32" styleClass="btn-delete"/>
                         <Pane HBox.hgrow="ALWAYS"/>
@@ -125,6 +121,7 @@
                     <HBox alignment="CENTER_LEFT" spacing="10">
                         <Button fx:id="btnSeleccionarCliente" text="Seleccionar Cliente" onAction="#handleSeleccionarCliente" styleClass="btn-edit"/>
                         <Button fx:id="btnLimpiarCliente" text="Limpiar Cliente" onAction="#handleLimpiarCliente" styleClass="btn-ghost"/>
+                        <Button fx:id="btnCanjearPuntos" text="🎁 Canjear Puntos" onAction="#handleCanjearPuntos" styleClass="btn-add"/>
                         <Label text="Cliente:" styleClass="field-label"/>
                         <Label fx:id="lblClienteSeleccionado" text="" styleClass="footer-info"/>
                         <Label fx:id="lblPuntosCliente" text="" styleClass="footer-info"/>
@@ -148,8 +145,6 @@
                         <ComboBox fx:id="cmbFiltroEstado" prefWidth="150" styleClass="combo-input"/>
                         <Button text="Ver detalle" onAction="#handleVerDetalleVenta" styleClass="btn-edit"/>
                     </HBox>
-
-                    <!-- Tabla Historial (Ajustada) -->
                     <TableView fx:id="tableHistorial" VBox.vgrow="ALWAYS" styleClass="data-table">
                         <placeholder><Label text="No hay ventas registradas"/></placeholder>
                         <columnResizePolicy>
@@ -165,7 +160,6 @@
                             <TableColumn fx:id="colHisEstado" text="ESTADO" prefWidth="100"/>
                         </columns>
                     </TableView>
-
                     <HBox alignment="CENTER_RIGHT">
                         <Label fx:id="lblFooterHistorial" text="Mostrando 0 ventas" styleClass="footer-info"/>
                     </HBox>
@@ -179,8 +173,6 @@
                         <Button fx:id="btnEditarCliente" text="Editar" onAction="#handleEditarCliente" styleClass="btn-edit"/>
                         <Button fx:id="btnEliminarCliente" text="Eliminar" onAction="#handleEliminarCliente" styleClass="btn-delete"/>
                     </HBox>
-
-                    <!-- Tabla Clientes (Ajustada) -->
                     <TableView fx:id="tableClientes" VBox.vgrow="ALWAYS" styleClass="data-table">
                         <placeholder><Label text="No hay clientes registrados"/></placeholder>
                         <columnResizePolicy>
@@ -195,7 +187,6 @@
                             <TableColumn fx:id="colCliPreferencias" text="PREFERENCIAS" prefWidth="150"/>
                         </columns>
                     </TableView>
-
                     <HBox alignment="CENTER_RIGHT">
                         <Label fx:id="lblFooterClientes" text="Total: 0 clientes" styleClass="footer-info"/>
                     </HBox>
