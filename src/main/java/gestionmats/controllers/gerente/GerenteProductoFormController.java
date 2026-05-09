@@ -21,7 +21,10 @@ public class GerenteProductoFormController implements Initializable {
     @FXML private Button btnGuardar, btnCancelar;
 
     private ProductoDaoCsv dao;
-    private boolean guardadoExitoso = false; // Bandera para avisar si debemos recargar la tabla
+    private boolean guardadoExitoso = false;
+
+    // Si esta variable es nula, estamos Creando. Si tiene datos, estamos Editando.
+    private Producto productoEdicion = null;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -33,15 +36,35 @@ public class GerenteProductoFormController implements Initializable {
         ));
         cmbCategoria.getSelectionModel().selectFirst();
 
-        // Autogenerar y bloquear el ID
+        // Por defecto, asumimos que es una creación
         txtId.setText(dao.generarSiguienteId());
 
         UIComponents.applyButtonAdd(btnGuardar);
         UIComponents.applyButtonGhost(btnCancelar);
     }
 
+    /**
+     * MÉTODO NUEVO: Lo llama el inventario cuando queremos editar un material.
+     */
+    public void cargarProductoParaEdicion(Producto p) {
+        this.productoEdicion = p; // Guardamos la referencia
+
+        txtId.setText(p.getIdProducto());
+        txtNombre.setText(p.getNombre());
+        txtMarca.setText(p.getMarca());
+        cmbCategoria.setValue(p.getCategoria());
+        txtUnidad.setText(p.getUnidadMedida());
+        txtPrecio.setText(String.valueOf(p.getPrecioVenta()));
+        txtDescuento.setText(String.valueOf(p.getDescuento()));
+        txtStockActual.setText(String.valueOf(p.getStockActual()));
+        txtStockMaximo.setText(String.valueOf(p.getStockMaximo()));
+
+        // BLOQUEO DE SEGURIDAD (Tú lo pediste)
+        txtStockActual.setDisable(true);
+        btnGuardar.setText("Actualizar Material");
+    }
+
     @FXML private void handleGuardar() {
-        // 1. Validar campos vacíos
         if (txtNombre.getText().trim().isEmpty() || txtMarca.getText().trim().isEmpty() ||
                 txtUnidad.getText().trim().isEmpty() || txtPrecio.getText().trim().isEmpty() ||
                 txtStockActual.getText().trim().isEmpty() || txtStockMaximo.getText().trim().isEmpty()) {
@@ -49,14 +72,16 @@ public class GerenteProductoFormController implements Initializable {
             return;
         }
 
-        // 2. Validar que no estemos duplicando
-        if (dao.existeProductoPorNombreExacto(txtNombre.getText())) {
+        // Validar duplicados SOLO si estamos creando un producto nuevo,
+        // o si estamos editando pero le cambiamos el nombre.
+        boolean nombreModificado = (productoEdicion == null) || !productoEdicion.getNombre().equalsIgnoreCase(txtNombre.getText().trim());
+
+        if (nombreModificado && dao.existeProductoPorNombreExacto(txtNombre.getText())) {
             UIComponents.showNotification("Ya existe un material registrado con ese nombre.", "error");
             return;
         }
 
         try {
-            // 3. Validar números
             double precio = Double.parseDouble(txtPrecio.getText().trim());
             double descuento = txtDescuento.getText().trim().isEmpty() ? 0.0 : Double.parseDouble(txtDescuento.getText().trim());
             int stockActual = Integer.parseInt(txtStockActual.getText().trim());
@@ -67,21 +92,19 @@ public class GerenteProductoFormController implements Initializable {
                 return;
             }
 
-            // 4. Crear el objeto
-            Producto nuevoProducto = new Producto(
-                    txtId.getText(),
-                    txtNombre.getText().trim(),
-                    txtMarca.getText().trim(),
-                    cmbCategoria.getValue(),
-                    precio,
-                    stockMax,
-                    stockActual,
-                    txtUnidad.getText().trim(),
-                    descuento
+            Producto productoProcesado = new Producto(
+                    txtId.getText(), txtNombre.getText().trim(), txtMarca.getText().trim(),
+                    cmbCategoria.getValue(), precio, stockMax, stockActual, txtUnidad.getText().trim(), descuento
             );
 
-            // 5. Guardar físicamente
-            if (dao.guardar(nuevoProducto)) {
+            boolean exito;
+            if (productoEdicion == null) {
+                exito = dao.guardar(productoProcesado); // CREAR
+            } else {
+                exito = dao.actualizar(productoProcesado); // EDITAR
+            }
+
+            if (exito) {
                 guardadoExitoso = true;
                 cerrarVentana();
             } else {
@@ -93,17 +116,7 @@ public class GerenteProductoFormController implements Initializable {
         }
     }
 
-    @FXML private void handleCancelar() {
-        cerrarVentana();
-    }
-
-    private void cerrarVentana() {
-        Stage stage = (Stage) btnCancelar.getScene().getWindow();
-        stage.close();
-    }
-
-    // Método que usará el controlador principal para saber si debe actualizar la tabla
-    public boolean isGuardadoExitoso() {
-        return guardadoExitoso;
-    }
+    @FXML private void handleCancelar() { cerrarVentana(); }
+    private void cerrarVentana() { ((Stage) btnCancelar.getScene().getWindow()).close(); }
+    public boolean isGuardadoExitoso() { return guardadoExitoso; }
 }

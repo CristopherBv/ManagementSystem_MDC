@@ -139,7 +139,7 @@ public class GerenteInventarioController implements Initializable {
 
             // Cuando se cierra, le preguntamos al controlador si logró guardar
             if (formController.isGuardadoExitoso()) {
-                handleActualizar(); // Tu método que ya recarga la tabla desde el CSV y actualiza KPIs
+                handleActualizar(); // method que recarga la tabla desde el CSV y actualiza KPIs
                 UIComponents.showNotification("Material agregado exitosamente.", "success");
             }
 
@@ -149,7 +149,41 @@ public class GerenteInventarioController implements Initializable {
         }
     }
 
-    @FXML private void handleEditar() { UIComponents.showNotification("Editar Producto", "info"); }
+    @FXML private void handleEditar() {
+        Producto selected = tableInventario.getSelectionModel().getSelectedItem();
+
+        if (selected == null) {
+            UIComponents.showNotification("Seleccione un material de la tabla para editar.", "warn");
+            return;
+        }
+
+        try {
+            javafx.fxml.FXMLLoader loader = new javafx.fxml.FXMLLoader(getClass().getResource("/views/gerente/GerenteProductoFormView.fxml"));
+            javafx.scene.Parent root = loader.load();
+
+            GerenteProductoFormController formController = loader.getController();
+
+            // ¡LE PASAMOS EL PRODUCTO PARA QUE SE PONGA EN MODO EDICIÓN!
+            formController.cargarProductoParaEdicion(selected);
+
+            javafx.stage.Stage stage = new javafx.stage.Stage();
+            stage.setTitle("Editar Material: " + selected.getIdProducto());
+            stage.setScene(new javafx.scene.Scene(root));
+            stage.setResizable(false);
+            stage.initModality(javafx.stage.Modality.APPLICATION_MODAL);
+            stage.showAndWait();
+
+            if (formController.isGuardadoExitoso()) {
+                handleActualizar(); // Recarga la tabla
+                UIComponents.showNotification("Material actualizado correctamente.", "success");
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            UIComponents.showNotification("Error al abrir el formulario de edición.", "error");
+        }
+    }
+
     @FXML private void handleExportar() { UIComponents.showNotification("Exportando...", "info"); }
 
     @FXML private void handleEliminar() {
