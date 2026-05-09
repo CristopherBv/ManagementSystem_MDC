@@ -4,26 +4,21 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.shape.Circle?>
 
-<BorderPane prefHeight="680.0" prefWidth="1100.0"
+<BorderPane prefHeight="720.0" prefWidth="1200.0"
             styleClass="root-pane"
             stylesheets="@../css/vendedor.css"
             xmlns="http://javafx.com/javafx/17.0.2"
             xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="gestionmats.controllers.VendedorController">
 
-    <!-- ═══════════════════════════════════════
-         SIDEBAR IZQUIERDO
-    ═══════════════════════════════════════ -->
+    <!-- SIDEBAR IZQUIERDO -->
     <left>
         <VBox styleClass="sidebar" prefWidth="220" spacing="0">
 
-            <!-- Barra de acento superior -->
             <Pane styleClass="sidebar-accent" prefHeight="4"/>
 
-            <!-- Perfil del usuario -->
             <VBox styleClass="sidebar-profile" alignment="CENTER" spacing="10">
-                <StackPane styleClass="avatar-ring" prefWidth="64" prefHeight="64"
-                           maxWidth="64" maxHeight="64">
+                <StackPane styleClass="avatar-ring" prefWidth="64" prefHeight="64">
                     <Label text="V" styleClass="avatar-letter"/>
                 </StackPane>
                 <VBox alignment="CENTER" spacing="3">
@@ -35,45 +30,36 @@
                 </VBox>
             </VBox>
 
-            <!-- Separador -->
-            <Pane styleClass="sidebar-divider" prefHeight="1" maxWidth="1000"/>
+            <Pane styleClass="sidebar-divider" prefHeight="1"/>
 
-            <!-- Menú de navegación -->
             <VBox styleClass="nav-section" spacing="2" VBox.vgrow="ALWAYS">
-
                 <Label text="MÓDULOS" styleClass="nav-section-label"/>
 
                 <Button fx:id="navVentas" text="  Punto de Venta"
                         onAction="#showVentas"
                         prefWidth="220" prefHeight="44"
-                        styleClass="nav-btn, nav-btn-active">
-                    <graphic>
-                        <Label text="🛒" styleClass="nav-icon"/>
-                    </graphic>
+                        styleClass="nav-btn">
+                    <graphic><Label text="🛒" styleClass="nav-icon"/></graphic>
                 </Button>
 
-                <Button fx:id="navPedidos" text="  Mis Pedidos"
-                        onAction="#showPedidos"
+                <Button fx:id="navHistorial" text="  Historial"
+                        onAction="#showHistorial"
                         prefWidth="220" prefHeight="44"
                         styleClass="nav-btn">
-                    <graphic>
-                        <Label text="📋" styleClass="nav-icon"/>
-                    </graphic>
+                    <graphic><Label text="📋" styleClass="nav-icon"/></graphic>
                 </Button>
 
                 <Button fx:id="navClientes" text="  Clientes"
                         onAction="#showClientes"
                         prefWidth="220" prefHeight="44"
                         styleClass="nav-btn">
-                    <graphic>
-                        <Label text="👥" styleClass="nav-icon"/>
-                    </graphic>
+                    <graphic><Label text="👥" styleClass="nav-icon"/></graphic>
                 </Button>
 
             </VBox>
 
-            <!-- Botón cerrar sesión -->
-            <Pane styleClass="sidebar-divider" prefHeight="1" maxWidth="1000"/>
+            <Pane styleClass="sidebar-divider" prefHeight="1"/>
+
             <VBox styleClass="sidebar-footer" alignment="CENTER">
                 <Button fx:id="btnLogout" text="Cerrar Sesión"
                         onAction="#handleLogout"
@@ -85,9 +71,7 @@
         </VBox>
     </left>
 
-    <!-- ═══════════════════════════════════════
-         CONTENIDO PRINCIPAL
-    ═══════════════════════════════════════ -->
+    <!-- CONTENIDO PRINCIPAL -->
     <center>
         <VBox styleClass="main-content" spacing="0">
 
@@ -100,39 +84,26 @@
                 </VBox>
                 <Pane HBox.hgrow="ALWAYS"/>
                 <VBox alignment="CENTER_RIGHT" spacing="2" styleClass="topbar-time">
-                    <Label fx:id="lblFecha" text="Miércoles, 29 Abr 2026" styleClass="time-date"/>
-                    <Label fx:id="lblHora" text="10:30" styleClass="time-clock"/>
+                    <Label fx:id="lblFecha" styleClass="time-date"/>
+                    <Label fx:id="lblHora" styleClass="time-clock"/>
                 </VBox>
             </HBox>
 
-            <!-- PANEL DINÁMICO -->
             <StackPane fx:id="contentPane" VBox.vgrow="ALWAYS" styleClass="dynamic-pane">
 
-                <!-- ── VISTA VENTAS (principal) ── -->
+                <!-- VISTA VENTAS -->
                 <VBox fx:id="viewVentas" spacing="14" styleClass="view-panel">
 
-                    <!-- Barra de herramientas productos -->
-                    <HBox styleClass="toolbar" alignment="CENTER_LEFT" spacing="10">
-                        <TextField fx:id="txtSearchProducto"
-                                   promptText="Buscar producto..."
-                                   prefHeight="36" prefWidth="260"
-                                   styleClass="search-input"/>
-                        <ComboBox fx:id="cmbCategoria"
-                                  promptText="Categoría"
-                                  prefHeight="36" prefWidth="150"
-                                  styleClass="combo-input"/>
+                    <HBox alignment="CENTER_LEFT" spacing="10">
+                        <TextField fx:id="txtSearchProducto" promptText="Buscar producto..."
+                                   prefHeight="36" prefWidth="260" styleClass="search-input"/>
+                        <ComboBox fx:id="cmbCategoria" promptText="Categoría"
+                                  prefHeight="36" prefWidth="150" styleClass="combo-input"/>
                         <Pane HBox.hgrow="ALWAYS"/>
                     </HBox>
 
-                    <!-- Tabla de productos -->
-                    <TableView fx:id="tableProductos"
-                               prefHeight="240"
-                               VBox.vgrow="ALWAYS"
-                               styleClass="data-table">
-                        <placeholder>
-                            <Label text="Sin productos registrados"/>
-                        </placeholder>
-
+                    <TableView fx:id="tableProductos" prefHeight="240" VBox.vgrow="ALWAYS" styleClass="data-table">
+                        <placeholder><Label text="Sin productos registrados"/></placeholder>
                         <columns>
                             <TableColumn fx:id="colIdProducto" text="ID" prefWidth="80"/>
                             <TableColumn fx:id="colNombreProducto" text="PRODUCTO" prefWidth="200"/>
@@ -142,22 +113,13 @@
                         </columns>
                     </TableView>
 
-                    <!-- Botones carrito -->
                     <HBox alignment="CENTER_RIGHT" spacing="10">
                         <Button fx:id="btnAgregarCarrito" text="+ Agregar al carrito"
-                                onAction="#handleAgregarAlCarrito"
-                                prefHeight="36" styleClass="btn-add"/>
+                                onAction="#handleAgregarAlCarrito" prefHeight="36" styleClass="btn-add"/>
                     </HBox>
 
-                    <!-- Tabla del carrito -->
-                    <TableView fx:id="tableCarrito"
-                               prefHeight="200"
-                               VBox.vgrow="ALWAYS"
-                               styleClass="data-table">
-                        <placeholder>
-                            <Label text="Carrito vacío"/>
-                        </placeholder>
-
+                    <TableView fx:id="tableCarrito" prefHeight="200" VBox.vgrow="ALWAYS" styleClass="data-table">
+                        <placeholder><Label text="Carrito vacío"/></placeholder>
                         <columns>
                             <TableColumn fx:id="colIdProdCarrito" text="ID" prefWidth="80"/>
                             <TableColumn fx:id="colNombreCarrito" text="PRODUCTO" prefWidth="180"/>
@@ -168,59 +130,106 @@
                         </columns>
                     </TableView>
 
-                    <!-- Totales y acciones del carrito -->
                     <HBox alignment="CENTER_RIGHT" spacing="15" styleClass="table-footer">
-                        <Button fx:id="btnEliminarDelCarrito" text="🗑 Eliminar"
-                                onAction="#handleEliminarDelCarrito"
-                                prefHeight="32" styleClass="btn-delete"/>
-
+                        <Button fx:id="btnEliminarDelCarrito" text="Eliminar"
+                                onAction="#handleEliminarDelCarrito" prefHeight="32" styleClass="btn-delete"/>
                         <Pane HBox.hgrow="ALWAYS"/>
-
                         <VBox alignment="CENTER_RIGHT" spacing="4">
                             <HBox spacing="15">
                                 <Label text="Subtotal:" styleClass="footer-info"/>
-                                <Label fx:id="lblSubtotal" text=" 0.00" styleClass="kpi-value" style="-fx-font-size: 18px;"/>
+                                <Label fx:id="lblSubtotal" text="0.00" styleClass="kpi-value"/>
                             </HBox>
                             <HBox spacing="15">
                                 <Label text="Descuento:" styleClass="footer-info"/>
-                                <Label fx:id="lblDescuento" text="0%" styleClass="kpi-orange" style="-fx-text-fill: #F58220; -fx-font-size: 14px;"/>
+                                <Label fx:id="lblDescuento" text="0" styleClass="kpi-orange"/>
                             </HBox>
                             <HBox spacing="15">
-                                <Label text="TOTAL:" styleClass="footer-info" style="-fx-font-weight: bold;"/>
-                                <Label fx:id="lblTotal" text=" 0.00" styleClass="kpi-value" style="-fx-font-size: 24px; -fx-text-fill: #F58220;"/>
+                                <Label text="TOTAL:" styleClass="footer-info"/>
+                                <Label fx:id="lblTotal" text="0.00" styleClass="kpi-value"/>
                             </HBox>
                         </VBox>
                     </HBox>
 
-                    <!-- Método pago y tipo venta -->
+                    <HBox alignment="CENTER_LEFT" spacing="15">
+                        <Button fx:id="btnSeleccionarCliente" text="Seleccionar Cliente"
+                                onAction="#handleSeleccionarCliente" styleClass="btn-edit"/>
+                        <Button fx:id="btnLimpiarCliente" text="Limpiar Cliente"
+                                onAction="#handleLimpiarCliente" styleClass="btn-ghost"/>
+                        <Label text="Cliente:" styleClass="field-label"/>
+                        <Label fx:id="lblClienteSeleccionado" text="" styleClass="footer-info"/>
+                        <Label fx:id="lblPuntosCliente" text="" styleClass="footer-info"/>
+                    </HBox>
+
                     <HBox alignment="CENTER_RIGHT" spacing="15">
                         <Label text="Método de pago:" styleClass="field-label"/>
                         <ComboBox fx:id="cmbMetodoPago" prefWidth="120" styleClass="combo-input"/>
                         <Label text="Tipo de venta:" styleClass="field-label"/>
                         <ComboBox fx:id="cmbTipoVenta" prefWidth="120" styleClass="combo-input"/>
                         <Button fx:id="btnAplicarDescuento" text="Aplicar descuento"
-                                onAction="#handleAplicarDescuento"
-                                prefHeight="36" styleClass="btn-edit"/>
-                        <Button fx:id="btnFinalizarVenta" text="💰 Finalizar venta"
-                                onAction="#handleFinalizarVenta"
-                                prefHeight="36" styleClass="btn-add"/>
+                                onAction="#handleAplicarDescuento" prefHeight="36" styleClass="btn-edit"/>
+                        <Button fx:id="btnFinalizarVenta" text="Finalizar venta"
+                                onAction="#handleFinalizarVenta" prefHeight="36" styleClass="btn-add"/>
                     </HBox>
 
                 </VBox>
 
-                <!-- ── PLACEHOLDER vistas futuras ── -->
-                <VBox fx:id="viewPedidos" visible="false" managed="false"
-                      styleClass="view-panel, placeholder-view" alignment="CENTER">
-                    <Label text="📋" styleClass="placeholder-icon"/>
-                    <Label text="Mis Pedidos" styleClass="placeholder-title"/>
-                    <Label text="Próximamente disponible" styleClass="placeholder-sub"/>
+                <!-- VISTA HISTORIAL -->
+                <VBox fx:id="viewHistorial" visible="false" managed="false" spacing="14" styleClass="view-panel">
+
+                    <HBox alignment="CENTER_LEFT" spacing="15">
+                        <TextField fx:id="txtBuscarVenta" promptText="Buscar por ID o fecha..."
+                                   HBox.hgrow="ALWAYS" styleClass="search-input"/>
+                        <Label text="Estado:"/>
+                        <ComboBox fx:id="cmbFiltroEstado" prefWidth="120" styleClass="combo-input"/>
+                        <Button text="Ver detalle" onAction="#handleVerDetalleVenta" styleClass="btn-edit"/>
+                    </HBox>
+
+                    <TableView fx:id="tableHistorial" VBox.vgrow="ALWAYS" styleClass="data-table">
+                        <placeholder><Label text="No hay ventas registradas"/></placeholder>
+                        <columns>
+                            <TableColumn fx:id="colHisId" text="ID" prefWidth="60"/>
+                            <TableColumn fx:id="colHisFecha" text="FECHA" prefWidth="150"/>
+                            <TableColumn fx:id="colHisCliente" text="CLIENTE" prefWidth="180"/>
+                            <TableColumn fx:id="colHisTipo" text="TIPO" prefWidth="100"/>
+                            <TableColumn fx:id="colHisMetodo" text="MÉTODO" prefWidth="100"/>
+                            <TableColumn fx:id="colHisTotal" text="TOTAL" prefWidth="100"/>
+                            <TableColumn fx:id="colHisEstado" text="ESTADO" prefWidth="100"/>
+                        </columns>
+                    </TableView>
+
+                    <HBox alignment="CENTER_RIGHT">
+                        <Label fx:id="lblFooterHistorial" text="Mostrando 0 ventas" styleClass="footer-info"/>
+                    </HBox>
+
                 </VBox>
 
-                <VBox fx:id="viewClientes" visible="false" managed="false"
-                      styleClass="view-panel, placeholder-view" alignment="CENTER">
-                    <Label text="👥" styleClass="placeholder-icon"/>
-                    <Label text="Clientes" styleClass="placeholder-title"/>
-                    <Label text="Próximamente disponible" styleClass="placeholder-sub"/>
+                <!-- VISTA CLIENTES -->
+                <VBox fx:id="viewClientes" visible="false" managed="false" spacing="14" styleClass="view-panel">
+
+                    <HBox spacing="10">
+                        <TextField fx:id="txtBuscarCliente" promptText="Buscar cliente..."
+                                   HBox.hgrow="ALWAYS" styleClass="search-input"/>
+                        <Button fx:id="btnNuevoCliente" text="Nuevo" onAction="#handleNuevoCliente" styleClass="btn-add"/>
+                        <Button fx:id="btnEditarCliente" text="Editar" onAction="#handleEditarCliente" styleClass="btn-edit"/>
+                        <Button fx:id="btnEliminarCliente" text="Eliminar" onAction="#handleEliminarCliente" styleClass="btn-delete"/>
+                    </HBox>
+
+                    <TableView fx:id="tableClientes" VBox.vgrow="ALWAYS" styleClass="data-table">
+                        <placeholder><Label text="No hay clientes registrados"/></placeholder>
+                        <columns>
+                            <TableColumn fx:id="colCliId" text="ID" prefWidth="60"/>
+                            <TableColumn fx:id="colCliNombre" text="NOMBRE" prefWidth="180"/>
+                            <TableColumn fx:id="colCliTelefono" text="TELÉFONO" prefWidth="120"/>
+                            <TableColumn fx:id="colCliEmail" text="EMAIL" prefWidth="180"/>
+                            <TableColumn fx:id="colCliPuntos" text="PUNTOS" prefWidth="100"/>
+                            <TableColumn fx:id="colCliPreferencias" text="PREFERENCIAS" prefWidth="150"/>
+                        </columns>
+                    </TableView>
+
+                    <HBox alignment="CENTER_RIGHT">
+                        <Label fx:id="lblFooterClientes" text="Total: 0 clientes" styleClass="footer-info"/>
+                    </HBox>
+
                 </VBox>
 
             </StackPane>

@@ -8,3 +8,9 @@ idDetalle,idVenta,idProducto,nombreProducto,cantidad,precioUnitario,descuentoApl
 7,4,M-008,Grava 3/4 (m3),1,420.0,0.0,420.0,420.0
 8,5,M-004,Madera pino 2x4,5,120.0,0.0,600.0,600.0
 9,5,M-006,Tubo PVC 4 hidráulico,2,160.0,0.0,320.0,320.0
+10,6,M001,Cemento Portland,1,240.0,0.0,240.0,240.0
+11,6,M002,Varilla 3/8 Grado 40,3,180.0,0.0,540.0,540.0
+12,6,M003,Block de 15x20x40,1,15.5,0.0,15.5,15.5
+13,6,M004,Madera pino 2x4,1,120.0,0.0,120.0,120.0
+14,7,M002,Varilla 3/8 Grado 40,137,180.0,0.0,24660.0,24660.0
+15,8,M001,Cemento Portland,199,240.0,0.0,47760.0,47760.0

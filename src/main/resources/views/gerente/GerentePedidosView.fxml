@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox spacing="14" styleClass="view-panel"
+      xmlns="http://javafx.com/javafx/17.0.2" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="gestionmats.controllers.gerente.GerentePedidosController">
+
+    <HBox styleClass="toolbar" alignment="CENTER_LEFT" spacing="10">
+        <TextField fx:id="txtSearch" promptText="Buscar por folio o proveedor..." prefHeight="36" prefWidth="300" styleClass="search-input"/>
+        <ComboBox fx:id="cmbEstado" promptText="Estado" prefHeight="36" prefWidth="150" styleClass="combo-input"/>
+        <Pane HBox.hgrow="ALWAYS"/>
+        <Button fx:id="btnNuevoPedido" text="+ Nuevo Pedido" onAction="#handleNuevoPedido" prefHeight="36" styleClass="btn-add"/>
+        <Button fx:id="btnVerDetalle" text="Ver Detalles" onAction="#handleVerDetalle" prefHeight="36" styleClass="btn-edit"/>
+    </HBox>
+
+    <TableView fx:id="tablePedidos" VBox.vgrow="ALWAYS" styleClass="data-table">
+        <columnResizePolicy>
+            <TableView fx:constant="CONSTRAINED_RESIZE_POLICY"/>
+        </columnResizePolicy>
+        <columns>
+            <TableColumn fx:id="colFolio" text="FOLIO" prefWidth="90" minWidth="90" maxWidth="100"/>
+            <TableColumn fx:id="colFecha" text="FECHA DE EMISIÓN" prefWidth="140" minWidth="140" maxWidth="170"/>
+            <TableColumn fx:id="colProveedor" text="PROVEEDOR" prefWidth="280"/>
+            <TableColumn fx:id="colEstado" text="ESTADO" prefWidth="120" minWidth="120" maxWidth="140"/>
+        </columns>
+        <placeholder>
+            <Label text="No hay órdenes de compra registradas en el historial."/>
+        </placeholder>
+    </TableView>
+
+    <HBox alignment="CENTER_LEFT" spacing="10" styleClass="table-footer">
+        <Label fx:id="lblTotal" text="Total: 0 pedidos" styleClass="footer-info"/>
+    </HBox>
+
+</VBox>

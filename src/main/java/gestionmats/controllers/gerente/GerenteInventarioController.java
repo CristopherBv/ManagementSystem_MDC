@@ -23,6 +23,7 @@ public class GerenteInventarioController implements Initializable {
     @FXML private ComboBox<String> cmbCategoria;
     @FXML private Label kpiStock, kpiAlertas, lblTotal;
     @FXML private Button btnAgregar, btnEditar, btnEliminar, btnExportar, btnActualizar;
+    @FXML private TableColumn<Producto, String> colPrecio, colPrecioDesc;
 
     private ObservableList<Producto> allItems;
     private FilteredList<Producto> filteredItems;
@@ -49,6 +50,37 @@ public class GerenteInventarioController implements Initializable {
         colId.setCellValueFactory(d -> new javafx.beans.property.SimpleStringProperty(d.getValue().getIdProducto()));
         colNombre.setCellValueFactory(d -> new javafx.beans.property.SimpleStringProperty(d.getValue().getNombre()));
         colMarca.setCellValueFactory(d -> new javafx.beans.property.SimpleStringProperty(d.getValue().getMarca()));
+        // Precio Regular formateado con el símbolo de pesos
+        colPrecio.setCellValueFactory(d -> new javafx.beans.property.SimpleStringProperty(String.format("$%.2f", d.getValue().getPrecioVenta())));
+
+        // Precio Final (Calculando el descuento al vuelo)
+        colPrecioDesc.setCellValueFactory(d -> {
+            double precio = d.getValue().getPrecioVenta();
+            double descuento = d.getValue().getDescuento(); // Asumiendo que es porcentaje (ej. 10.0)
+            double precioFinal = precio - (precio * (descuento / 100.0));
+            return new javafx.beans.property.SimpleStringProperty(String.format("$%.2f", precioFinal));
+        });
+
+        // Darle color verde al Precio Final si tiene un descuento activo
+        colPrecioDesc.setCellFactory(column -> new TableCell<>() {
+            @Override
+            protected void updateItem(String item, boolean empty) {
+                super.updateItem(item, empty);
+                if (empty || item == null) {
+                    setText(null);
+                    setStyle("");
+                } else {
+                    setText(item);
+                    // Obtenemos el producto de esta fila
+                    Producto p = getTableView().getItems().get(getIndex());
+                    if (p.getDescuento() > 0) {
+                        setStyle("-fx-text-fill: #4ade80; -fx-font-weight: bold;"); // Verde resaltado
+                    } else {
+                        setStyle("-fx-text-fill: #9ca3af;"); // Gris normal
+                    }
+                }
+            }
+        });
         colCantidad.setCellValueFactory(d -> new javafx.beans.property.SimpleObjectProperty<>(d.getValue().getStockActual()));
         colUnidad.setCellValueFactory(d -> new javafx.beans.property.SimpleStringProperty(d.getValue().getUnidadMedida()));
         colStock.setCellValueFactory(d -> new javafx.beans.property.SimpleObjectProperty<>(d.getValue().calcularStockMinimo()));
@@ -139,7 +171,7 @@ public class GerenteInventarioController implements Initializable {
 
             // Cuando se cierra, le preguntamos al controlador si logró guardar
             if (formController.isGuardadoExitoso()) {
-                handleActualizar(); // Tu método que ya recarga la tabla desde el CSV y actualiza KPIs
+                handleActualizar(); // method que recarga la tabla desde el CSV y actualiza KPIs
                 UIComponents.showNotification("Material agregado exitosamente.", "success");
             }
 
@@ -149,7 +181,41 @@ public class GerenteInventarioController implements Initializable {
         }
     }
 
-    @FXML private void handleEditar() { UIComponents.showNotification("Editar Producto", "info"); }
+    @FXML private void handleEditar() {
+        Producto selected = tableInventario.getSelectionModel().getSelectedItem();
+
+        if (selected == null) {
+            UIComponents.showNotification("Seleccione un material de la tabla para editar.", "warn");
+            return;
+        }
+
+        try {
+            javafx.fxml.FXMLLoader loader = new javafx.fxml.FXMLLoader(getClass().getResource("/views/gerente/GerenteProductoFormView.fxml"));
+            javafx.scene.Parent root = loader.load();
+
+            GerenteProductoFormController formController = loader.getController();
+
+            // ¡LE PASAMOS EL PRODUCTO PARA QUE SE PONGA EN MODO EDICIÓN!
+            formController.cargarProductoParaEdicion(selected);
+
+            javafx.stage.Stage stage = new javafx.stage.Stage();
+            stage.setTitle("Editar Material: " + selected.getIdProducto());
+            stage.setScene(new javafx.scene.Scene(root));
+            stage.setResizable(false);
+            stage.initModality(javafx.stage.Modality.APPLICATION_MODAL);
+            stage.showAndWait();
+
+            if (formController.isGuardadoExitoso()) {
+                handleActualizar(); // Recarga la tabla
+                UIComponents.showNotification("Material actualizado correctamente.", "success");
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            UIComponents.showNotification("Error al abrir el formulario de edición.", "error");
+        }
+    }
+
     @FXML private void handleExportar() { UIComponents.showNotification("Exportando...", "info"); }
 
     @FXML private void handleEliminar() {
