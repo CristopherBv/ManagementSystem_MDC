@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox spacing="20" stylesheets="@../../css/gerente.css"
+      xmlns="http://javafx.com/javafx/17.0.2" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="gestionmats.controllers.gerente.GerenteNuevoPedidoController"
+      style="-fx-background-color: #111318; -fx-padding: 25; -fx-border-color: #F58220; -fx-border-width: 3 0 0 0;">
+
+    <Label text="Generar Orden de Compra" styleClass="page-title"/>
+
+    <HBox spacing="20">
+        <VBox spacing="15" prefWidth="300">
+            <VBox spacing="5">
+                <Label text="Proveedor" styleClass="kpi-sub"/>
+                <ComboBox fx:id="cmbProveedor" prefWidth="300" styleClass="form-input"/>
+            </VBox>
+            <VBox spacing="5">
+                <Label text="Material" styleClass="kpi-sub"/>
+                <ComboBox fx:id="cmbProducto" prefWidth="300" styleClass="form-input"/>
+            </VBox>
+            <HBox spacing="10" alignment="CENTER_LEFT">
+                <VBox spacing="5">
+                    <Label text="Cantidad" styleClass="kpi-sub"/>
+                    <TextField fx:id="txtCantidad" prefWidth="100" styleClass="form-input"/>
+                </VBox>
+                <Pane HBox.hgrow="ALWAYS"/>
+                <Button fx:id="btnAgregar" text="Agregar al Pedido" onAction="#handleAgregarDetalle" styleClass="btn-edit" prefHeight="35"/>
+            </HBox>
+        </VBox>
+
+        <VBox spacing="10" HBox.hgrow="ALWAYS">
+            <TableView fx:id="tableDetalles" VBox.vgrow="ALWAYS" styleClass="data-table" prefHeight="250">
+                <columnResizePolicy>
+                    <TableView fx:constant="CONSTRAINED_RESIZE_POLICY"/>
+                </columnResizePolicy>
+                <columns>
+                    <TableColumn fx:id="colMaterial" text="MATERIAL" prefWidth="180"/>
+                    <TableColumn fx:id="colCantidad" text="CANTIDAD" prefWidth="80"/>
+                    <TableColumn fx:id="colCosto" text="SUBTOTAL" prefWidth="100"/>
+                </columns>
+            </TableView>
+            <HBox alignment="CENTER_RIGHT" spacing="15">
+                <Label text="Costo Estimado:" styleClass="kpi-sub"/>
+                <Label fx:id="lblTotal" text="0.00" styleClass="kpi-value" style="-fx-font-size: 20px;"/>
+            </HBox>
+        </VBox>
+    </HBox>
+
+    <HBox spacing="10" alignment="CENTER_RIGHT" style="-fx-padding: 10 0 0 0;">
+        <Button fx:id="btnCancelar" text="Cancelar" onAction="#handleCancelar" styleClass="btn-ghost" prefHeight="35"/>
+        <Button fx:id="btnEmitir" text="Emitir Orden" onAction="#handleEmitirOrden" styleClass="btn-add" prefHeight="35"/>
+    </HBox>
+</VBox>
