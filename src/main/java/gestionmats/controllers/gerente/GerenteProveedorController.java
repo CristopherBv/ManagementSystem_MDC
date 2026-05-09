@@ -89,12 +89,40 @@ public class GerenteProveedorController implements Initializable {
     }
 
     @FXML private void handleAgregar() {
-        // TODO: Mismo mecanismo que hicimos con GerenteProductoFormView
-        UIComponents.showNotification("Abrir formulario nuevo proveedor", "info");
+        abrirFormulario(null);
     }
 
     @FXML private void handleEditar() {
-        // TODO: Mismo mecanismo de edición
-        UIComponents.showNotification("Abrir formulario editar proveedor", "info");
+        Proveedor selected = tableProveedores.getSelectionModel().getSelectedItem();
+        if (selected != null) {
+            abrirFormulario(selected);
+        } else {
+            UIComponents.showNotification("Seleccione un proveedor de la tabla.", "warn");
+        }
+    }
+
+    private void abrirFormulario(Proveedor p) {
+        try {
+            javafx.fxml.FXMLLoader loader = new javafx.fxml.FXMLLoader(getClass().getResource("/views/gerente/GerenteProveedorFormView.fxml"));
+            javafx.scene.Parent root = loader.load();
+
+            GerenteProveedorFormController controller = loader.getController();
+            if (p != null) controller.cargarProveedorParaEdicion(p);
+
+            javafx.stage.Stage stage = new javafx.stage.Stage();
+            stage.setTitle(p == null ? "Nuevo Proveedor" : "Editar Proveedor");
+            stage.setScene(new javafx.scene.Scene(root));
+            stage.setResizable(false);
+            stage.initModality(javafx.stage.Modality.APPLICATION_MODAL);
+            stage.showAndWait();
+
+            if (controller.isGuardadoExitoso()) {
+                loadData(); // Recarga la tabla y actualiza el contador total
+                UIComponents.showNotification(p == null ? "Proveedor registrado." : "Datos actualizados.", "success");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            UIComponents.showNotification("Error al cargar el formulario.", "error");
+        }
     }
 }
