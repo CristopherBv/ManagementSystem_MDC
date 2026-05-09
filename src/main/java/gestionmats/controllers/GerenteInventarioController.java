@@ -117,7 +117,38 @@ public class GerenteInventarioController implements Initializable {
         kpiAlertas.setText(String.valueOf(alertas));
     }
 
-    @FXML private void handleAgregar() { UIComponents.showNotification("Abrir Formulario Producto", "info"); }
+
+    @FXML private void handleAgregar() {
+        try {
+            // Cargamos la vista del formulario
+            javafx.fxml.FXMLLoader loader = new javafx.fxml.FXMLLoader(getClass().getResource("/views/GerenteProductoFormView.fxml"));
+            javafx.scene.Parent root = loader.load();
+
+            // Obtenemos el controlador de esa vista
+            GerenteProductoFormController formController = loader.getController();
+
+            // Creamos la nueva ventana (Stage)
+            javafx.stage.Stage stage = new javafx.stage.Stage();
+            stage.setTitle("Registrar Nuevo Material");
+            stage.setScene(new javafx.scene.Scene(root));
+            stage.setResizable(false);
+
+            // Hacer que sea MODAL (bloquea la ventana de inventario hasta que se cierre)
+            stage.initModality(javafx.stage.Modality.APPLICATION_MODAL);
+            stage.showAndWait(); // El código se detiene aquí hasta que el usuario cierra el pop-up
+
+            // Cuando se cierra, le preguntamos al controlador si logró guardar
+            if (formController.isGuardadoExitoso()) {
+                handleActualizar(); // Tu método que ya recarga la tabla desde el CSV y actualiza KPIs
+                UIComponents.showNotification("Material agregado exitosamente.", "success");
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            UIComponents.showNotification("Error al abrir el formulario.", "error");
+        }
+    }
+
     @FXML private void handleEditar() { UIComponents.showNotification("Editar Producto", "info"); }
     @FXML private void handleExportar() { UIComponents.showNotification("Exportando...", "info"); }
 

@@ -535,3 +535,22 @@
 .chart-bar {
     -fx-bar-fill: #F58220; /* Naranja Construct Hub */
 }
+
+/* ══════════════════════════════
+   INPUTS PARA FORMULARIOS
+══════════════════════════════ */
+.form-input {
+    -fx-background-color: rgba(255,255,255,0.05);
+    -fx-text-fill: white;
+    -fx-prompt-text-fill: #9ca3af; /* Gris más claro para que no se camufle */
+    -fx-background-radius: 4; /* Radio más pequeño para quitar el efecto óvalo */
+    -fx-border-color: rgba(255,255,255,0.15);
+    -fx-border-radius: 4;
+    -fx-padding: 8 12;
+    -fx-font-size: 13px; /* Texto ligeramente más grande */
+}
+
+.form-input:focused {
+    -fx-border-color: #F58220;
+    -fx-background-color: rgba(245,130,32,0.06);
+}
