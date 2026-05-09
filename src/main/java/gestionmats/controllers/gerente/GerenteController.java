@@ -113,7 +113,9 @@ public class GerenteController implements Initializable {
     }
 
     @FXML private void showPedidos() { UIComponents.showNotification("Próximamente", "info"); }
-    @FXML private void showProveedores() { UIComponents.showNotification("Próximamente", "info"); }
+    @FXML private void showProveedores() {
+        loadModule("/views/gerente/GerenteProveedorView.fxml", navProveedores, "Directorio de Proveedores", "Gestión de empresas suministradoras");
+    }
 
     @FXML private void handleLogout() {
         NavigationTools.manejarLogout(btnLogout, clockTimeline);
