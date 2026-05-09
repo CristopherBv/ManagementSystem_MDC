@@ -68,7 +68,6 @@
 
                 <!-- ================= VISTA VENTAS ================= -->
                 <VBox fx:id="viewVentas" spacing="14" styleClass="view-panel">
-
                     <HBox alignment="CENTER_LEFT" spacing="10">
                         <TextField fx:id="txtSearchProducto" promptText="Buscar producto..." prefHeight="36" prefWidth="260" styleClass="search-input"/>
                         <ComboBox fx:id="cmbCategoria" promptText="Categoría" prefHeight="36" prefWidth="180" styleClass="combo-input"/>
@@ -77,9 +76,7 @@
 
                     <TableView fx:id="tableProductos" VBox.vgrow="ALWAYS" styleClass="data-table">
                         <placeholder><Label text="Sin productos registrados"/></placeholder>
-                        <columnResizePolicy>
-                            <TableView fx:constant="CONSTRAINED_RESIZE_POLICY"/>
-                        </columnResizePolicy>
+                        <columnResizePolicy><TableView fx:constant="CONSTRAINED_RESIZE_POLICY"/></columnResizePolicy>
                         <columns>
                             <TableColumn fx:id="colIdProducto" text="ID" prefWidth="60"/>
                             <TableColumn fx:id="colNombreProducto" text="PRODUCTO" prefWidth="250"/>
@@ -95,9 +92,7 @@
 
                     <TableView fx:id="tableCarrito" prefHeight="180" VBox.vgrow="NEVER" styleClass="data-table">
                         <placeholder><Label text="Carrito vacío"/></placeholder>
-                        <columnResizePolicy>
-                            <TableView fx:constant="CONSTRAINED_RESIZE_POLICY"/>
-                        </columnResizePolicy>
+                        <columnResizePolicy><TableView fx:constant="CONSTRAINED_RESIZE_POLICY"/></columnResizePolicy>
                         <columns>
                             <TableColumn fx:id="colIdProdCarrito" text="ID" prefWidth="60"/>
                             <TableColumn fx:id="colNombreCarrito" text="PRODUCTO" prefWidth="250"/>
@@ -147,9 +142,7 @@
                     </HBox>
                     <TableView fx:id="tableHistorial" VBox.vgrow="ALWAYS" styleClass="data-table">
                         <placeholder><Label text="No hay ventas registradas"/></placeholder>
-                        <columnResizePolicy>
-                            <TableView fx:constant="CONSTRAINED_RESIZE_POLICY"/>
-                        </columnResizePolicy>
+                        <columnResizePolicy><TableView fx:constant="CONSTRAINED_RESIZE_POLICY"/></columnResizePolicy>
                         <columns>
                             <TableColumn fx:id="colHisId" text="ID" prefWidth="60"/>
                             <TableColumn fx:id="colHisFecha" text="FECHA" prefWidth="160"/>
@@ -160,9 +153,7 @@
                             <TableColumn fx:id="colHisEstado" text="ESTADO" prefWidth="100"/>
                         </columns>
                     </TableView>
-                    <HBox alignment="CENTER_RIGHT">
-                        <Label fx:id="lblFooterHistorial" text="Mostrando 0 ventas" styleClass="footer-info"/>
-                    </HBox>
+                    <HBox alignment="CENTER_RIGHT"><Label fx:id="lblFooterHistorial" text="Mostrando 0 ventas" styleClass="footer-info"/></HBox>
                 </VBox>
 
                 <!-- ================= VISTA CLIENTES ================= -->
@@ -175,21 +166,18 @@
                     </HBox>
                     <TableView fx:id="tableClientes" VBox.vgrow="ALWAYS" styleClass="data-table">
                         <placeholder><Label text="No hay clientes registrados"/></placeholder>
-                        <columnResizePolicy>
-                            <TableView fx:constant="CONSTRAINED_RESIZE_POLICY"/>
-                        </columnResizePolicy>
+                        <columnResizePolicy><TableView fx:constant="CONSTRAINED_RESIZE_POLICY"/></columnResizePolicy>
                         <columns>
                             <TableColumn fx:id="colCliId" text="ID" prefWidth="60"/>
-                            <TableColumn fx:id="colCliNombre" text="NOMBRE" prefWidth="200"/>
+                            <TableColumn fx:id="colCliNombre" text="NOMBRE" prefWidth="180"/>
                             <TableColumn fx:id="colCliTelefono" text="TELÉFONO" prefWidth="120"/>
-                            <TableColumn fx:id="colCliEmail" text="EMAIL" prefWidth="200"/>
-                            <TableColumn fx:id="colCliPuntos" text="PUNTOS" prefWidth="100"/>
+                            <TableColumn fx:id="colCliEmail" text="EMAIL" prefWidth="180"/>
+                            <TableColumn fx:id="colCliDireccion" text="DIRECCIÓN" prefWidth="200"/>
+                            <TableColumn fx:id="colCliPuntos" text="PUNTOS" prefWidth="80"/>
                             <TableColumn fx:id="colCliPreferencias" text="PREFERENCIAS" prefWidth="150"/>
                         </columns>
                     </TableView>
-                    <HBox alignment="CENTER_RIGHT">
-                        <Label fx:id="lblFooterClientes" text="Total: 0 clientes" styleClass="footer-info"/>
-                    </HBox>
+                    <HBox alignment="CENTER_RIGHT"><Label fx:id="lblFooterClientes" text="Total: 0 clientes" styleClass="footer-info"/></HBox>
                 </VBox>
 
             </StackPane>

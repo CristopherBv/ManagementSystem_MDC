@@ -86,6 +86,8 @@ public class ClienteDaoCsv implements Dao<Cliente> {
 
     /**
      * Acumula puntos al cliente después de una venta
+     * @param idCliente ID del cliente
+     * @param montoVenta Monto total de la venta
      */
     public void acumularPuntos(int idCliente, double montoVenta) {
         Cliente c = buscarPorId(idCliente);

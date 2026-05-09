@@ -86,7 +86,7 @@ public class VendedorController implements Initializable {
     @FXML private Label lblPuntosCliente;
     @FXML private Button btnSeleccionarCliente;
     @FXML private Button btnLimpiarCliente;
-    @FXML private Button btnCanjearPuntos; // NUEVO BOTÓN
+    @FXML private Button btnCanjearPuntos;
 
     // ── VISTA HISTORIAL ───────────────────────────────────────────────
     @FXML private TextField txtBuscarVenta;
@@ -109,6 +109,7 @@ public class VendedorController implements Initializable {
     @FXML private TableColumn<Cliente, String> colCliNombre;
     @FXML private TableColumn<Cliente, String> colCliTelefono;
     @FXML private TableColumn<Cliente, String> colCliEmail;
+    @FXML private TableColumn<Cliente, String> colCliDireccion;  // NUEVA COLUMNA
     @FXML private TableColumn<Cliente, Double> colCliPuntos;
     @FXML private TableColumn<Cliente, String> colCliPreferencias;
     @FXML private Button btnNuevoCliente;
@@ -132,8 +133,8 @@ public class VendedorController implements Initializable {
     private FilteredList<Cliente> clientesFiltrados;
 
     private double descuentoGlobal = 0.0;
-    private double descuentoPorPuntos = 0.0; // Descuento generado por puntos canjeados
-    private int puntosUsados = 0; // Puntos que se van a restar del cliente
+    private double descuentoPorPuntos = 0.0;
+    private int puntosUsados = 0;
     private Cliente clienteActual = null;
     private Timeline clockTimeline;
     private Button activeNavBtn;
@@ -166,7 +167,6 @@ public class VendedorController implements Initializable {
         viewClientes.setManaged(false);
     }
 
-    // ==================== MÉTODOS EXISTENTES (SIN CAMBIOS ESTRUCTURALES) ====================
     private void setupClock() {
         DateTimeFormatter fmtFecha = DateTimeFormatter.ofPattern("EEEE, dd MMM yyyy", new java.util.Locale("es", "MX"));
         DateTimeFormatter fmtHora = DateTimeFormatter.ofPattern("HH:mm");
@@ -210,6 +210,7 @@ public class VendedorController implements Initializable {
     @FXML private void showHistorial() { cargarHistorial(); mostrarVista(viewHistorial, navHistorial, "Historial de Ventas", "Consulta de todas las ventas registradas"); }
     @FXML private void showClientes() { cargarClientes(); mostrarVista(viewClientes, navClientes, "Clientes", "Gestión de clientes y programa de lealtad"); }
 
+    // ==================== PRODUCTOS ====================
     private void setupTablaProductos() {
         colIdProducto.setCellValueFactory(new PropertyValueFactory<>("idProducto"));
         colNombreProducto.setCellValueFactory(new PropertyValueFactory<>("nombre"));
@@ -338,14 +339,14 @@ public class VendedorController implements Initializable {
     private void actualizarTotales() {
         double subtotal = carrito.stream().mapToDouble(DetalleVenta::getSubtotal).sum();
         double total = subtotal * (1 - descuentoGlobal / 100);
-        total = total - descuentoPorPuntos; // Aplicar descuento por puntos
+        total = total - descuentoPorPuntos;
         if (total < 0) total = 0;
         lblSubtotal.setText(String.format("$ %.2f", subtotal));
         lblDescuento.setText(String.format("%.1f%%", descuentoGlobal));
         lblTotal.setText(String.format("$ %.2f", total));
     }
 
-    // ==================== CLIENTE EN VENTA (CON CANJE DE PUNTOS) ====================
+    // ==================== CLIENTE EN VENTA ====================
     @FXML private void handleSeleccionarCliente() {
         Dialog<Cliente> dialog = new Dialog<>();
         dialog.setTitle("Seleccionar Cliente");
@@ -424,9 +425,8 @@ public class VendedorController implements Initializable {
         totalActual = totalActual * (1 - descuentoGlobal / 100);
 
         double puntosDisponibles = clienteActual.getPuntosLealtad();
-        double valorEnPesos = puntosDisponibles * 0.01; // 1 punto = $0.01 MXN
+        double valorEnPesos = puntosDisponibles * 0.01;
 
-        // Crear diálogo para elegir puntos
         TextInputDialog dialog = new TextInputDialog("0");
         dialog.setTitle("Canjear Puntos");
         dialog.setHeaderText("Cliente: " + clienteActual.getNombre() + "\nPuntos disponibles: " + (int) puntosDisponibles);
@@ -462,7 +462,7 @@ public class VendedorController implements Initializable {
         }
     }
 
-    // ==================== FINALIZAR VENTA (con descuento de puntos) ====================
+    // ==================== FINALIZAR VENTA ====================
     @FXML
     private void handleFinalizarVenta() {
         if (carrito.isEmpty()) {
@@ -503,15 +503,22 @@ public class VendedorController implements Initializable {
             }
         }
 
-        // Actualizar puntos del cliente
+        // ACTUALIZACIÓN DE PUNTOS USANDO EL MÉTODO DEL DAO
         if (clienteActual != null) {
-            double puntosGanados = total * 0.01;
-            double puntosFinales = clienteActual.getPuntosLealtad() - puntosUsados + puntosGanados;
-            clienteActual.setPuntosLealtad(puntosFinales);
-            clienteDao.actualizar(clienteActual);
+            // Primero restamos los puntos que usó (si canjeó)
+            if (puntosUsados > 0) {
+                double puntosRestantes = clienteActual.getPuntosLealtad() - puntosUsados;
+                clienteActual.setPuntosLealtad(puntosRestantes);
+            }
+            // Luego acumulamos los puntos ganados por la compra usando el método del DAO
+            clienteDao.acumularPuntos(clienteActual.getIdCliente(), total);
+
+            // Recargamos el cliente actual para tener los puntos actualizados
+            clienteActual = clienteDao.buscarPorId(clienteActual.getIdCliente());
+
             UIComponents.showNotification("Cliente " + clienteActual.getNombre() +
-                    " usó " + puntosUsados + " puntos, ganó " + String.format("%.0f", puntosGanados) +
-                    " nuevos puntos. Saldo actual: " + String.format("%.0f", puntosFinales), "success");
+                    " usó " + puntosUsados + " puntos, ganó nuevos puntos por la compra. Saldo actual: " +
+                    String.format("%.0f", clienteActual.getPuntosLealtad()), "success");
         }
 
         carrito.clear();
@@ -525,7 +532,7 @@ public class VendedorController implements Initializable {
         UIComponents.showNotification("Venta #" + nuevoIdVenta + " completada", "success");
     }
 
-    // ==================== HISTORIAL (SIN CAMBIOS) ====================
+    // ==================== HISTORIAL ====================
     private void setupTablaHistorial() {
         colHisId.setCellValueFactory(new PropertyValueFactory<>("idVenta"));
         colHisFecha.setCellValueFactory(new PropertyValueFactory<>("fechaHora"));
@@ -593,19 +600,31 @@ public class VendedorController implements Initializable {
         colCliNombre.setCellValueFactory(new PropertyValueFactory<>("nombre"));
         colCliTelefono.setCellValueFactory(new PropertyValueFactory<>("numeroTelefonico"));
         colCliEmail.setCellValueFactory(new PropertyValueFactory<>("correoElectronico"));
+        colCliDireccion.setCellValueFactory(new PropertyValueFactory<>("direccion")); // NUEVA COLUMNA
         colCliPuntos.setCellValueFactory(new PropertyValueFactory<>("puntosLealtad"));
         colCliPreferencias.setCellValueFactory(new PropertyValueFactory<>("preferencias"));
-        colCliPuntos.setCellFactory(col -> new TableCell<>() { @Override protected void updateItem(Double item, boolean empty) { super.updateItem(item, empty); setText(empty || item == null ? null : String.format("%.0f", item)); } });
+
+        colCliPuntos.setCellFactory(col -> new TableCell<>() {
+            @Override protected void updateItem(Double item, boolean empty) {
+                super.updateItem(item, empty);
+                setText(empty || item == null ? null : String.format("%.0f", item));
+            }
+        });
+
         todosClientes = FXCollections.observableArrayList();
         clientesFiltrados = new FilteredList<>(todosClientes, c -> true);
         tableClientes.setItems(clientesFiltrados);
         clientesFiltrados.addListener((javafx.collections.ListChangeListener<Cliente>) c -> lblFooterClientes.setText("Total: " + clientesFiltrados.size() + " clientes"));
         txtBuscarCliente.textProperty().addListener((obs, o, n) -> {
             String txt = n == null ? "" : n.toLowerCase().trim();
-            clientesFiltrados.setPredicate(c -> txt.isEmpty() || c.getNombre().toLowerCase().contains(txt) || c.getNumeroTelefonico().contains(txt));
+            clientesFiltrados.setPredicate(c -> txt.isEmpty() ||
+                    c.getNombre().toLowerCase().contains(txt) ||
+                    c.getNumeroTelefonico().contains(txt) ||
+                    c.getCorreoElectronico().toLowerCase().contains(txt));
         });
     }
     private void cargarClientes() { todosClientes.setAll(clienteDao.listarTodos()); }
+
     @FXML private void handleNuevoCliente() {
         Dialog<Cliente> dialog = new Dialog<>();
         dialog.setTitle("Nuevo Cliente"); dialog.setHeaderText("Registrar nuevo cliente");
@@ -618,8 +637,10 @@ public class VendedorController implements Initializable {
         TextField txtEmail = new TextField(); txtEmail.setPromptText("Email (opcional)");
         TextField txtDireccion = new TextField(); txtDireccion.setPromptText("Dirección (opcional)");
         TextField txtPreferencias = new TextField(); txtPreferencias.setPromptText("Preferencias (opcional)");
-        grid.addRow(0, new Label("Nombre:"), txtNombre); grid.addRow(1, new Label("Teléfono:"), txtTelefono);
-        grid.addRow(2, new Label("Email:"), txtEmail); grid.addRow(3, new Label("Dirección:"), txtDireccion);
+        grid.addRow(0, new Label("Nombre:"), txtNombre);
+        grid.addRow(1, new Label("Teléfono:"), txtTelefono);
+        grid.addRow(2, new Label("Email:"), txtEmail);
+        grid.addRow(3, new Label("Dirección:"), txtDireccion);
         grid.addRow(4, new Label("Preferencias:"), txtPreferencias);
         dialog.getDialogPane().setContent(grid);
         javafx.scene.Node btnOk = dialog.getDialogPane().lookupButton(btnGuardar);
@@ -629,10 +650,12 @@ public class VendedorController implements Initializable {
         dialog.setResultConverter(bt -> {
             if (bt != btnGuardar) return null;
             int nuevoId = clienteDao.obtenerUltimoId() + 1;
-            return new Cliente(nuevoId, txtNombre.getText().trim(), txtEmail.getText().trim(), txtTelefono.getText().trim(), txtDireccion.getText().trim(), 0.0, txtPreferencias.getText().trim());
+            return new Cliente(nuevoId, txtNombre.getText().trim(), txtEmail.getText().trim(),
+                    txtTelefono.getText().trim(), txtDireccion.getText().trim(), 0.0, txtPreferencias.getText().trim());
         });
         dialog.showAndWait().ifPresent(c -> { clienteDao.guardar(c); cargarClientes(); UIComponents.showNotification("Cliente registrado", "success"); });
     }
+
     @FXML private void handleEditarCliente() {
         Cliente sel = tableClientes.getSelectionModel().getSelectedItem();
         if (sel == null) { UIComponents.showNotification("Seleccione un cliente para editar", "warn"); return; }
@@ -642,22 +665,29 @@ public class VendedorController implements Initializable {
         dialog.getDialogPane().getButtonTypes().addAll(btnGuardar, ButtonType.CANCEL);
         dialog.getDialogPane().setStyle("-fx-background-color: #16181f;");
         GridPane grid = new GridPane(); grid.setHgap(12); grid.setVgap(12); grid.setPadding(new Insets(16));
-        TextField txtNombre = new TextField(sel.getNombre()); TextField txtTelefono = new TextField(sel.getNumeroTelefonico());
-        TextField txtEmail = new TextField(sel.getCorreoElectronico()); TextField txtDireccion = new TextField(sel.getDireccion());
+        TextField txtNombre = new TextField(sel.getNombre());
+        TextField txtTelefono = new TextField(sel.getNumeroTelefonico());
+        TextField txtEmail = new TextField(sel.getCorreoElectronico());
+        TextField txtDireccion = new TextField(sel.getDireccion());
         TextField txtPreferencias = new TextField(sel.getPreferencias());
-        grid.addRow(0, new Label("Nombre:"), txtNombre); grid.addRow(1, new Label("Teléfono:"), txtTelefono);
-        grid.addRow(2, new Label("Email:"), txtEmail); grid.addRow(3, new Label("Dirección:"), txtDireccion);
+        grid.addRow(0, new Label("Nombre:"), txtNombre);
+        grid.addRow(1, new Label("Teléfono:"), txtTelefono);
+        grid.addRow(2, new Label("Email:"), txtEmail);
+        grid.addRow(3, new Label("Dirección:"), txtDireccion);
         grid.addRow(4, new Label("Preferencias:"), txtPreferencias);
         dialog.getDialogPane().setContent(grid);
         dialog.setResultConverter(bt -> {
             if (bt != btnGuardar) return null;
-            sel.setNombre(txtNombre.getText().trim()); sel.setNumeroTelefonico(txtTelefono.getText().trim());
-            sel.setCorreoElectronico(txtEmail.getText().trim()); sel.setDireccion(txtDireccion.getText().trim());
+            sel.setNombre(txtNombre.getText().trim());
+            sel.setNumeroTelefonico(txtTelefono.getText().trim());
+            sel.setCorreoElectronico(txtEmail.getText().trim());
+            sel.setDireccion(txtDireccion.getText().trim());
             sel.setPreferencias(txtPreferencias.getText().trim());
             return sel;
         });
         dialog.showAndWait().ifPresent(c -> { clienteDao.actualizar(c); cargarClientes(); UIComponents.showNotification("Cliente actualizado", "success"); });
     }
+
     @FXML private void handleEliminarCliente() {
         Cliente sel = tableClientes.getSelectionModel().getSelectedItem();
         if (sel == null) { UIComponents.showNotification("Seleccione un cliente para eliminar", "warn"); return; }
