@@ -86,6 +86,7 @@ public class VendedorController implements Initializable {
     @FXML private Label lblPuntosCliente;
     @FXML private Button btnSeleccionarCliente;
     @FXML private Button btnLimpiarCliente;
+    @FXML private Button btnCanjearPuntos;  // ✅ NUEVO
 
     // ── VISTA HISTORIAL ───────────────────────────────────────────────
     @FXML private TextField txtBuscarVenta;
@@ -478,6 +479,78 @@ public class VendedorController implements Initializable {
         descuentoGlobal = 0.0;
         actualizarTotales();
         actualizarInfoCliente();
+    }
+
+    // ✅ NUEVO MÉTODO: Canjear puntos
+    @FXML
+    private void handleCanjearPuntos() {
+        if (clienteActual == null) {
+            UIComponents.showNotification("No hay cliente seleccionado", "warn");
+            return;
+        }
+
+        if (clienteActual.getPuntosLealtad() <= 0) {
+            UIComponents.showNotification("El cliente no tiene puntos acumulados", "warn");
+            return;
+        }
+
+        // Calcular descuento máximo disponible (10 puntos = $1 peso)
+        double descuentoMaximo = clienteActual.getPuntosLealtad() * 0.10;
+
+        TextInputDialog dialog = new TextInputDialog("0");
+        dialog.setTitle("Canjear puntos");
+        dialog.setHeaderText("Cliente: " + clienteActual.getNombre());
+        dialog.setContentText("Puntos disponibles: " + String.format("%.0f", clienteActual.getPuntosLealtad()) +
+                "\nEquivalencia: 10 puntos = $1 peso" +
+                "\nDescuento máximo disponible: $" + String.format("%.2f", descuentoMaximo) +
+                "\n\n¿Cuántos puntos desea canjear?");
+
+        Optional<String> result = dialog.showAndWait();
+        if (result.isPresent()) {
+            try {
+                double puntosCanjear = Double.parseDouble(result.get().trim());
+                if (puntosCanjear <= 0) {
+                    UIComponents.showNotification("Ingrese una cantidad válida", "warn");
+                    return;
+                }
+                if (puntosCanjear > clienteActual.getPuntosLealtad()) {
+                    UIComponents.showNotification("No tiene suficientes puntos", "warn");
+                    return;
+                }
+
+                // Calcular descuento: 10 puntos = $1 peso
+                double descuentoPesos = puntosCanjear * 0.10;
+
+                // Confirmar canje
+                boolean confirm = UIComponents.showConfirmDialog("Confirmar canje",
+                        "Se canjearán " + String.format("%.0f", puntosCanjear) + " puntos por $" +
+                                String.format("%.2f", descuentoPesos) + " de descuento.\n¿Continuar?");
+
+                if (confirm) {
+                    // Aplicar el descuento directamente al total
+                    double subtotal = carrito.stream().mapToDouble(DetalleVenta::getSubtotal).sum();
+                    if (subtotal > 0) {
+                        double porcentajeAdicional = (descuentoPesos / subtotal) * 100;
+                        descuentoGlobal += porcentajeAdicional;
+                    } else {
+                        UIComponents.showNotification("El carrito está vacío. Agregue productos primero.", "warn");
+                        return;
+                    }
+
+                    // Restar puntos del cliente
+                    clienteActual.setPuntosLealtad(clienteActual.getPuntosLealtad() - puntosCanjear);
+                    clienteDao.actualizar(clienteActual);
+
+                    actualizarInfoCliente();
+                    actualizarTotales();
+
+                    UIComponents.showNotification("Se canjearon " + String.format("%.0f", puntosCanjear) +
+                            " puntos por $" + String.format("%.2f", descuentoPesos) + " de descuento", "success");
+                }
+            } catch (NumberFormatException e) {
+                UIComponents.showNotification("Cantidad inválida", "error");
+            }
+        }
     }
 
     private void actualizarInfoCliente() {
