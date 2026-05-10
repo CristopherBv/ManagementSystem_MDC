@@ -1,19 +1,25 @@
 package gestionmats.model;
 
+import gestionmats.strategy.EstrategiaPago;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Venta {
     private int idVenta;
-    private int idCliente;        // Cliente que compra (id=0 para cliente genérico)
-    private int idVendedor;       // Usuario que realizó la venta
-    private String fechaHora;     // Formato: "yyyy-MM-dd HH:mm:ss"
-    private String tipoVenta;     // "INSTANTANEA" o "PEDIDO"
-    private String metodoPago;    // "EFECTIVO", "TARJETA", "CREDITO"
+    private int idCliente;
+    private int idVendedor;
+    private String fechaHora;
+    private String tipoVenta;
+    private String metodoPago;
     private double subtotal;
-    private double descuento;      // Porcentaje aplicado (ej: 10.0 = 10%)
+    private double descuento;
     private double total;
-    private String estado;         // "COMPLETADA", "PENDIENTE", "CANCELADA"
+    private String estado;
+
+    private List<DetalleVenta> detalles;
+    private EstrategiaPago estrategiaPago;
 
     // Constructor completo
     public Venta(int idVenta, int idCliente, int idVendedor, String fechaHora,
@@ -29,9 +35,11 @@ public class Venta {
         this.descuento = descuento;
         this.total = total;
         this.estado = estado;
+        this.detalles = new ArrayList<>();
+        this.estrategiaPago = null;
     }
 
-    // Constructor para crear una venta nueva (sin ID aún)
+    // Constructor para nueva venta (sin ID)
     public Venta(int idCliente, int idVendedor, String tipoVenta,
                  String metodoPago, double subtotal, double descuento, double total) {
         this.idCliente = idCliente;
@@ -43,9 +51,11 @@ public class Venta {
         this.descuento = descuento;
         this.total = total;
         this.estado = "COMPLETADA";
+        this.detalles = new ArrayList<>();
+        this.estrategiaPago = null;
     }
 
-    // Getters y Setters
+    // ========== GETTERS Y SETTERS ==========
     public int getIdVenta() { return idVenta; }
     public void setIdVenta(int idVenta) { this.idVenta = idVenta; }
 
@@ -76,14 +86,38 @@ public class Venta {
     public String getEstado() { return estado; }
     public void setEstado(String estado) { this.estado = estado; }
 
+    // ========== MÉTODOS PARA DETALLES ==========
+    public List<DetalleVenta> getDetalles() {
+        return detalles;
+    }
+
+    public void setDetalles(List<DetalleVenta> detalles) {
+        this.detalles = detalles;
+    }
+
+    public void agregarDetalle(DetalleVenta detalle) {
+        this.detalles.add(detalle);
+    }
+
+    // ========== MÉTODOS PARA ESTRATEGIA DE PAGO ==========
+    public EstrategiaPago getEstrategiaPago() {
+        return estrategiaPago;
+    }
+
+    public void setEstrategiaPago(EstrategiaPago estrategiaPago) {
+        this.estrategiaPago = estrategiaPago;
+    }
+
+    public boolean procesarPago() {
+        if (estrategiaPago != null) {
+            return estrategiaPago.procesarPago(this.total);
+        }
+        System.out.println("No se ha definido una estrategia de pago.");
+        return false;
+    }
+
     @Override
     public String toString() {
-        return "Venta{" +
-                "idVenta=" + idVenta +
-                ", idCliente=" + idCliente +
-                ", idVendedor=" + idVendedor +
-                ", fechaHora='" + fechaHora + '\'' +
-                ", total=" + total +
-                '}';
+        return "Venta #" + idVenta + " - Total: $" + total;
     }
 }
