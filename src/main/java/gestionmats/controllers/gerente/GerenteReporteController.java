@@ -11,6 +11,9 @@ import javafx.scene.chart.*;
 import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
 import javafx.util.Duration;
+import javafx.stage.FileChooser;
+import java.io.File;
+import java.io.PrintWriter;
 
 import java.net.URL;
 import java.time.LocalDate;
@@ -199,7 +202,42 @@ public class GerenteReporteController implements Initializable {
         });
     }
 
-    @FXML private void handleExportarReporte() {
-        UIComponents.showNotification("Reporte generado con filtros actuales.", "success");
+    @FXML
+    private void handleExportarReporte() {
+        // 1. Configurar la ventana para guardar el archivo
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Guardar Reporte de Ventas");
+        fileChooser.setInitialFileName("Reporte_Ventas_" + LocalDate.now() + ".txt");
+        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Texto Plano (*.txt)", "*.txt"));
+
+        // 2. Mostrar la ventana y esperar a que el usuario elija dónde guardar
+        File file = fileChooser.showSaveDialog(btnExportar.getScene().getWindow());
+
+        // 3. Si el usuario seleccionó una ruta (y no canceló)
+        if (file != null) {
+            try (PrintWriter writer = new PrintWriter(file)) {
+                // Escribir el formato del reporte
+                writer.println("==================================================");
+                writer.println("   REPORTE DE INTELIGENCIA DE NEGOCIO - SDG_MDC   ");
+                writer.println("==================================================");
+                writer.println("Periodo analizado: " + dpInicio.getValue() + " AL " + dpFin.getValue());
+                writer.println("Filtro de categoría: " + cmbCategoria.getValue());
+                writer.println("Fecha de impresión: " + LocalDateTime.now().format(fmt));
+                writer.println("--------------------------------------------------");
+                writer.println("RESUMEN FINANCIERO:");
+                writer.println("- Ingresos Totales:    " + lblUtilidadTotal.getText());
+                writer.println("- Producto Estrella:   " + lblMasVendido.getText());
+                writer.println("- Categoría Dominante: " + lblMejorCategoria.getText());
+                writer.println("--------------------------------------------------");
+                writer.println("Este reporte fue generado por el sistema de gestión.");
+                writer.println("Uso exclusivo para la Gerencia General.");
+
+                // Avisar que todo salió bien
+                UIComponents.showNotification("Reporte guardado con éxito.", "success");
+            } catch (Exception e) {
+                e.printStackTrace();
+                UIComponents.showNotification("Error al guardar el archivo de texto.", "error");
+            }
+        }
     }
 }
