@@ -3,10 +3,7 @@ package gestionmats.controllers.gerente;
 import gestionmats.dao.OrdenCompraDaoCsv;
 import gestionmats.dao.ProductoDaoCsv;
 import gestionmats.dao.ProveedorDaoCsv;
-import gestionmats.model.DetalleOrden;
-import gestionmats.model.OrdenCompra;
-import gestionmats.model.Producto;
-import gestionmats.model.Proveedor;
+import gestionmats.model.*;
 import gestionmats.utils.UIComponents;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
@@ -111,8 +108,14 @@ public class GerenteNuevoPedidoController implements Initializable {
             nuevaOrden.addDetalleOrden(det);
         }
 
-        // El Super-DAO se encarga de guardar todo
+        // El Super-DAO se encarga de guardar all
         if (ordenDao.guardar(nuevaOrden)) {
+
+            Usuario u = gestionmats.services.GestorSesion.getInstancia().getUsuarioActual();
+            if (u instanceof Gerente) {
+                ((Gerente) u).generarOrdenCompra(nuevaOrden.getIdOrden(), prov.getNombreProveedor());
+            }
+
             ordenGenerada = true;
             cerrarVentana();
         } else {
