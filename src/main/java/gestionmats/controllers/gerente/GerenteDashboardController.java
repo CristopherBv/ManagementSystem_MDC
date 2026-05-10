@@ -1,14 +1,18 @@
 package gestionmats.controllers.gerente;
 
 import gestionmats.dao.ProductoDaoCsv;
+import gestionmats.dao.ClienteDaoCsv;
+import gestionmats.dao.ProveedorDaoCsv;
+import gestionmats.dao.OrdenCompraDaoCsv;
 import gestionmats.model.Producto;
 import gestionmats.model.EstadoProducto;
-import gestionmats.utils.UIComponents;
+import gestionmats.model.OrdenCompra;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.chart.*;
 import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
+import gestionmats.utils.UIComponents;
 
 import java.net.URL;
 import java.util.List;
@@ -25,20 +29,28 @@ public class GerenteDashboardController implements Initializable {
     public void initialize(URL url, ResourceBundle rb) {
         cargarDatosReales();
         cargarDatosSimulados();
+        setupAnimations();
+    }
 
-        // Le aplicamos una escala muy sutil (1.03) para que no sea exagerado
-        UIComponents.applyHoverScale(boxProductos, 5);
-        UIComponents.applyHoverScale(boxAlertas, 5);
-        UIComponents.applyHoverScale(boxVentas, 5);
-        UIComponents.applyHoverScale(boxClientes, 5);
-        UIComponents.applyHoverScale(boxProveedores, 5);
-        UIComponents.applyHoverScale(boxPedidos, 5);
+    private void setupAnimations() {
+        // Aplicamos el efecto de escala que configuramos en UIComponents
+        UIComponents.applyHoverScale(boxProductos, 1.03);
+        UIComponents.applyHoverScale(boxAlertas, 1.03);
+        UIComponents.applyHoverScale(boxVentas, 1.03);
+        UIComponents.applyHoverScale(boxClientes, 1.03);
+        UIComponents.applyHoverScale(boxProveedores, 1.03);
+        UIComponents.applyHoverScale(boxPedidos, 1.03);
     }
 
     private void cargarDatosReales() {
-        ProductoDaoCsv dao = new ProductoDaoCsv();
-        List<Producto> productos = dao.listarTodos();
+        // 1. Instanciamos todos los DAOs necesarios
+        ProductoDaoCsv productoDao = new ProductoDaoCsv();
+        ClienteDaoCsv clienteDao = new ClienteDaoCsv();
+        ProveedorDaoCsv proveedorDao = new ProveedorDaoCsv();
+        OrdenCompraDaoCsv ordenDao = new OrdenCompraDaoCsv();
 
+        // --- SECCIÓN PRODUCTOS ---
+        List<Producto> productos = productoDao.listarTodos();
         lblTotalProductos.setText(String.valueOf(productos.size()));
 
         long alertas = productos.stream()
@@ -46,7 +58,24 @@ public class GerenteDashboardController implements Initializable {
                 .count();
         lblAlertas.setText(String.valueOf(alertas));
 
-        // Gráfica de pastel mejorada
+        // --- SECCIÓN CLIENTES ---
+        // Conectado con el DAO que me pasaste
+        int totalClientes = clienteDao.listarTodos().size();
+        lblClientes.setText(String.valueOf(totalClientes));
+
+        // --- SECCIÓN PROVEEDORES ---
+        int totalProveedores = proveedorDao.listarTodos().size();
+        lblProveedores.setText(String.valueOf(totalProveedores));
+
+        // --- SECCIÓN PEDIDOS PENDIENTES ---
+        // Filtramos para contar solo los que no han sido surtidos ni cancelados
+        long pedidosPendientes = ordenDao.listarTodos().stream()
+                .filter(o -> o.getEstado().equals("EMITIDA") || o.getEstado().equals("INCOMPLETA"))
+                .count();
+        lblPedidos.setText(String.valueOf(pedidosPendientes));
+
+        // --- GRÁFICA DE INVENTARIO ---
+        chartInventario.getData().clear();
         long ok = productos.stream()
                 .filter(p -> p.getEstado() == EstadoProducto.OK || p.getEstado() == EstadoProducto.LLENO)
                 .count();
@@ -56,19 +85,11 @@ public class GerenteDashboardController implements Initializable {
     }
 
     private void cargarDatosSimulados() {
-        // TODO: Conectar con ClienteDaoCsv
-        lblClientes.setText("48");
-
-        // TODO: Conectar con ProveedorDaoCsv
-        lblProveedores.setText("12");
-
-        // TODO: Conectar con OrdenCompraDao
-        lblPedidos.setText("5");
-
-        // TODO: Implementar lógica de ingresos diarios desde VentaDaoCsv
+        // TODO: Implementar lógica de ingresos diarios reales desde VentaDaoCsv cuando el equipo de Ventas termine
         lblVentasHoy.setText("$14,250.00");
 
-        // Simulación de gráfica de barras
+        // Simulación de gráfica de barras (Ventas de la semana)
+        chartVentas.getData().clear();
         XYChart.Series<String, Number> series = new XYChart.Series<>();
         series.getData().add(new XYChart.Data<>("Lun", 12000));
         series.getData().add(new XYChart.Data<>("Mar", 15000));

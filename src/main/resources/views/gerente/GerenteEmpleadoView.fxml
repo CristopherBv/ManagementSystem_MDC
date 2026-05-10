@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox spacing="14" styleClass="view-panel"
+      xmlns="http://javafx.com/javafx/17.0.2" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="gestionmats.controllers.gerente.GerenteEmpleadoController">
+
+    <HBox styleClass="toolbar" alignment="CENTER_LEFT" spacing="10">
+        <TextField fx:id="txtSearch" promptText="Buscar por nombre o usuario..." prefHeight="36" prefWidth="300" styleClass="search-input"/>
+        <Pane HBox.hgrow="ALWAYS"/>
+        <Button fx:id="btnAgregar" text="+ Nuevo Empleado" onAction="#handleNuevoEmpleado" prefHeight="36" styleClass="btn-add"/>
+        <Button fx:id="btnEditar" text="Editar" onAction="#handleEditarEmpleado" prefHeight="36" styleClass="btn-edit"/>
+        <Button fx:id="btnEliminar" text="Eliminar" onAction="#handleEliminarEmpleado" prefHeight="36" styleClass="btn-delete"/>
+    </HBox>
+
+    <TableView fx:id="tableEmpleados" VBox.vgrow="ALWAYS" styleClass="data-table">
+        <columnResizePolicy>
+            <TableView fx:constant="CONSTRAINED_RESIZE_POLICY"/>
+        </columnResizePolicy>
+        <columns>
+            <TableColumn fx:id="colId" text="ID" prefWidth="60" minWidth="60" maxWidth="80"/>
+            <TableColumn fx:id="colNombreCompleto" text="NOMBRE COMPLETO" prefWidth="300"/>
+            <TableColumn fx:id="colUsername" text="USUARIO (LOGIN)" prefWidth="150"/>
+            <TableColumn fx:id="colRol" text="PUESTO / ROL" prefWidth="170" minWidth="170" maxWidth="180"/>
+        </columns>
+        <placeholder>
+            <Label text="No hay empleados registrados en el sistema."/>
+        </placeholder>
+    </TableView>
+
+    <HBox alignment="CENTER_LEFT" spacing="10" styleClass="table-footer">
+        <Label fx:id="lblTotal" text="Total: 0 empleados" styleClass="footer-info"/>
+    </HBox>
+
+</VBox>

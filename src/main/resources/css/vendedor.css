@@ -198,6 +198,7 @@
 
 .view-panel {
     -fx-spacing: 12;
+    -fx-fit-to-width: true; /* Ajuste para que el VBox ocupe todo */
 }
 
 /* TOOLBAR */
@@ -301,7 +302,7 @@
 }
 
 /* ══════════════════════════════
-   TABLA
+   TABLAS
 ══════════════════════════════ */
 .data-table {
     -fx-background-color: transparent;
@@ -309,6 +310,7 @@
     -fx-border-radius: 9;
     -fx-background-radius: 9;
     -fx-table-cell-border-color: transparent;
+    -fx-pref-width: 100%; /* FIX: Asegura que use todo el ancho */
 }
 
 .data-table .column-header-background {

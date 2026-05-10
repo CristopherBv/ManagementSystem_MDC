@@ -23,7 +23,7 @@ import java.util.ResourceBundle;
 public class GerenteController implements Initializable {
 
     @FXML private Label lblPageTitle, lblPageSub, lblFecha, lblHora, lblUserName; // <-- Agregado lblUserName
-    @FXML private Button navDashboard, navInventario, navPedidos, navClientes, navProveedores, btnLogout;
+    @FXML private Button navDashboard, navEmpleados, navInventario, navPedidos, navClientes, navProveedores, btnLogout;
     @FXML private StackPane contentArea;
 
     private Timeline clockTimeline;
@@ -60,6 +60,7 @@ public class GerenteController implements Initializable {
 
     private void setupNavButtons() {
         UIComponents.applyNavHover(navDashboard);
+        UIComponents.applyNavHover(navEmpleados);
         UIComponents.applyNavHover(navInventario);
         UIComponents.applyNavHover(navPedidos);
         UIComponents.applyNavHover(navClientes);
@@ -107,9 +108,12 @@ public class GerenteController implements Initializable {
         loadModule("/views/gerente/GerenteInventarioView.fxml", navInventario, "Inventario", "Gestión de stock físico");
     }
 
+    @FXML private void showEmpleados() {
+        loadModule("/views/gerente/GerenteEmpleadoView.fxml", navEmpleados, "Administración de Personal", "Gestión de accesos y roles del sistema");
+    }
+
     @FXML private void showClientes() {
-        // Cuando esté listo: loadModule("/views/GerenteClienteView.fxml", navClientes, "Clientes", "Cartera de clientes");
-        UIComponents.showNotification("Módulo de Clientes en desarrollo", "info");
+        loadModule("/views/gerente/GerenteClienteView.fxml", navClientes, "Cartera de Clientes", "Gestión de clientes y programa de lealtad");
     }
 
     @FXML private void showPedidos() {
