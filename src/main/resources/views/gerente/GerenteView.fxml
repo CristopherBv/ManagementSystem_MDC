@@ -33,6 +33,9 @@
                 <Button fx:id="navDashboard" text="  Panel de Control" onAction="#showDashboard"
                         prefWidth="220" prefHeight="44" styleClass="nav-btn"/>
 
+                <Button fx:id="navEmpleados" text="  Empleados" onAction="#showEmpleados"
+                        prefWidth="220" prefHeight="44" styleClass="nav-btn"/>
+
                 <Button fx:id="navInventario" text="  Inventario" onAction="#showInventario"
                         prefWidth="220" prefHeight="44" styleClass="nav-btn"/>
 
