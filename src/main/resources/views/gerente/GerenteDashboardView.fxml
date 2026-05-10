@@ -17,38 +17,55 @@
         <rowConstraints>
             <RowConstraints vgrow="SOMETIMES" />
             <RowConstraints vgrow="SOMETIMES" />
+            <RowConstraints vgrow="SOMETIMES" />
         </rowConstraints>
 
-        <VBox styleClass="kpi-card, kpi-orange" GridPane.columnIndex="0" GridPane.rowIndex="0">
+        <VBox fx:id="boxProductos" styleClass="kpi-card, kpi-orange" GridPane.columnIndex="0" GridPane.rowIndex="0">
             <Label text="PRODUCTOS EN STOCK" styleClass="kpi-label"/>
             <Label fx:id="lblTotalProductos" text="0" styleClass="kpi-value"/>
             <Label text="Sincronizado con Inventario" styleClass="kpi-sub"/>
         </VBox>
-        <VBox styleClass="kpi-card, kpi-red" GridPane.columnIndex="1" GridPane.rowIndex="0">
+        <VBox fx:id="boxAlertas" styleClass="kpi-card, kpi-red" GridPane.columnIndex="1" GridPane.rowIndex="0">
             <Label text="ALERTAS CRÍTICAS" styleClass="kpi-label"/>
             <Label fx:id="lblAlertas" text="0" styleClass="kpi-value"/>
             <Label text="Bajo el mínimo permitido" styleClass="kpi-sub"/>
         </VBox>
-        <VBox styleClass="kpi-card, kpi-green" GridPane.columnIndex="2" GridPane.rowIndex="0">
+        <VBox fx:id="boxVentas" styleClass="kpi-card, kpi-green" GridPane.columnIndex="2" GridPane.rowIndex="0">
             <Label text="VENTAS DEL DÍA" styleClass="kpi-label"/>
             <Label fx:id="lblVentasHoy" text="0.00" styleClass="kpi-value"/>
             <Label text="Ingresos brutos hoy" styleClass="kpi-sub"/>
         </VBox>
 
-        <VBox styleClass="kpi-card, kpi-blue" GridPane.columnIndex="0" GridPane.rowIndex="1">
+        <VBox fx:id="boxClientes" styleClass="kpi-card, kpi-blue" GridPane.columnIndex="0" GridPane.rowIndex="1">
             <Label text="CLIENTES REGISTRADOS" styleClass="kpi-label"/>
             <Label fx:id="lblClientes" text="--" styleClass="kpi-value"/>
             <Label text="Cartera activa" styleClass="kpi-sub"/>
         </VBox>
-        <VBox styleClass="kpi-card, kpi-orange" GridPane.columnIndex="1" GridPane.rowIndex="1">
+        <VBox fx:id="boxProveedores" styleClass="kpi-card, kpi-orange" GridPane.columnIndex="1" GridPane.rowIndex="1">
             <Label text="PROVEEDORES" styleClass="kpi-label"/>
             <Label fx:id="lblProveedores" text="--" styleClass="kpi-value"/>
             <Label text="Contactos directos" styleClass="kpi-sub"/>
         </VBox>
-        <VBox styleClass="kpi-card, kpi-blue" GridPane.columnIndex="2" GridPane.rowIndex="1">
+        <VBox fx:id="boxPedidos" styleClass="kpi-card, kpi-blue" GridPane.columnIndex="2" GridPane.rowIndex="1">
             <Label text="PEDIDOS PENDIENTES" styleClass="kpi-label"/>
             <Label fx:id="lblPedidos" text="--" styleClass="kpi-value"/>
             <Label text="Órdenes de compra" styleClass="kpi-sub"/>
+        </VBox>
+
+        <VBox fx:id="boxVendedores" styleClass="kpi-card, kpi-orange" GridPane.columnIndex="0" GridPane.rowIndex="2">
+            <Label text="VENDEDORES" styleClass="kpi-label"/>
+            <Label fx:id="lblVendedores" text="0" styleClass="kpi-value"/>
+            <Label text="Personal de mostrador" styleClass="kpi-sub"/>
+        </VBox>
+        <VBox fx:id="boxAlmacenistas" styleClass="kpi-card, kpi-blue" GridPane.columnIndex="1" GridPane.rowIndex="2">
+            <Label text="ALMACENISTAS" styleClass="kpi-label"/>
+            <Label fx:id="lblAlmacenistas" text="0" styleClass="kpi-value"/>
+            <Label text="Control de almacén" styleClass="kpi-sub"/>
+        </VBox>
+        <VBox fx:id="boxEmpleadosTotal" styleClass="kpi-card, kpi-green" GridPane.columnIndex="2" GridPane.rowIndex="2">
+            <Label text="TOTAL DE USUARIOS" styleClass="kpi-label"/>
+            <Label fx:id="lblTotalEmpleados" text="0" styleClass="kpi-value"/>
+            <Label text="Accesos al sistema" styleClass="kpi-sub"/>
         </VBox>
     </GridPane>
 
