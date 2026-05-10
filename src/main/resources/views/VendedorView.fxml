@@ -11,7 +11,6 @@
             xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="gestionmats.controllers.VendedorController">
 
-    <!-- SIDEBAR IZQUIERDO -->
     <left>
         <VBox styleClass="sidebar" prefWidth="220" spacing="0">
             <Pane styleClass="sidebar-accent" prefHeight="4"/>
@@ -48,7 +47,6 @@
         </VBox>
     </left>
 
-    <!-- CONTENIDO PRINCIPAL -->
     <center>
         <VBox styleClass="main-content" spacing="0">
             <HBox styleClass="topbar" alignment="CENTER_LEFT" spacing="0">
@@ -75,7 +73,6 @@
                     </HBox>
 
                     <TableView fx:id="tableProductos" VBox.vgrow="ALWAYS" styleClass="data-table">
-                        <placeholder><Label text="Sin productos registrados"/></placeholder>
                         <columnResizePolicy><TableView fx:constant="CONSTRAINED_RESIZE_POLICY"/></columnResizePolicy>
                         <columns>
                             <TableColumn fx:id="colIdProducto" text="ID" prefWidth="60"/>
@@ -91,7 +88,6 @@
                     </HBox>
 
                     <TableView fx:id="tableCarrito" prefHeight="180" VBox.vgrow="NEVER" styleClass="data-table">
-                        <placeholder><Label text="Carrito vacio"/></placeholder>
                         <columnResizePolicy><TableView fx:constant="CONSTRAINED_RESIZE_POLICY"/></columnResizePolicy>
                         <columns>
                             <TableColumn fx:id="colIdProdCarrito" text="ID" prefWidth="60"/>
@@ -107,18 +103,9 @@
                         <Button fx:id="btnEliminarDelCarrito" text="Eliminar" onAction="#handleEliminarDelCarrito" prefHeight="32" styleClass="btn-delete"/>
                         <Pane HBox.hgrow="ALWAYS"/>
                         <VBox alignment="CENTER_RIGHT" spacing="4">
-                            <HBox spacing="15">
-                                <Label text="Subtotal:" styleClass="footer-info"/>
-                                <Label fx:id="lblSubtotal" text="0.00" styleClass="kpi-value"/>
-                            </HBox>
-                            <HBox spacing="15">
-                                <Label text="Descuento:" styleClass="footer-info"/>
-                                <Label fx:id="lblDescuento" text="0" styleClass="kpi-orange"/>
-                            </HBox>
-                            <HBox spacing="15">
-                                <Label text="TOTAL:" styleClass="footer-info"/>
-                                <Label fx:id="lblTotal" text="0.00" styleClass="kpi-value"/>
-                            </HBox>
+                            <HBox spacing="15"><Label text="Subtotal:"/><Label fx:id="lblSubtotal" text="0.00" styleClass="kpi-value"/></HBox>
+                            <HBox spacing="15"><Label text="Descuento:"/><Label fx:id="lblDescuento" text="0" styleClass="kpi-orange"/></HBox>
+                            <HBox spacing="15"><Label text="TOTAL:"/><Label fx:id="lblTotal" text="0.00" styleClass="kpi-value"/></HBox>
                         </VBox>
                     </HBox>
 
@@ -126,32 +113,25 @@
                         <Button fx:id="btnSeleccionarCliente" text="Seleccionar Cliente" onAction="#handleSeleccionarCliente" styleClass="btn-edit"/>
                         <Button fx:id="btnLimpiarCliente" text="Limpiar Cliente" onAction="#handleLimpiarCliente" styleClass="btn-ghost"/>
                         <Button fx:id="btnCanjearPuntos" text="Canjear Puntos" onAction="#handleCanjearPuntos" styleClass="btn-add"/>
-                        <Label text="Cliente:" styleClass="field-label"/>
-                        <Label fx:id="lblClienteSeleccionado" text="" styleClass="footer-info"/>
-                        <Label fx:id="lblPuntosCliente" text="" styleClass="footer-info"/>
+                        <Label text="Cliente:"/><Label fx:id="lblClienteSeleccionado" text=""/><Label fx:id="lblPuntosCliente" text=""/>
                     </HBox>
 
                     <HBox alignment="CENTER_RIGHT" spacing="15">
-                        <Label text="Metodo de pago:" styleClass="field-label"/>
-                        <ComboBox fx:id="cmbMetodoPago" prefWidth="150" styleClass="combo-input"/>
-                        <Label text="Tipo de venta:" styleClass="field-label"/>
-                        <ComboBox fx:id="cmbTipoVenta" prefWidth="150" styleClass="combo-input"/>
-                        <Button fx:id="btnAplicarDescuento" text="Aplicar descuento" onAction="#handleAplicarDescuento" prefHeight="36" styleClass="btn-edit"/>
-                        <Button fx:id="btnFinalizarVenta" text="Finalizar venta" onAction="#handleFinalizarVenta" prefHeight="36" styleClass="btn-add"/>
+                        <Label text="Metodo de pago:"/><ComboBox fx:id="cmbMetodoPago" prefWidth="150"/>
+                        <Label text="Tipo de venta:"/><ComboBox fx:id="cmbTipoVenta" prefWidth="150"/>
+                        <Button fx:id="btnAplicarDescuento" text="Aplicar descuento" onAction="#handleAplicarDescuento" styleClass="btn-edit"/>
+                        <Button fx:id="btnFinalizarVenta" text="Finalizar venta" onAction="#handleFinalizarVenta" styleClass="btn-add"/>
                     </HBox>
                 </VBox>
 
                 <!-- VISTA HISTORIAL -->
                 <VBox fx:id="viewHistorial" visible="false" managed="false" spacing="14" styleClass="view-panel">
                     <HBox alignment="CENTER_LEFT" spacing="15">
-                        <TextField fx:id="txtBuscarVenta" promptText="Buscar por ID o fecha..." HBox.hgrow="ALWAYS" styleClass="search-input"/>
-                        <Label text="Estado:"/>
-                        <ComboBox fx:id="cmbFiltroEstado" prefWidth="150" styleClass="combo-input"/>
+                        <TextField fx:id="txtBuscarVenta" promptText="Buscar por ID o fecha..." styleClass="search-input"/>
+                        <Label text="Estado:"/><ComboBox fx:id="cmbFiltroEstado" prefWidth="150"/>
                         <Button text="Ver detalle" onAction="#handleVerDetalleVenta" styleClass="btn-edit"/>
                     </HBox>
                     <TableView fx:id="tableHistorial" VBox.vgrow="ALWAYS" styleClass="data-table">
-                        <placeholder><Label text="No hay ventas registradas"/></placeholder>
-                        <columnResizePolicy><TableView fx:constant="CONSTRAINED_RESIZE_POLICY"/></columnResizePolicy>
                         <columns>
                             <TableColumn fx:id="colHisId" text="ID" prefWidth="60"/>
                             <TableColumn fx:id="colHisFecha" text="FECHA" prefWidth="160"/>
@@ -162,22 +142,18 @@
                             <TableColumn fx:id="colHisEstado" text="ESTADO" prefWidth="100"/>
                         </columns>
                     </TableView>
-                    <HBox alignment="CENTER_RIGHT">
-                        <Label fx:id="lblFooterHistorial" text="Mostrando 0 ventas" styleClass="footer-info"/>
-                    </HBox>
+                    <Label fx:id="lblFooterHistorial" text="Mostrando 0 ventas"/>
                 </VBox>
 
-                <!-- VISTA CLIENTES -->
+                <!-- VISTA CLIENTES (sin tabla de facturas) -->
                 <VBox fx:id="viewClientes" visible="false" managed="false" spacing="14" styleClass="view-panel">
                     <HBox spacing="10">
-                        <TextField fx:id="txtBuscarCliente" promptText="Buscar cliente..." HBox.hgrow="ALWAYS" styleClass="search-input"/>
+                        <TextField fx:id="txtBuscarCliente" promptText="Buscar cliente..." styleClass="search-input"/>
                         <Button fx:id="btnNuevoCliente" text="Nuevo" onAction="#handleNuevoCliente" styleClass="btn-add"/>
                         <Button fx:id="btnEditarCliente" text="Editar" onAction="#handleEditarCliente" styleClass="btn-edit"/>
                         <Button fx:id="btnEliminarCliente" text="Eliminar" onAction="#handleEliminarCliente" styleClass="btn-delete"/>
                     </HBox>
                     <TableView fx:id="tableClientes" VBox.vgrow="ALWAYS" styleClass="data-table">
-                        <placeholder><Label text="No hay clientes registrados"/></placeholder>
-                        <columnResizePolicy><TableView fx:constant="CONSTRAINED_RESIZE_POLICY"/></columnResizePolicy>
                         <columns>
                             <TableColumn fx:id="colCliId" text="ID" prefWidth="60"/>
                             <TableColumn fx:id="colCliNombre" text="NOMBRE" prefWidth="180"/>
@@ -188,9 +164,7 @@
                             <TableColumn fx:id="colCliPreferencias" text="PREFERENCIAS" prefWidth="150"/>
                         </columns>
                     </TableView>
-                    <HBox alignment="CENTER_RIGHT">
-                        <Label fx:id="lblFooterClientes" text="Total: 0 clientes" styleClass="footer-info"/>
-                    </HBox>
+                    <Label fx:id="lblFooterClientes" text="Total: 0 clientes"/>
                 </VBox>
 
             </StackPane>
