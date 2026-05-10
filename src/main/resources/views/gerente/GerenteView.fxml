@@ -45,6 +45,8 @@
                 <Button fx:id="navPedidos" text="  Pedidos" onAction="#showPedidos"
                         prefWidth="220" prefHeight="44" styleClass="nav-btn"/>
 
+                <Button fx:id="navHistorial" text="  Historial de Ventas" onAction="#showHistorialVentas"
+                        prefWidth="220" prefHeight="44" styleClass="nav-btn"/>
 
                 <Button fx:id="navProveedores" text="  Proveedores" onAction="#showProveedores"
                         prefWidth="220" prefHeight="44" styleClass="nav-btn"/>
