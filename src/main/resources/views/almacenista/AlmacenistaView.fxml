@@ -59,8 +59,8 @@
                     <Label fx:id="lblHora" text="00:00" styleClass="time-clock"/>
                 </VBox>
             </HBox>
-
-            <StackPane fx:id="contentArea" VBox.vgrow="ALWAYS" styleClass="dynamic-pane"/>
         </VBox>
+
+        <StackPane fx:id="contentArea" VBox.vgrow="ALWAYS" style="-fx-background-color: transparent;" />
     </center>
 </BorderPane>

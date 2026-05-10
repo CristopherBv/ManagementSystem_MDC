@@ -1,15 +1,31 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.layout.VBox?>
-<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.control.cell.*?>
 
-<VBox xmlns="http://javafx.com/javafx"
-      xmlns:fx="http://javafx.com/fxml"
+<VBox xmlns="http://javafx.com/javafx/17.0.2"
+      xmlns:fx="http://javafx.com/fxml/1"
       fx:controller="gestionmats.controllers.almacenista.RecepcionController"
-      alignment="CENTER"
       spacing="20"
-      style="-fx-background-color: transparent;">
+      style="-fx-padding: 20;"
+      styleClass="main-content">
 
-    <Label text="PANEL DE RECEPCIÓN / ENTRADAS"
-           style="-fx-text-fill: #F39C12; -fx-font-size: 24px; -fx-font-weight: bold;"/>
+    <HBox spacing="10" alignment="CENTER_LEFT">
+        <TextField fx:id="txtIdOrden" promptText="Ingrese ID de Venta..." style="-fx-text-fill: black;" prefWidth="300"/>
+        <Button text="Buscar Orden" onAction="#handleBuscarOrden" styleClass="nav-btn"/>
+    </HBox>
+
+    <TableView fx:id="tablaRecepcion" VBox.vgrow="ALWAYS">
+        <columns>
+            <TableColumn fx:id="colProducto" text="Material / Producto" prefWidth="300" />
+            <TableColumn fx:id="colEsperado" text="Cant. Esperada" prefWidth="150" />
+            <TableColumn fx:id="colRecibido" text="Cant. Recibida" prefWidth="150" />
+        </columns>
+    </TableView>
+
+    <HBox alignment="CENTER_RIGHT" spacing="10">
+        <Button text="Registrar Entrada" onAction="#handleRegistrarEntrada"
+                style="-fx-background-color: #27ae60; -fx-text-fill: white; -fx-font-weight: bold;"/>
+    </HBox>
 </VBox>
