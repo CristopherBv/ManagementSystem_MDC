@@ -3,12 +3,14 @@ package gestionmats.controllers.gerente;
 import gestionmats.dao.*;
 import gestionmats.model.*;
 import gestionmats.utils.UIComponents;
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.chart.*;
 import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
+import javafx.util.Duration;
 
 import java.net.URL;
 import java.time.LocalDate;
@@ -31,6 +33,7 @@ public class GerenteReporteController implements Initializable {
     private DetalleVentaDaoCsv detalleDao = new DetalleVentaDaoCsv();
     private ProductoDaoCsv productoDao = new ProductoDaoCsv();
     private DateTimeFormatter fmt = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+
     @FXML private Button btnHoy, btnSemana, btnMes, btnAño, btnPersonalizado;
     private List<Button> listaBotones;
 
@@ -61,16 +64,10 @@ public class GerenteReporteController implements Initializable {
     }
 
     private void marcarBotonActivo(Button btn) {
-        // Quitamos la clase 'active-period' de todos
         listaBotones.forEach(b -> b.getStyleClass().remove("active-period"));
-        // Se la ponemos solo al presionado
         btn.getStyleClass().add("active-period");
     }
 
-    // ==========================================
-    // LÓGICA DE BOTONES RÁPIDOS (UX)
-    // ==========================================
-    // Actualizamos los handlers para llamar a la función
     @FXML private void handlePresetHoy() {
         marcarBotonActivo(btnHoy);
         ocultarCustomDates();
@@ -111,9 +108,6 @@ public class GerenteReporteController implements Initializable {
         hboxCustomDates.setManaged(false);
     }
 
-    // ==========================================
-    // PROCESAMIENTO DE DATOS E INTELIGENCIA
-    // ==========================================
     private void procesarDatos() {
         LocalDate inicio = dpInicio.getValue();
         LocalDate fin = dpFin.getValue();
@@ -128,6 +122,7 @@ public class GerenteReporteController implements Initializable {
 
         Map<String, Integer> unidadesPorProducto = new HashMap<>();
         Map<String, Double> dineroPorCat = new HashMap<>();
+        Map<String, Double> dineroPorProducto = new HashMap<>();
         double utilidadTotal = 0;
 
         for (Venta v : ventasFiltradas) {
@@ -139,39 +134,72 @@ public class GerenteReporteController implements Initializable {
 
                 unidadesPorProducto.put(p.getNombre(), unidadesPorProducto.getOrDefault(p.getNombre(), 0) + d.getCantidad());
                 dineroPorCat.put(p.getCategoria(), dineroPorCat.getOrDefault(p.getCategoria(), 0.0) + d.getTotal());
+                dineroPorProducto.put(p.getNombre(), dineroPorProducto.getOrDefault(p.getNombre(), 0.0) + d.getTotal());
                 utilidadTotal += d.getTotal();
             }
         }
 
-        // Actualizar Labels
         lblUtilidadTotal.setText(String.format("$%,.2f", utilidadTotal));
         lblMasVendido.setText(unidadesPorProducto.entrySet().stream()
                 .max(Map.Entry.comparingByValue()).map(e -> e.getKey()).orElse("--"));
         lblMejorCategoria.setText(dineroPorCat.entrySet().stream()
                 .max(Map.Entry.comparingByValue()).map(e -> e.getKey()).orElse("--"));
 
-        // Cargar PieChart (Distribución)
+        // ==========================================
+        // DIBUJAR PASTEL Y AÑADIR TOOLTIPS
+        // ==========================================
         chartDistribucion.getData().clear();
         unidadesPorProducto.forEach((nombre, cant) -> {
-            chartDistribucion.getData().add(new PieChart.Data(nombre + " (" + cant + ")", cant));
+            PieChart.Data slice = new PieChart.Data(nombre, cant);
+            chartDistribucion.getData().add(slice);
         });
 
-        // Cargar LineChart (Tendencia)
+        // Esperamos a que la gráfica se dibuje en pantalla para ponerle los tooltips
+        Platform.runLater(() -> {
+            for (PieChart.Data slice : chartDistribucion.getData()) {
+                javafx.scene.Node node = slice.getNode();
+                if (node != null) {
+                    double ingresos = dineroPorProducto.getOrDefault(slice.getName(), 0.0);
+                    Tooltip t = new Tooltip(String.format("Producto: %s\nUnidades: %.0f\nIngresos: $%,.2f", slice.getName(), slice.getPieValue(), ingresos));
+                    t.setShowDelay(Duration.ZERO); // Hace que aparezca instantáneamente
+                    t.setStyle("-fx-font-size: 14px; -fx-background-color: #1a1d24; -fx-text-fill: white; -fx-border-color: #F58220; -fx-border-width: 1px; -fx-padding: 8px;");
+                    Tooltip.install(node, t);
+                    node.setStyle("-fx-cursor: hand;");
+                }
+            }
+        });
+
         actualizarGraficaTendencia(ventasFiltradas);
     }
 
     private void actualizarGraficaTendencia(List<Venta> ventas) {
         chartTendencia.getData().clear();
+        chartTendencia.setAnimated(false);
+
         XYChart.Series<String, Number> series = new XYChart.Series<>();
         Map<LocalDate, Double> mapa = ventas.stream().collect(Collectors.groupingBy(
                 v -> LocalDateTime.parse(v.getFechaHora(), fmt).toLocalDate(),
                 TreeMap::new, Collectors.summingDouble(Venta::getTotal)));
+
         mapa.forEach((f, t) -> series.getData().add(new XYChart.Data<>(f.toString(), t)));
         chartTendencia.getData().add(series);
+
+        // Esperamos a que la línea se dibuje para ponerle los tooltips a los puntos
+        Platform.runLater(() -> {
+            for (XYChart.Data<String, Number> data : series.getData()) {
+                javafx.scene.Node node = data.getNode();
+                if (node != null) {
+                    Tooltip t = new Tooltip(String.format("Fecha: %s\nIngresos: $%,.2f", data.getXValue(), data.getYValue().doubleValue()));
+                    t.setShowDelay(Duration.ZERO);
+                    t.setStyle("-fx-font-size: 14px; -fx-background-color: #1a1d24; -fx-text-fill: white; -fx-border-color: #60a5fa; -fx-border-width: 1px; -fx-padding: 8px;");
+                    Tooltip.install(node, t);
+                    node.setStyle("-fx-cursor: hand;");
+                }
+            }
+        });
     }
 
     @FXML private void handleExportarReporte() {
-        // Lógica de FileChooser (Txt) similar a la anterior...
         UIComponents.showNotification("Reporte generado con filtros actuales.", "success");
     }
 }
