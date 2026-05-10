@@ -77,4 +77,28 @@ public class UsuarioDaoCsv extends AbstractDaoCsv<Usuario> {
     protected String obtenerId(Usuario entidad) {
         return String.valueOf(entidad.getIdUsuario());
     }
+
+    // ==========================================================
+    // MÉTODOS AÑADIDOS PARA LA GESTIÓN DE EMPLEADOS
+    // ==========================================================
+
+    public int generarSiguienteId() {
+        int maxId = 0;
+        for (Usuario u : this.listarTodos()) {
+            if (u.getIdUsuario() > maxId) {
+                maxId = u.getIdUsuario();
+            }
+        }
+        return maxId + 1;
+    }
+
+    public boolean existeUsername(String username) {
+        for (Usuario u : this.listarTodos()) {
+            if (u.getUsername().equalsIgnoreCase(username.trim())) {
+                return true;
+            }
+        }
+        return false;
+    }
+
 }
