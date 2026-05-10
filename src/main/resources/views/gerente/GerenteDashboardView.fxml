@@ -52,12 +52,12 @@
             <Label text="Órdenes de compra" styleClass="kpi-sub"/>
         </VBox>
 
-        <VBox fx:id="boxVendedores" styleClass="kpi-card, kpi-blue" GridPane.columnIndex="0" GridPane.rowIndex="2">
+        <VBox fx:id="boxVendedores" styleClass="kpi-card, kpi-orange" GridPane.columnIndex="0" GridPane.rowIndex="2">
             <Label text="VENDEDORES" styleClass="kpi-label"/>
             <Label fx:id="lblVendedores" text="0" styleClass="kpi-value"/>
             <Label text="Personal de mostrador" styleClass="kpi-sub"/>
         </VBox>
-        <VBox fx:id="boxAlmacenistas" styleClass="kpi-card, kpi-orange" GridPane.columnIndex="1" GridPane.rowIndex="2">
+        <VBox fx:id="boxAlmacenistas" styleClass="kpi-card, kpi-blue" GridPane.columnIndex="1" GridPane.rowIndex="2">
             <Label text="ALMACENISTAS" styleClass="kpi-label"/>
             <Label fx:id="lblAlmacenistas" text="0" styleClass="kpi-value"/>
             <Label text="Control de almacén" styleClass="kpi-sub"/>
