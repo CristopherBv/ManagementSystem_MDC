@@ -61,7 +61,7 @@ public class GerenteDashboardController implements Initializable {
         // --- SECCIÓN CLIENTES ---
         // Conectado con el DAO que me pasaste
         int totalClientes = clienteDao.listarTodos().size();
-        lblClientes.setText(String.valueOf(totalClientes));
+        lblClientes.setText(String.valueOf(totalClientes-1));
 
         // --- SECCIÓN PROVEEDORES ---
         int totalProveedores = proveedorDao.listarTodos().size();
