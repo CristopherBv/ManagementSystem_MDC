@@ -554,3 +554,79 @@
     -fx-border-color: #F58220;
     -fx-background-color: rgba(245,130,32,0.06);
 }
+
+/* ==================================================
+   BOTONES DE FILTRO RÁPIDO (MÓDULO REPORTES)
+   ================================================== */
+
+.btn-ghost-small {
+    -fx-background-color: transparent;
+    -fx-text-fill: #9ca3af; /* Gris claro para texto inactivo */
+    -fx-border-color: #374151; /* Borde gris oscuro para que se vea el contorno */
+    -fx-border-radius: 6px;
+    -fx-background-radius: 6px;
+    -fx-padding: 6px 14px;
+    -fx-font-family: "Segoe UI", "Open Sans", sans-serif;
+    -fx-font-size: 13px;
+    -fx-font-weight: bold;
+    -fx-cursor: hand;
+    -fx-transition: all 0.2s ease-in-out;
+}
+
+/* Efecto Hover: Se ilumina con el naranja característico del sistema */
+.btn-ghost-small:hover {
+    -fx-background-color: rgba(245, 130, 32, 0.1); /* Fondo naranja transparente */
+    -fx-text-fill: #F58220; /* Texto Naranja */
+    -fx-border-color: #F58220; /* Borde Naranja */
+}
+
+/* El botón de "Personalizado" con un tono azul para destacar */
+.btn-edit-small {
+    -fx-background-color: rgba(96, 165, 250, 0.1); /* Fondo azul oscuro transparente */
+    -fx-text-fill: #60a5fa; /* Texto azul claro */
+    -fx-border-color: #60a5fa;
+    -fx-border-radius: 6px;
+    -fx-background-radius: 6px;
+    -fx-padding: 6px 14px;
+    -fx-font-family: "Segoe UI", "Open Sans", sans-serif;
+    -fx-font-size: 13px;
+    -fx-font-weight: bold;
+    -fx-cursor: hand;
+}
+
+.btn-edit-small:hover {
+    -fx-background-color: #60a5fa;
+    -fx-text-fill: #111318; /* Texto oscuro para contrastar */
+}
+
+/* --- Estado Activo para Botones de Periodo --- */
+.active-period {
+    -fx-background-color: #111318!important; /* Naranja sólido */
+    -fx-text-fill: #F58220!important;         /* Texto oscuro para contraste */
+    -fx-border-color: #F58220 !important;
+}
+/* --- Arreglo Definitivo para ComboBox --- */
+.combo-input {
+    -fx-background-color: #1a1d24;
+    -fx-border-color: #F58220;
+    -fx-text-fill: white;
+}
+
+/* El texto de la caja principal */
+.combo-input .label {
+    -fx-text-fill: white !important;
+}
+
+/* El fondo y texto de la lista desplegable */
+.combo-input .list-view,
+.combo-input .list-cell {
+    -fx-background-color: #1a1d24;
+    -fx-text-fill: white;
+}
+
+/* Efecto hover en las opciones de la lista */
+.combo-input .list-cell:filled:hover,
+.combo-input .list-cell:filled:selected {
+    -fx-background-color: #111318; /* Naranja al seleccionar */
+    -fx-text-fill: #F58220;        /* Texto oscuro para contrastar */
+}

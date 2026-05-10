@@ -16,3 +16,7 @@ idDetalle,idVenta,idProducto,nombreProducto,cantidad,precioUnitario,descuentoApl
 15,8,M001,Cemento Portland,199,240.0,0.0,47760.0,47760.0
 16,9,M003,Block de 15x20x40,50,15.5,0.0,775.0,775.0
 17,10,M005,Impermeabilizante 19L,10,850.0,0.0,8500.0,8500.0
+18,11,M006,Tubo PVC 4 hidráulico,2,160.0,0.0,320.0,320.0
+19,12,M008,Grava 3/4 (m3),1,420.0,0.0,420.0,420.0
+20,13,M004,Madera pino 2x4,1,120.0,0.0,120.0,120.0
+21,14,M005,Impermeabilizante 19L,1,850.0,0.0,850.0,850.0
