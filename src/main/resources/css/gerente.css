@@ -598,3 +598,33 @@
     -fx-background-color: #60a5fa;
     -fx-text-fill: #111318; /* Texto oscuro para contrastar */
 }
+
+/* --- Estado Activo para Botones de Periodo --- */
+.active-period {
+    -fx-background-color: #F58220 !important; /* Naranja sólido */
+    -fx-text-fill: #111318 !important;         /* Texto oscuro para contraste */
+    -fx-border-color: #F58220 !important;
+}
+
+/* --- Arreglo de contraste para ComboBox --- */
+.combo-input .label,
+.combo-input .list-cell {
+    -fx-text-fill: #ffffff !important; /* Texto blanco puro */
+}
+
+.combo-input .list-view {
+    -fx-background-color: #1a1d24;    /* Fondo oscuro para la lista desplegable */
+    -fx-border-color: #374151;
+}
+
+/* --- Estilo para Tooltips (para que se vean en cualquier sistema) --- */
+.chart-tooltip {
+    -fx-background-color: #1a1d24;
+    -fx-text-fill: #544d4d;
+    -fx-padding: 8px;
+    -fx-border-color: #F58220;
+    -fx-border-width: 1px;
+    -fx-font-weight: bold;
+    -fx-background-radius: 4px;
+    -fx-border-radius: 4px;
+}

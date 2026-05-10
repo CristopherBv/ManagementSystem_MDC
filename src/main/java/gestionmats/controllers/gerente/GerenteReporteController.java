@@ -31,9 +31,15 @@ public class GerenteReporteController implements Initializable {
     private DetalleVentaDaoCsv detalleDao = new DetalleVentaDaoCsv();
     private ProductoDaoCsv productoDao = new ProductoDaoCsv();
     private DateTimeFormatter fmt = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+    @FXML private Button btnHoy, btnSemana, btnMes, btnAño, btnPersonalizado;
+    private List<Button> listaBotones;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+
+        listaBotones = Arrays.asList(btnHoy, btnSemana, btnMes, btnAño, btnPersonalizado);
+        // Marcamos "Esta Semana" como activo por defecto
+        marcarBotonActivo(btnSemana);
         setupInitialFilters();
         UIComponents.applyButtonAdd(btnExportar);
         procesarDatos();
@@ -54,34 +60,47 @@ public class GerenteReporteController implements Initializable {
         cmbCategoria.valueProperty().addListener((o, old, n) -> procesarDatos());
     }
 
+    private void marcarBotonActivo(Button btn) {
+        // Quitamos la clase 'active-period' de todos
+        listaBotones.forEach(b -> b.getStyleClass().remove("active-period"));
+        // Se la ponemos solo al presionado
+        btn.getStyleClass().add("active-period");
+    }
+
     // ==========================================
     // LÓGICA DE BOTONES RÁPIDOS (UX)
     // ==========================================
+    // Actualizamos los handlers para llamar a la función
     @FXML private void handlePresetHoy() {
+        marcarBotonActivo(btnHoy);
         ocultarCustomDates();
         dpInicio.setValue(LocalDate.now());
         dpFin.setValue(LocalDate.now());
     }
 
     @FXML private void handlePresetSemana() {
+        marcarBotonActivo(btnSemana);
         ocultarCustomDates();
         dpInicio.setValue(LocalDate.now().minusWeeks(1));
         dpFin.setValue(LocalDate.now());
     }
 
     @FXML private void handlePresetMes() {
+        marcarBotonActivo(btnMes);
         ocultarCustomDates();
         dpInicio.setValue(LocalDate.now().withDayOfMonth(1));
         dpFin.setValue(LocalDate.now());
     }
 
     @FXML private void handlePresetAño() {
+        marcarBotonActivo(btnAño);
         ocultarCustomDates();
         dpInicio.setValue(LocalDate.now().withDayOfYear(1));
         dpFin.setValue(LocalDate.now());
     }
 
     @FXML private void handleTogglePersonalizado() {
+        marcarBotonActivo(btnPersonalizado);
         boolean estaVisible = hboxCustomDates.isVisible();
         hboxCustomDates.setVisible(!estaVisible);
         hboxCustomDates.setManaged(!estaVisible);
