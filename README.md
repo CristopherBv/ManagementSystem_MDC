@@ -1,61 +1,136 @@
-# Sistema de Gestión de Materiales de Construcción
+# 🏗️ Sistema de Gestión de Materiales de Construcción (SDG_MDC)
 
-Este proyecto consiste en una solución de software diseñada para optimizar las operaciones diarias de una constructora y su manejo de materiales. El sistema permite gestionar desde el catálogo de productos y el inventario hasta la generación de reportes financieros, garantizando precisión y eficiencia en la toma de decisiones comerciales.
+<div align="center">
+  <img src="ruta/a/tu/logo.png" alt="Logo del Sistema" width="250"/>
+</div>
 
+<br>
+
+<div align="center">
+
+![Java](https://img.shields.io/badge/Java-17.0.12-ED8B00?style=for-the-badge&logo=java&logoColor=white)
+![JavaFX](https://img.shields.io/badge/JavaFX-UI-4796DA?style=for-the-badge&logo=java&logoColor=white)
+![Maven](https://img.shields.io/badge/Apache_Maven-C71A36?style=for-the-badge&logo=apachemaven&logoColor=white)
+![Arquitectura MVC](https://img.shields.io/badge/Arquitectura-MVC-232F3E?style=for-the-badge)
+![Persistencia](https://img.shields.io/badge/Persistencia-CSV-4CAF50?style=for-the-badge)
+
+</div>
+
+---
+
+## 📑 Tabla de Contenidos
+- [Acerca del Proyecto](#-acerca-del-proyecto)
+- [Vistas Previas del Sistema](#-vistas-previas-del-sistema)
+- [Stack Tecnológico](#️-stack-tecnológico)
+- [Requerimientos Funcionales](#-requerimientos-funcionales-rf)
+- [Requerimientos No Funcionales](#️-requerimientos-no-funcionales-rnf)
+- [Instalación y Ejecución](#-instalación-y-ejecución)
+
+---
+
+## 📖 Acerca del Proyecto
+
+Este proyecto consiste en una solución de software diseñada para optimizar las operaciones diarias de una constructora y su manejo de materiales. El sistema permite gestionar desde el catálogo de productos y el inventario hasta la generación de reportes financieros, garantizando precisión y eficiencia en la toma de decisiones comerciales mediante accesos controlados por roles (Gerente, Vendedor, Almacenista).
+
+---
+
+## 📸 Vistas Previas del Sistema
+
+> **Nota:** Aquí puedes ver cómo luce el sistema en acción. 
+
+<details>
+  <summary><b>1. Dashboard del Gerente (Inteligencia de Negocio)</b> <i>[Clic para expandir]</i></summary>
+  <br>
+  <div align="center">
+    <img src="ruta/a/tu/imagen_dashboard.png" alt="Dashboard Gerente" width="800"/>
+    <p><i>Panel principal con KPIs de ventas, alertas de stock e inventario en tiempo real.</i></p>
+  </div>
+</details>
+
+<details>
+  <summary><b>2. Punto de Venta (Vendedor)</b> <i>[Clic para expandir]</i></summary>
+  <br>
+  <div align="center">
+    <img src="ruta/a/tu/imagen_punto_venta.png" alt="Punto de Venta" width="800"/>
+    <p><i>Interfaz fluida para registro de compras, carrito y canje de puntos de lealtad.</i></p>
+  </div>
+</details>
+
+<details>
+  <summary><b>3. Control de Almacén (Almacenista)</b> <i>[Clic para expandir]</i></summary>
+  <br>
+  <div align="center">
+    <img src="ruta/a/tu/imagen_almacen.png" alt="Control de Almacén" width="800"/>
+    <p><i>Módulo para la recepción de proveedores mediante órdenes de compra y despacho a clientes.</i></p>
+  </div>
+</details>
+
+---
 
 ## 🛠️ Stack Tecnológico
 
-* **Lenguaje:** Java 17.0.12 (Oracle JDK)
-* **Interfaz Gráfica:** JavaFX
-* **Arquitectura:** Modelo-Vista-Controlador (MVC)
-* **Manejo de Datos:** Archivos planos (CSV) mediante el patrón DAO
-* **Gestión de Dependencias:** Apache Maven
+| Tecnología | Descripción |
+| :--- | :--- |
+| **☕ Java** | Versión 17.0.12 (Oracle JDK) - Lógica core del sistema. |
+| **🎨 JavaFX** | Framework para el diseño de interfaces gráficas (GUI) modernas. |
+| **🏗️ MVC** | Patrón de arquitectura Modelo-Vista-Controlador. |
+| **📂 DAO & CSV** | Patrón de Acceso a Datos utilizando archivos planos (.csv) para persistencia. |
+| **📦 Maven** | Herramienta de gestión de dependencias y empaquetado del proyecto. |
 
+---
 
 ## 📋 Requerimientos Funcionales (RF)
 
-**RF-01. Gestión del Catálogo de Productos** > El sistema debe permitir al Gerente la creación, actualización y mantenimiento general del catálogo de materiales de construcción. Cada registro deberá almacenar de manera obligatoria el nombre, descripción, categoría, precio de venta y la disponibilidad actual.
+- **`RF-01` Gestión del Catálogo de Productos:** > El sistema debe permitir al Gerente la creación, actualización y mantenimiento general del catálogo de materiales de construcción. Cada registro deberá almacenar obligatoriamente el nombre, descripción, categoría, precio de venta y disponibilidad actual.
 
-**RF-02. Búsqueda y Consulta de Materiales** > El sistema debe proporcionar al Vendedor y al Gerente una herramienta de búsqueda rápida que permita localizar productos por nombre, número de artículo o categoría, desplegando su información detallada, precio, existencias actuales y detalles técnicos.
+- **`RF-02` Búsqueda y Consulta de Materiales:** > Proporciona al Vendedor y al Gerente una herramienta de búsqueda rápida que permita localizar productos por nombre, número o categoría, desplegando información detallada, precio y existencias.
 
-**RF-03. Registro de Pedidos y Ventas** > El sistema debe permitir al Vendedor registrar los pedidos de los clientes. Durante este proceso, el Vendedor podrá seleccionar los productos deseados y la cantidad, mientras el sistema calcula de manera automática y en tiempo real el precio total del pedido o venta.
+- **`RF-03` Registro de Pedidos y Ventas:** > Permite al Vendedor registrar pedidos. Seleccionará productos y cantidades, mientras el sistema calcula de manera automática y en tiempo real el precio total.
 
-**RF-04. Generación de Recibos y Comprobantes** > Al finalizar una transacción, el sistema debe generar automáticamente un recibo para la venta, el cual incluirá el desglose detallado de la compra: lista de productos, precios unitarios, cantidades y el importe total a pagar.
+- **`RF-04` Generación de Recibos y Comprobantes:** > Al finalizar una transacción, genera automáticamente un recibo con desglose detallado: productos, precios unitarios, cantidades e importe total.
 
-**RF-05. Gestión de Clientes y Programas de Lealtad** > El sistema debe permitir al Vendedor registrar y mantener la información de clientes habituales (datos de contacto y preferencias). Asimismo, el sistema administrará un programa de lealtad, calculando y habilitando descuentos para clientes frecuentes al momento de la venta.
+- **`RF-05` Gestión de Clientes y Lealtad:** > Permite registrar clientes habituales. Administra un programa de lealtad calculando y habilitando descuentos para clientes frecuentes al momento de la venta.
 
-**RF-06. Aplicación de Descuentos y Promociones** > El sistema debe calcular automáticamente los descuentos aplicables y permitir al Gerente (para configuración) y al Vendedor (al momento del cobro) aplicar promociones especiales ya sea sobre productos específicos o sobre el total de la compra.
+- **`RF-06` Aplicación de Descuentos y Promociones:** > Calcula automáticamente descuentos y permite aplicar promociones especiales sobre productos específicos o el total de la compra (configurado por Gerente, aplicado por Vendedor).
 
-**RF-07. Gestión de Salidas y Entradas de Inventario** > El sistema proveerá una interfaz simplificada para el Almacenista dividida en dos flujos operativos: 
+- **`RF-07` Gestión de Salidas y Entradas de Inventario:** > Interfaz simplificada para el Almacenista:
+  > * **Salidas:** Ingresa ticket/pedido, confirma entrega y descuenta stock automáticamente.
+  > * **Entradas:** Ingresa ID de Orden de Compra, verifica lista esperada vs recibida. Suma stock real y notifica discrepancias al Gerente.
 
--**Salidas (Despacho a Clientes)**: El Almacenista ingresará el número de ticket o ID de pedido. El sistema mostrará los detalles de la venta y, al "Confirmar Entrega", descontará automáticamente el stock y marcará el ticket como "Surtido" para evitar dobles entregas. 
+- **`RF-08` Sistema de Alertas de Stock:** > Monitoreo constante del inventario con notificaciones visuales (Gerente/Vendedor) cuando un producto alcance su límite mínimo.
 
--**Entradas (Recepción de Proveedores)**: El Almacenista ingresará el ID de la Orden de Compra (previamente registrada en el sistema). El sistema desplegará la lista de materiales esperados con un campo numérico editable para cada uno. El Almacenista deberá ingresar la cantidad real recibida de cada producto. Al confirmar, el sistema sumará exclusivamente las cantidades reales al stock y notificará automáticamente al Gerente en caso de existir discrepancias (faltantes) entre lo pedido y lo recibido. El sistema mostrará el listado de materiales esperados. 
+- **`RF-09` Gestión de Proveedores y Órdenes de Compra:** > Mantiene catálogo de proveedores. Permite exclusivamente al Gerente generar "Órdenes de Compra" (Pendientes) que servirán como base para la entrada física de mercancía.
 
-**RF-08. Sistema de Alertas de Stock** > El sistema debe monitorear constantemente los niveles de inventario y generar notificaciones visuales dirigidas al Gerente y al Vendedor cuando las existencias de un producto alcancen su límite mínimo preestablecido.
+- **`RF-10` Historial y Consulta de Ventas:** > Registro inmutable de todas las ventas (fecha, productos, precios, cliente). Búsquedas y consultas habilitadas para Vendedor y Gerente.
 
-**RF-09. Gestión de Proveedores y Generación de Ordenes de Compras** >El sistema debe mantener un catálogo con la información de contacto de los proveedores. Además, debe permitir exclusivamente al Gerente generar "Órdenes de Compra" para el reabastecimiento de material. Estas órdenes se guardarán en el sistema con un estado de "Pendiente" y servirán como el folio base para que el Almacenista registre la entrada física y actualice el inventario (como se especifica en el RF-07). 
+- **`RF-11` Reportes e Inteligencia de Negocio:** > Exclusivo para el Gerente. Generación de reportes financieros/rendimiento (diarios, semanales, mensuales, anuales) y análisis de tendencia con exportación a `.txt`.
 
-**RF-10. Historial y Consulta de Ventas** > El sistema debe almacenar un registro histórico inmutable de todas las ventas realizadas (incluyendo fecha, productos, precios y cliente asociado). El Vendedor y el Gerente podrán realizar búsquedas y consultas sobre este registro en cualquier momento.
+- **`RF-12` Autorización de Operaciones Restringidas:** > Validaciones (Override) en el Punto de Venta. Acciones críticas (cancelaciones, precios manuales, descuentos extra) disparan una solicitud del PIN de Gerente para proceder.
 
-**RF-11. Generación de Reportes e Inteligencia de Negocio** > El sistema debe permitir exclusivamente al Gerente la generación de reportes financieros y de rendimiento. Esto incluye informes de ventas diarias, semanales, mensuales y anuales, así como análisis de ventas filtrados por producto, categoría y período de tiempo.
-
-**RF-12. Autorización de Operaciones Restringidas (Override)** > El sistema debe contar con un mecanismo de validación de credenciales de supervisor en la pantalla de Punto de Venta. Acciones críticas como la cancelación de un ticket ya cobrado, la modificación de precios manual o la aplicación de descuentos no programados por parte de un Vendedor, dispararán una ventana de autorización que exigirá la clave de un Gerente para proceder. 
-
+---
 
 ## ⚙️ Requerimientos No Funcionales (RNF)
 
-**RNF-01. Interfaz de Usuario Intuitiva y Amigable** > El sistema debe contar con una interfaz gráfica moderna desarrollada en JavaFX. El diseño debe ser limpio y fácil de usar para el personal de la constructora, permitiendo la gestión de productos, ventas y reportes con un mínimo de clics y una curva de aprendizaje reducida.
+- **`RNF-01` Interfaz Intuitiva (UI/UX):** > GUI moderna en JavaFX con diseño limpio, minimizando clics y reduciendo la curva de aprendizaje del personal.
+- **`RNF-02` Persistencia en Archivos Planos:** > Almacenamiento portátil mediante formato CSV, garantizando lectura/escritura rápida y consistencia transaccional.
+- **`RNF-03` Modularidad (MVC):** > Separación estricta entre Lógica de Negocio, Interfaz Gráfica y Acceso a Datos (DAO) para facilitar mantenimiento.
+- **`RNF-04` Compatibilidad (Java 17):** > Ejecución asegurada en Windows, macOS y Linux mediante el clonado del repositorio y Maven.
+- **`RNF-05` Integridad de Datos:** > Validaciones estrictas pre-guardado para evitar corrupción de CSVs (ej. rechazar ventas sin stock, prevenir letras en campos numéricos).
 
-**RNF-02. Persistencia de Datos mediante Archivos Planos** > Para facilitar la portabilidad, el sistema utilizará archivos en formato CSV como mecanismo principal de almacenamiento. El sistema debe garantizar que la lectura y escritura en estos archivos sea rápida y que los datos se mantengan consistentes tras cada operación.
-
-**RNF-03. Modularidad y Mantenibilidad (Arquitectura MVC)** > El software se construirá bajo el patrón de diseño Modelo-Vista-Controlador. Esto asegura que la lógica de negocio, la interfaz gráfica y el acceso a datos (DAO) estén separados, facilitando futuras actualizaciones o el cambio de motor de persistencia sin afectar la estabilidad global.
-
-**RNF-04. Compatibilidad y Entorno de Ejecución** > La aplicación debe ser totalmente compatible con Java Oracle OpenJDK 17.0.12. El código debe ser portable para que cualquier integrante del equipo pueda ejecutarlo en su entorno local (Windows, macOS o Linux) simplemente clonando el repositorio y cargando las dependencias.
-
-**RNF-05. Integridad y Validación de Datos** > A pesar de usar archivos CSV, el sistema debe implementar validaciones lógicas estrictas. No se debe permitir el registro de ventas con stock insuficiente, ni la entrada de datos nulos o formatos incorrectos (como letras en campos de precio) para prevenir la corrupción de los archivos de almacenamiento.
-
+---
 
 ## 🚀 Instalación y Ejecución
 
-1. Clonar el repositorio:
+Sigue estos pasos para ejecutar el proyecto en tu entorno local:
+
+### 1. Prerrequisitos
+Asegúrate de tener instalados:
+- [Java JDK 17](https://www.oracle.com/java/technologies/javase/jdk17-archive-downloads.html)
+- [Apache Maven](https://maven.apache.org/download.cgi)
+- Git
+
+### 2. Clonar el repositorio
+Abre tu terminal de preferencia y ejecuta:
+```bash
+git clone [https://github.com/tu-usuario/SDG_MDC.git](https://github.com/tu-usuario/SDG_MDC.git)
+cd SDG_MDC
