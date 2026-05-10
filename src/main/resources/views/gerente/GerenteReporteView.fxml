@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.chart.*?>
+
+<VBox spacing="18" styleClass="view-panel" xmlns="http://javafx.com/javafx/17.0.2" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="gestionmats.controllers.gerente.GerenteReporteController">
+
+    <HBox spacing="15" alignment="CENTER_LEFT" styleClass="toolbar">
+        <VBox spacing="5">
+            <Label text="Desde:" styleClass="kpi-sub"/>
+            <DatePicker fx:id="dpInicio" prefHeight="35" prefWidth="150" styleClass="combo-input"/>
+        </VBox>
+        <VBox spacing="5">
+            <Label text="Hasta:" styleClass="kpi-sub"/>
+            <DatePicker fx:id="dpFin" prefHeight="35" prefWidth="150" styleClass="combo-input"/>
+        </VBox>
+        <VBox spacing="5">
+            <Label text="Categoría:" styleClass="kpi-sub"/>
+            <ComboBox fx:id="cmbCategoria" prefHeight="35" prefWidth="180" styleClass="combo-input"/>
+        </VBox>
+        <Pane HBox.hgrow="ALWAYS"/>
+        <Button fx:id="btnGenerarTxt" text="📥 Exportar Reporte (.txt)" onAction="#handleExportarReporte" prefHeight="40" styleClass="btn-add"/>
+    </HBox>
+
+    <HBox spacing="15">
+        <VBox styleClass="kpi-card, kpi-blue" HBox.hgrow="ALWAYS">
+            <Label text="PRODUCTO MÁS VENDIDO" styleClass="kpi-label"/>
+            <Label fx:id="lblMasVendido" text="--" styleClass="kpi-value" style="-fx-font-size: 18px;"/>
+        </VBox>
+        <VBox styleClass="kpi-card, kpi-orange" HBox.hgrow="ALWAYS">
+            <Label text="CATEGORÍA LÍDER" styleClass="kpi-label"/>
+            <Label fx:id="lblMejorCategoria" text="--" styleClass="kpi-value" style="-fx-font-size: 18px;"/>
+        </VBox>
+        <VBox styleClass="kpi-card, kpi-green" HBox.hgrow="ALWAYS">
+            <Label text="UTILIDAD EN PERIODO" styleClass="kpi-label"/>
+            <Label fx:id="lblUtilidadTotal" text="0.00" styleClass="kpi-value" style="-fx-font-size: 18px;"/>
+        </VBox>
+    </HBox>
+
+    <VBox styleClass="toolbar" VBox.vgrow="ALWAYS">
+        <Label text="Análisis de Tendencia de Ventas" styleClass="page-title" style="-fx-font-size: 14px;"/>
+        <LineChart fx:id="chartTendencia" legendVisible="false" VBox.vgrow="ALWAYS">
+            <xAxis><CategoryAxis side="BOTTOM" /></xAxis>
+            <yAxis><NumberAxis side="LEFT" /></yAxis>
+        </LineChart>
+    </VBox>
+
+</VBox>
