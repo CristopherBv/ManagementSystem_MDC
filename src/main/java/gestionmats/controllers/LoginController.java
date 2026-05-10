@@ -43,6 +43,7 @@ public class LoginController implements Initializable {
     public void initialize(URL url, ResourceBundle resourceBundle) {
         setupPasswordVisibility();
         playEntryAnimation();
+        setupEnterNavigation();
     }
 
     private void playEntryAnimation() {
@@ -56,6 +57,21 @@ public class LoginController implements Initializable {
 
         fade.play();
         translate.play();
+    }
+    private void setupEnterNavigation() {
+        // 1. Si presionas Enter en el Usuario, pasa el cursor a la Contraseña
+        txtUser.setOnAction(event -> {
+            // Revisa cuál de los dos campos de contraseña está activo en ese momento
+            if (txtPasswordVisible.isVisible()) {
+                txtPasswordVisible.requestFocus();
+            } else {
+                txtPasswordHidden.requestFocus();
+            }
+        });
+
+        // 2. Si presionas Enter en la Contraseña, simula el clic en el botón de "Ingresar"
+        txtPasswordHidden.setOnAction(event -> handleLogin());
+        txtPasswordVisible.setOnAction(event -> handleLogin());
     }
 
     private void setupPasswordVisibility() {
