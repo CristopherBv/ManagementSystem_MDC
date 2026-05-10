@@ -8,18 +8,19 @@
       fx:controller="gestionmats.controllers.gerente.GerenteReporteController">
 
     <VBox spacing="10" styleClass="toolbar">
+        <Label text="Filtros de Periodo:" styleClass="kpi-sub" style="-fx-text-fill: white;"/>
+
         <HBox spacing="10" alignment="CENTER_LEFT">
-            <Label text="Periodo:" styleClass="kpi-sub" style="-fx-text-fill: white;"/>
-            <Button fx:id="btnHoy" text="Hoy" onAction="#handlePresetHoy" styleClass="btn-ghost-small"/>
-            <Button fx:id="btnSemana" text="Esta Semana" onAction="#handlePresetSemana" styleClass="btn-ghost-small"/>
-            <Button fx:id="btnMes" text="Este Mes" onAction="#handlePresetMes" styleClass="btn-ghost-small"/>
-            <Button fx:id="btnAño" text="Este Año" onAction="#handlePresetAño" styleClass="btn-ghost-small"/>
-            <Button fx:id="btnPersonalizado" text="Personalizado ⚙" onAction="#handleTogglePersonalizado" styleClass="btn-edit-small"/>
+            <Button fx:id="btnHoy" text="Hoy" onAction="#handlePresetHoy" styleClass="btn-ghost-small" minWidth="-Infinity"/>
+            <Button fx:id="btnSemana" text="Esta Semana" onAction="#handlePresetSemana" styleClass="btn-ghost-small" minWidth="-Infinity"/>
+            <Button fx:id="btnMes" text="Este Mes" onAction="#handlePresetMes" styleClass="btn-ghost-small" minWidth="-Infinity"/>
+            <Button fx:id="btnAño" text="Este Año" onAction="#handlePresetAño" styleClass="btn-ghost-small" minWidth="-Infinity"/>
+            <Button fx:id="btnPersonalizado" text="Personalizado ⚙" onAction="#handleTogglePersonalizado" styleClass="btn-edit-small" minWidth="-Infinity"/>
 
             <Pane HBox.hgrow="ALWAYS"/>
 
             <ComboBox fx:id="cmbCategoria" prefHeight="32" prefWidth="180" styleClass="combo-input" promptText="Todas las categorías"/>
-            <Button fx:id="btnExportar" text="📥 Exportar .txt" onAction="#handleExportarReporte" prefHeight="32" styleClass="btn-add"/>
+            <Button fx:id="btnExportar" text="📥 Exportar .txt" onAction="#handleExportarReporte" prefHeight="32" styleClass="btn-add" minWidth="-Infinity"/>
         </HBox>
 
         <HBox fx:id="hboxCustomDates" spacing="15" alignment="CENTER_LEFT" visible="false" managed="false"
