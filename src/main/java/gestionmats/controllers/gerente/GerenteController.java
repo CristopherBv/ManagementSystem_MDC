@@ -23,7 +23,7 @@ import java.util.ResourceBundle;
 public class GerenteController implements Initializable {
 
     @FXML private Label lblPageTitle, lblPageSub, lblFecha, lblHora, lblUserName; // <-- Agregado lblUserName
-    @FXML private Button navDashboard, navEmpleados, navInventario, navPedidos, navClientes, navProveedores, navReportes, btnLogout;
+    @FXML private Button navDashboard, navEmpleados, navInventario, navPedidos, navClientes, navProveedores, navReportes, navHistorial,  btnLogout;
     @FXML private StackPane contentArea;
 
     private Timeline clockTimeline;
@@ -64,6 +64,7 @@ public class GerenteController implements Initializable {
         UIComponents.applyNavHover(navClientes);
         UIComponents.applyNavHover(navInventario);
         UIComponents.applyNavHover(navPedidos);
+        UIComponents.applyNavHover(navHistorial);
         UIComponents.applyNavHover(navProveedores);
         UIComponents.applyNavHover(navReportes);
         UIComponents.applyButtonPulse(btnLogout);
@@ -126,6 +127,11 @@ public class GerenteController implements Initializable {
 
     @FXML private void showReportes() {
         loadModule("/views/gerente/GerenteReporteView.fxml", navReportes, "Inteligencia de Negocio", "Análisis detallado de ventas y rendimiento");
+    }
+
+    @FXML private void showHistorialVentas() {
+        // Asegúrate de tener el fx:id="navHistorial" en tu FXML de Gerente
+        loadModule("/views/gerente/GerenteHistorialView.fxml", navHistorial, "Historial Global de Ventas", "Consulta detallada de todas las transacciones del sistema");
     }
 
     @FXML private void handleLogout() {
