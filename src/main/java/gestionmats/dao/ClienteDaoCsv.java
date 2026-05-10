@@ -98,16 +98,5 @@ public class ClienteDaoCsv implements Dao<Cliente> {
         return max;
     }
 
-    /**
-     * Acumula puntos al cliente después de una venta
-     * @param idCliente ID del cliente
-     * @param montoVenta Monto total de la venta
-     */
-    public void acumularPuntos(int idCliente, double montoVenta) {
-        Cliente c = buscarPorId(idCliente);
-        if (c != null) {
-            c.acumularPuntos(montoVenta);
-            actualizar(c);
-        }
-    }
+
 }
