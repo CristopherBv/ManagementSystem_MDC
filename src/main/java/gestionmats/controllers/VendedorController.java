@@ -4,11 +4,15 @@ import gestionmats.dao.ClienteDaoCsv;
 import gestionmats.dao.DetalleVentaDaoCsv;
 import gestionmats.dao.ProductoDaoCsv;
 import gestionmats.dao.VentaDaoCsv;
+import gestionmats.factory.GeneradorRecibo;
+import gestionmats.factory.GeneradorReciboInstantaneo;
+import gestionmats.factory.GeneradorReciboPedido;
 import gestionmats.model.Cliente;
 import gestionmats.model.DetalleVenta;
 import gestionmats.model.Producto;
 import gestionmats.model.Venta;
 import gestionmats.services.GestorSesion;
+import gestionmats.strategy.*;
 import gestionmats.utils.NavigationTools;
 import gestionmats.utils.UIComponents;
 import javafx.animation.KeyFrame;
@@ -86,7 +90,6 @@ public class VendedorController implements Initializable {
     @FXML private Label lblPuntosCliente;
     @FXML private Button btnSeleccionarCliente;
     @FXML private Button btnLimpiarCliente;
-    @FXML private Button btnCanjearPuntos;
 
     // ── VISTA HISTORIAL ───────────────────────────────────────────────
     @FXML private TextField txtBuscarVenta;
@@ -109,7 +112,7 @@ public class VendedorController implements Initializable {
     @FXML private TableColumn<Cliente, String> colCliNombre;
     @FXML private TableColumn<Cliente, String> colCliTelefono;
     @FXML private TableColumn<Cliente, String> colCliEmail;
-    @FXML private TableColumn<Cliente, String> colCliDireccion;  // NUEVA COLUMNA
+    @FXML private TableColumn<Cliente, String> colCliDireccion;
     @FXML private TableColumn<Cliente, Double> colCliPuntos;
     @FXML private TableColumn<Cliente, String> colCliPreferencias;
     @FXML private Button btnNuevoCliente;
@@ -123,6 +126,10 @@ public class VendedorController implements Initializable {
     private DetalleVentaDaoCsv detalleDao;
     private ClienteDaoCsv clienteDao;
 
+    // ── PATRONES ──────────────────────────────────────────────────────
+    private EstrategiaDescuento estrategiaDescuento;
+    private EstrategiaPago estrategiaPago;
+
     // ── ESTADO INTERNO ────────────────────────────────────────────────
     private ObservableList<Producto> todosProductos;
     private FilteredList<Producto> productosFiltrados;
@@ -132,9 +139,6 @@ public class VendedorController implements Initializable {
     private ObservableList<Cliente> todosClientes;
     private FilteredList<Cliente> clientesFiltrados;
 
-    private double descuentoGlobal = 0.0;
-    private double descuentoPorPuntos = 0.0;
-    private int puntosUsados = 0;
     private Cliente clienteActual = null;
     private Timeline clockTimeline;
     private Button activeNavBtn;
@@ -145,6 +149,10 @@ public class VendedorController implements Initializable {
         ventaDao = new VentaDaoCsv();
         detalleDao = new DetalleVentaDaoCsv();
         clienteDao = new ClienteDaoCsv();
+
+        // Estrategias por defecto
+        estrategiaDescuento = new SinDescuento();
+        estrategiaPago = null;
 
         setupClock();
         setupVendedorInfo();
@@ -321,28 +329,42 @@ public class VendedorController implements Initializable {
         if (pinResult.isEmpty()) return;
         if (!"1234".equals(pinResult.get())) { UIComponents.showNotification("PIN incorrecto", "error"); return; }
 
-        TextInputDialog descDialog = new TextInputDialog(String.valueOf((int) descuentoGlobal));
+        TextInputDialog descDialog = new TextInputDialog("0");
         descDialog.setTitle("Descuento manual");
         descDialog.setHeaderText("Autorizado. Ingrese el porcentaje.");
-        descDialog.setContentText("Descuento (0–100):");
+        descDialog.setContentText("Descuento (%):");
         descDialog.showAndWait().ifPresent(input -> {
             try {
-                double desc = Double.parseDouble(input.trim());
-                if (desc < 0 || desc > 100) { UIComponents.showNotification("Valor entre 0 y 100", "warn"); return; }
-                descuentoGlobal = desc;
+                double porcentaje = Double.parseDouble(input.trim());
+                if (porcentaje < 0 || porcentaje > 100) {
+                    UIComponents.showNotification("Valor entre 0 y 100", "warn");
+                    return;
+                }
+                estrategiaDescuento = new DescuentoPorPromocion(porcentaje, "Descuento manual");
                 actualizarTotales();
-                UIComponents.showNotification("Descuento del " + desc + "% aplicado", "success");
-            } catch (NumberFormatException e) { UIComponents.showNotification("Valor inválido", "error"); }
+                UIComponents.showNotification("Descuento del " + porcentaje + "% aplicado", "success");
+            } catch (NumberFormatException e) {
+                UIComponents.showNotification("Valor inválido", "error");
+            }
         });
+    }
+
+    private double getDescuentoAplicado() {
+        double subtotal = carrito.stream().mapToDouble(DetalleVenta::getSubtotal).sum();
+        return estrategiaDescuento.calcularDescuento(subtotal);
     }
 
     private void actualizarTotales() {
         double subtotal = carrito.stream().mapToDouble(DetalleVenta::getSubtotal).sum();
-        double total = subtotal * (1 - descuentoGlobal / 100);
-        total = total - descuentoPorPuntos;
+        double descuento = getDescuentoAplicado();
+        double total = subtotal - descuento;
         if (total < 0) total = 0;
         lblSubtotal.setText(String.format("$ %.2f", subtotal));
-        lblDescuento.setText(String.format("%.1f%%", descuentoGlobal));
+        if (estrategiaDescuento instanceof DescuentoPorPromocion) {
+            lblDescuento.setText(String.format("%.1f%%", ((DescuentoPorPromocion) estrategiaDescuento).getPorcentaje()));
+        } else {
+            lblDescuento.setText("0%");
+        }
         lblTotal.setText(String.format("$ %.2f", total));
     }
 
@@ -391,9 +413,7 @@ public class VendedorController implements Initializable {
 
     @FXML private void handleLimpiarCliente() {
         clienteActual = null;
-        descuentoGlobal = 0.0;
-        puntosUsados = 0;
-        descuentoPorPuntos = 0.0;
+        estrategiaDescuento = new SinDescuento();
         actualizarTotales();
         actualizarInfoCliente();
     }
@@ -402,11 +422,9 @@ public class VendedorController implements Initializable {
         if (clienteActual == null) {
             lblClienteSeleccionado.setText("Sin cliente (venta general)");
             lblPuntosCliente.setText("");
-            btnCanjearPuntos.setDisable(true);
         } else {
             lblClienteSeleccionado.setText(clienteActual.getNombre());
             lblPuntosCliente.setText("Puntos: " + String.format("%.0f", clienteActual.getPuntosLealtad()));
-            btnCanjearPuntos.setDisable(false);
         }
     }
 
@@ -421,48 +439,29 @@ public class VendedorController implements Initializable {
             return;
         }
 
-        double totalActual = carrito.stream().mapToDouble(DetalleVenta::getSubtotal).sum();
-        totalActual = totalActual * (1 - descuentoGlobal / 100);
-
         double puntosDisponibles = clienteActual.getPuntosLealtad();
-        double valorEnPesos = puntosDisponibles * 0.01;
-
         TextInputDialog dialog = new TextInputDialog("0");
         dialog.setTitle("Canjear Puntos");
         dialog.setHeaderText("Cliente: " + clienteActual.getNombre() + "\nPuntos disponibles: " + (int) puntosDisponibles);
-        dialog.setContentText("Ingrese la cantidad de puntos a canjear:\n(1 punto = $0.01 MXN | Valor máximo en pesos: $" + String.format("%.2f", Math.min(valorEnPesos, totalActual)) + ")");
-
+        dialog.setContentText("Ingrese la cantidad de puntos a canjear:\n(1 punto = $0.01 MXN)");
         Optional<String> result = dialog.showAndWait();
         if (result.isPresent()) {
             try {
                 int puntos = Integer.parseInt(result.get().trim());
-                if (puntos <= 0) {
-                    UIComponents.showNotification("Debe ingresar una cantidad mayor a 0", "warn");
+                if (puntos <= 0 || puntos > puntosDisponibles) {
+                    UIComponents.showNotification("Cantidad inválida o puntos insuficientes", "warn");
                     return;
                 }
-                if (puntos > puntosDisponibles) {
-                    UIComponents.showNotification("No tiene suficientes puntos. Máximo: " + (int) puntosDisponibles, "warn");
-                    return;
-                }
-
-                double valorDescuento = puntos * 0.01;
-                if (valorDescuento > totalActual) {
-                    UIComponents.showNotification("El valor del descuento no puede superar el total de la compra.", "warn");
-                    return;
-                }
-
-                puntosUsados = puntos;
-                descuentoPorPuntos = valorDescuento;
+                estrategiaDescuento = new DescuentoPorPromocion(puntos, "Canje de puntos");
                 actualizarTotales();
-
-                UIComponents.showNotification("Se canjearon " + puntos + " puntos por $" + String.format("%.2f", valorDescuento), "success");
+                UIComponents.showNotification("Se canjearon " + puntos + " puntos", "success");
             } catch (NumberFormatException e) {
                 UIComponents.showNotification("Cantidad inválida", "error");
             }
         }
     }
 
-    // ==================== FINALIZAR VENTA ====================
+    // ==================== FINALIZAR VENTA (con Factory y Strategy) ====================
     @FXML
     private void handleFinalizarVenta() {
         if (carrito.isEmpty()) {
@@ -470,22 +469,98 @@ public class VendedorController implements Initializable {
             return;
         }
 
+        double total = Double.parseDouble(lblTotal.getText().replace("$ ", ""));
+        String metodoPago = cmbMetodoPago.getValue();
+
+        // 1. STRATEGY: Crear estrategia de pago según método seleccionado
+        switch (metodoPago) {
+            case "EFECTIVO":
+                TextInputDialog efectivoDialog = new TextInputDialog();
+                efectivoDialog.setTitle("Pago en Efectivo");
+                efectivoDialog.setHeaderText("Ingrese el monto recibido");
+                efectivoDialog.setContentText("Monto recibido:");
+                Optional<String> montoRecibido = efectivoDialog.showAndWait();
+                if (montoRecibido.isEmpty()) return;
+                try {
+                    double recibido = Double.parseDouble(montoRecibido.get().trim());
+                    if (recibido < total) {
+                        UIComponents.showNotification("Monto insuficiente", "error");
+                        return;
+                    }
+                    estrategiaPago = new PagoEfectivo(recibido);
+                } catch (NumberFormatException e) {
+                    UIComponents.showNotification("Monto inválido", "error");
+                    return;
+                }
+                break;
+            case "TARJETA":
+                TextInputDialog tarjetaDialog = new TextInputDialog();
+                tarjetaDialog.setTitle("Pago con Tarjeta");
+                tarjetaDialog.setHeaderText("Ingrese el número de tarjeta");
+                tarjetaDialog.setContentText("Número de tarjeta:");
+                Optional<String> numeroTarjeta = tarjetaDialog.showAndWait();
+                if (numeroTarjeta.isEmpty()) return;
+                estrategiaPago = new PagoTarjetaCredito(numeroTarjeta.get());
+                break;
+            case "CREDITO":
+                TextInputDialog debitoDialog = new TextInputDialog();
+                debitoDialog.setTitle("Pago con Crédito/Débito");
+                debitoDialog.setHeaderText("Ingrese el saldo disponible");
+                debitoDialog.setContentText("Saldo disponible:");
+                Optional<String> saldo = debitoDialog.showAndWait();
+                if (saldo.isEmpty()) return;
+                try {
+                    double saldoDisponible = Double.parseDouble(saldo.get().trim());
+                    estrategiaPago = new PagoTarjetaDebito(saldoDisponible);
+                } catch (NumberFormatException e) {
+                    UIComponents.showNotification("Saldo inválido", "error");
+                    return;
+                }
+                break;
+            default:
+                UIComponents.showNotification("Seleccione un método de pago", "warn");
+                return;
+        }
+
+        // Procesar pago con la estrategia seleccionada
+        if (!estrategiaPago.procesarPago(total)) {
+            UIComponents.showNotification("El pago fue rechazado", "error");
+            return;
+        }
+
+        // 2. Confirmar venta
         String msgCliente = clienteActual != null ? "Cliente: " + clienteActual.getNombre() : "Venta general (sin cliente)";
-        if (!UIComponents.showConfirmDialog("Confirmar venta", msgCliente + "\n¿Desea finalizar la venta?")) return;
+        if (!UIComponents.showConfirmDialog("Confirmar venta", msgCliente + "\nTotal: $" + total + "\n¿Desea finalizar la venta?")) return;
 
         var usuario = GestorSesion.getInstancia().getUsuarioActual();
         int idVendedor = usuario != null ? usuario.getIdUsuario() : 1;
         int idCliente = clienteActual != null ? clienteActual.getIdCliente() : 0;
 
         double subtotal = carrito.stream().mapToDouble(DetalleVenta::getSubtotal).sum();
-        double total = Double.parseDouble(lblTotal.getText().replace("$ ", ""));
+        double descuentoAplicado = getDescuentoAplicado();
 
+        Venta venta = new Venta(idCliente, idVendedor, cmbTipoVenta.getValue(),
+                metodoPago, subtotal,
+                estrategiaDescuento instanceof DescuentoPorPromocion ? ((DescuentoPorPromocion) estrategiaDescuento).getPorcentaje() : 0,
+                total);
+        venta.setDetalles(new java.util.ArrayList<>(carrito));
+        venta.setEstrategiaPago(estrategiaPago);
+
+        // 3. FACTORY METHOD: Generar recibo según tipo de venta
+        GeneradorRecibo generador;
+        if ("INSTANTANEA".equals(cmbTipoVenta.getValue())) {
+            generador = new GeneradorReciboInstantaneo(venta);
+        } else {
+            generador = new GeneradorReciboPedido(venta, 1000, "15 días hábiles");
+        }
+
+        String recibo = generador.generarRecibo();
+        System.out.println(recibo);
+        UIComponents.showNotification("Recibo generado. Revisa la consola.", "info");
+
+        // 4. Guardar en DAOs
         int nuevoIdVenta = ventaDao.obtenerUltimoId() + 1;
-        Venta venta = new Venta(nuevoIdVenta, idCliente, idVendedor,
-                LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")),
-                cmbTipoVenta.getValue(), cmbMetodoPago.getValue(),
-                subtotal, descuentoGlobal, total, "COMPLETADA");
-
+        venta.setIdVenta(nuevoIdVenta);
         if (!ventaDao.guardar(venta)) {
             UIComponents.showNotification("Error al guardar la venta", "error");
             return;
@@ -503,28 +578,19 @@ public class VendedorController implements Initializable {
             }
         }
 
-        // ACTUALIZACIÓN DE PUNTOS USANDO EL MÉTODO DEL DAO
+        // 5. Actualizar puntos del cliente
         if (clienteActual != null) {
-            // Primero restamos los puntos que usó (si canjeó)
-            if (puntosUsados > 0) {
-                double puntosRestantes = clienteActual.getPuntosLealtad() - puntosUsados;
-                clienteActual.setPuntosLealtad(puntosRestantes);
-            }
-            // Luego acumulamos los puntos ganados por la compra usando el método del DAO
-            clienteDao.acumularPuntos(clienteActual.getIdCliente(), total);
-
-            // Recargamos el cliente actual para tener los puntos actualizados
-            clienteActual = clienteDao.buscarPorId(clienteActual.getIdCliente());
-
+            double puntosGanados = total * 0.01;
+            clienteActual.setPuntosLealtad(clienteActual.getPuntosLealtad() + puntosGanados);
+            clienteDao.actualizar(clienteActual);
             UIComponents.showNotification("Cliente " + clienteActual.getNombre() +
-                    " usó " + puntosUsados + " puntos, ganó nuevos puntos por la compra. Saldo actual: " +
-                    String.format("%.0f", clienteActual.getPuntosLealtad()), "success");
+                    " ganó " + String.format("%.0f", puntosGanados) + " puntos", "success");
         }
 
+        // 6. Limpiar estado
         carrito.clear();
-        descuentoGlobal = 0;
-        puntosUsados = 0;
-        descuentoPorPuntos = 0.0;
+        estrategiaDescuento = new SinDescuento();
+        estrategiaPago = null;
         clienteActual = null;
         actualizarTotales();
         actualizarInfoCliente();
@@ -600,27 +666,22 @@ public class VendedorController implements Initializable {
         colCliNombre.setCellValueFactory(new PropertyValueFactory<>("nombre"));
         colCliTelefono.setCellValueFactory(new PropertyValueFactory<>("numeroTelefonico"));
         colCliEmail.setCellValueFactory(new PropertyValueFactory<>("correoElectronico"));
-        colCliDireccion.setCellValueFactory(new PropertyValueFactory<>("direccion")); // NUEVA COLUMNA
+        colCliDireccion.setCellValueFactory(new PropertyValueFactory<>("direccion"));
         colCliPuntos.setCellValueFactory(new PropertyValueFactory<>("puntosLealtad"));
         colCliPreferencias.setCellValueFactory(new PropertyValueFactory<>("preferencias"));
-
         colCliPuntos.setCellFactory(col -> new TableCell<>() {
             @Override protected void updateItem(Double item, boolean empty) {
                 super.updateItem(item, empty);
                 setText(empty || item == null ? null : String.format("%.0f", item));
             }
         });
-
         todosClientes = FXCollections.observableArrayList();
         clientesFiltrados = new FilteredList<>(todosClientes, c -> true);
         tableClientes.setItems(clientesFiltrados);
         clientesFiltrados.addListener((javafx.collections.ListChangeListener<Cliente>) c -> lblFooterClientes.setText("Total: " + clientesFiltrados.size() + " clientes"));
         txtBuscarCliente.textProperty().addListener((obs, o, n) -> {
             String txt = n == null ? "" : n.toLowerCase().trim();
-            clientesFiltrados.setPredicate(c -> txt.isEmpty() ||
-                    c.getNombre().toLowerCase().contains(txt) ||
-                    c.getNumeroTelefonico().contains(txt) ||
-                    c.getCorreoElectronico().toLowerCase().contains(txt));
+            clientesFiltrados.setPredicate(c -> txt.isEmpty() || c.getNombre().toLowerCase().contains(txt) || c.getNumeroTelefonico().contains(txt) || c.getCorreoElectronico().toLowerCase().contains(txt));
         });
     }
     private void cargarClientes() { todosClientes.setAll(clienteDao.listarTodos()); }
@@ -637,10 +698,8 @@ public class VendedorController implements Initializable {
         TextField txtEmail = new TextField(); txtEmail.setPromptText("Email (opcional)");
         TextField txtDireccion = new TextField(); txtDireccion.setPromptText("Dirección (opcional)");
         TextField txtPreferencias = new TextField(); txtPreferencias.setPromptText("Preferencias (opcional)");
-        grid.addRow(0, new Label("Nombre:"), txtNombre);
-        grid.addRow(1, new Label("Teléfono:"), txtTelefono);
-        grid.addRow(2, new Label("Email:"), txtEmail);
-        grid.addRow(3, new Label("Dirección:"), txtDireccion);
+        grid.addRow(0, new Label("Nombre:"), txtNombre); grid.addRow(1, new Label("Teléfono:"), txtTelefono);
+        grid.addRow(2, new Label("Email:"), txtEmail); grid.addRow(3, new Label("Dirección:"), txtDireccion);
         grid.addRow(4, new Label("Preferencias:"), txtPreferencias);
         dialog.getDialogPane().setContent(grid);
         javafx.scene.Node btnOk = dialog.getDialogPane().lookupButton(btnGuardar);
@@ -670,18 +729,14 @@ public class VendedorController implements Initializable {
         TextField txtEmail = new TextField(sel.getCorreoElectronico());
         TextField txtDireccion = new TextField(sel.getDireccion());
         TextField txtPreferencias = new TextField(sel.getPreferencias());
-        grid.addRow(0, new Label("Nombre:"), txtNombre);
-        grid.addRow(1, new Label("Teléfono:"), txtTelefono);
-        grid.addRow(2, new Label("Email:"), txtEmail);
-        grid.addRow(3, new Label("Dirección:"), txtDireccion);
+        grid.addRow(0, new Label("Nombre:"), txtNombre); grid.addRow(1, new Label("Teléfono:"), txtTelefono);
+        grid.addRow(2, new Label("Email:"), txtEmail); grid.addRow(3, new Label("Dirección:"), txtDireccion);
         grid.addRow(4, new Label("Preferencias:"), txtPreferencias);
         dialog.getDialogPane().setContent(grid);
         dialog.setResultConverter(bt -> {
             if (bt != btnGuardar) return null;
-            sel.setNombre(txtNombre.getText().trim());
-            sel.setNumeroTelefonico(txtTelefono.getText().trim());
-            sel.setCorreoElectronico(txtEmail.getText().trim());
-            sel.setDireccion(txtDireccion.getText().trim());
+            sel.setNombre(txtNombre.getText().trim()); sel.setNumeroTelefonico(txtTelefono.getText().trim());
+            sel.setCorreoElectronico(txtEmail.getText().trim()); sel.setDireccion(txtDireccion.getText().trim());
             sel.setPreferencias(txtPreferencias.getText().trim());
             return sel;
         });
@@ -695,6 +750,5 @@ public class VendedorController implements Initializable {
         if (confirm) { clienteDao.eliminar(sel.getIdCliente()); cargarClientes(); UIComponents.showNotification("Cliente eliminado", "success"); }
     }
 
-    // ==================== LOGOUT ====================
     @FXML private void handleLogout() { NavigationTools.manejarLogout(btnLogout, clockTimeline); }
 }
