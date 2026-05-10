@@ -36,17 +36,22 @@
                 <Button fx:id="navEmpleados" text="  Empleados" onAction="#showEmpleados"
                         prefWidth="220" prefHeight="44" styleClass="nav-btn"/>
 
+                <Button fx:id="navClientes" text="  Clientes" onAction="#showClientes"
+                        prefWidth="220" prefHeight="44" styleClass="nav-btn"/>
+
                 <Button fx:id="navInventario" text="  Inventario" onAction="#showInventario"
                         prefWidth="220" prefHeight="44" styleClass="nav-btn"/>
 
                 <Button fx:id="navPedidos" text="  Pedidos" onAction="#showPedidos"
                         prefWidth="220" prefHeight="44" styleClass="nav-btn"/>
 
-                <Button fx:id="navClientes" text="  Clientes" onAction="#showClientes"
-                        prefWidth="220" prefHeight="44" styleClass="nav-btn"/>
 
                 <Button fx:id="navProveedores" text="  Proveedores" onAction="#showProveedores"
                         prefWidth="220" prefHeight="44" styleClass="nav-btn"/>
+
+                <Button fx:id="navReportes" text="  Reportes" onAction="#showReportes"
+                        prefWidth="220" prefHeight="44" styleClass="nav-btn"/>
+
             </VBox>
 
             <VBox styleClass="sidebar-footer" alignment="CENTER">

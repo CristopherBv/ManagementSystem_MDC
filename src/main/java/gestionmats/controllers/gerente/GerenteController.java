@@ -23,7 +23,7 @@ import java.util.ResourceBundle;
 public class GerenteController implements Initializable {
 
     @FXML private Label lblPageTitle, lblPageSub, lblFecha, lblHora, lblUserName; // <-- Agregado lblUserName
-    @FXML private Button navDashboard, navEmpleados, navInventario, navPedidos, navClientes, navProveedores, btnLogout;
+    @FXML private Button navDashboard, navEmpleados, navInventario, navPedidos, navClientes, navProveedores, navReportes, btnLogout;
     @FXML private StackPane contentArea;
 
     private Timeline clockTimeline;
@@ -61,10 +61,11 @@ public class GerenteController implements Initializable {
     private void setupNavButtons() {
         UIComponents.applyNavHover(navDashboard);
         UIComponents.applyNavHover(navEmpleados);
+        UIComponents.applyNavHover(navClientes);
         UIComponents.applyNavHover(navInventario);
         UIComponents.applyNavHover(navPedidos);
-        UIComponents.applyNavHover(navClientes);
         UIComponents.applyNavHover(navProveedores);
+        UIComponents.applyNavHover(navReportes);
         UIComponents.applyButtonPulse(btnLogout);
     }
 
@@ -121,6 +122,10 @@ public class GerenteController implements Initializable {
     }
      @FXML private void showProveedores() {
         loadModule("/views/gerente/GerenteProveedorView.fxml", navProveedores, "Directorio de Proveedores", "Gestión de empresas suministradoras");
+    }
+
+    @FXML private void showReportes() {
+        loadModule("/views/gerente/GerenteReporteView.fxml", navReportes, "Inteligencia de Negocio", "Análisis detallado de ventas y rendimiento");
     }
 
     @FXML private void handleLogout() {

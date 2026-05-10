@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.chart.*?>
+
+<VBox spacing="18" styleClass="view-panel" xmlns="http://javafx.com/javafx/17.0.2" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="gestionmats.controllers.gerente.GerenteReporteController">
+
+    <VBox spacing="10" styleClass="toolbar">
+        <Label text="Filtros de Periodo:" styleClass="kpi-sub" style="-fx-text-fill: white;"/>
+
+        <HBox spacing="10" alignment="CENTER_LEFT">
+            <Button fx:id="btnHoy" text="Hoy" onAction="#handlePresetHoy" styleClass="btn-ghost-small" minWidth="-Infinity"/>
+            <Button fx:id="btnSemana" text="Esta Semana" onAction="#handlePresetSemana" styleClass="btn-ghost-small" minWidth="-Infinity"/>
+            <Button fx:id="btnMes" text="Este Mes" onAction="#handlePresetMes" styleClass="btn-ghost-small" minWidth="-Infinity"/>
+            <Button fx:id="btnAño" text="Este Año" onAction="#handlePresetAño" styleClass="btn-ghost-small" minWidth="-Infinity"/>
+            <Button fx:id="btnPersonalizado" text="Personalizado ⚙" onAction="#handleTogglePersonalizado" styleClass="btn-edit-small" minWidth="-Infinity"/>
+
+            <Pane HBox.hgrow="ALWAYS"/>
+
+            <ComboBox fx:id="cmbCategoria" prefHeight="32" prefWidth="180" styleClass="combo-input" promptText="Todas las categorías"/>
+            <Button fx:id="btnExportar" text="📥 Exportar .txt" onAction="#handleExportarReporte" prefHeight="32" styleClass="btn-add" minWidth="-Infinity"/>
+        </HBox>
+
+        <HBox fx:id="hboxCustomDates" spacing="15" alignment="CENTER_LEFT" visible="false" managed="false"
+              style="-fx-background-color: rgba(255,255,255,0.03); -fx-padding: 10; -fx-background-radius: 5;">
+            <Label text="Desde:" styleClass="kpi-sub"/>
+            <DatePicker fx:id="dpInicio" prefHeight="30" prefWidth="140" styleClass="combo-input"/>
+            <Label text="Hasta:" styleClass="kpi-sub"/>
+            <DatePicker fx:id="dpFin" prefHeight="30" prefWidth="140" styleClass="combo-input"/>
+        </HBox>
+    </VBox>
+
+    <HBox spacing="15">
+        <VBox styleClass="kpi-card, kpi-blue" HBox.hgrow="ALWAYS">
+            <Label text="PRODUCTO MÁS VENDIDO" styleClass="kpi-label"/>
+            <Label fx:id="lblMasVendido" text="--" styleClass="kpi-value" style="-fx-font-size: 16px;"/>
+        </VBox>
+        <VBox styleClass="kpi-card, kpi-orange" HBox.hgrow="ALWAYS">
+            <Label text="CATEGORÍA LÍDER" styleClass="kpi-label"/>
+            <Label fx:id="lblMejorCategoria" text="--" styleClass="kpi-value" style="-fx-font-size: 16px;"/>
+        </VBox>
+        <VBox styleClass="kpi-card, kpi-green" HBox.hgrow="ALWAYS">
+            <Label text="UTILIDAD EN PERIODO" styleClass="kpi-label"/>
+            <Label fx:id="lblUtilidadTotal" text="0.00" styleClass="kpi-value" style="-fx-font-size: 16px;"/>
+        </VBox>
+    </HBox>
+
+    <HBox spacing="15" VBox.vgrow="ALWAYS">
+        <VBox styleClass="toolbar" prefWidth="400">
+            <Label text="Distribución de Unidades Vendidas" styleClass="page-title" style="-fx-font-size: 13px;"/>
+            <PieChart fx:id="chartDistribucion" legendSide="BOTTOM" VBox.vgrow="ALWAYS" labelsVisible="false"/>
+        </VBox>
+
+        <VBox styleClass="toolbar" HBox.hgrow="ALWAYS">
+            <Label text="Tendencia de Ingresos" styleClass="page-title" style="-fx-font-size: 13px;"/>
+            <LineChart fx:id="chartTendencia" legendVisible="false" VBox.vgrow="ALWAYS">
+                <xAxis><CategoryAxis side="BOTTOM" /></xAxis>
+                <yAxis><NumberAxis side="LEFT" /></yAxis>
+            </LineChart>
+        </VBox>
+    </HBox>
+
+</VBox>
