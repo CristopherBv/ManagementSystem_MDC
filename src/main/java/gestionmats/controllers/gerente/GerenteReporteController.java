@@ -2,6 +2,7 @@ package gestionmats.controllers.gerente;
 
 import gestionmats.dao.*;
 import gestionmats.model.*;
+import gestionmats.services.GestorSesion;
 import gestionmats.utils.UIComponents;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
@@ -115,6 +116,12 @@ public class GerenteReporteController implements Initializable {
         LocalDate inicio = dpInicio.getValue();
         LocalDate fin = dpFin.getValue();
         String catFiltro = cmbCategoria.getValue();
+
+        // ── LLAMADA AL MODELO (CUMPLIMIENTO UML) ──
+        Usuario usuario = GestorSesion.getInstancia().getUsuarioActual();
+        if (usuario instanceof Gerente) {
+            ((Gerente) usuario).obtenerReportes("Filtro: " + catFiltro + " (" + inicio + " a " + fin + ")");
+        }
 
         List<Venta> ventasFiltradas = ventaDao.listarTodos().stream()
                 .filter(v -> !v.getEstado().equals("CANCELADA"))
@@ -232,7 +239,7 @@ public class GerenteReporteController implements Initializable {
                 writer.println("Este reporte fue generado por el sistema de gestión.");
                 writer.println("Uso exclusivo para la Gerencia General.");
 
-                // Avisar que todo salió bien
+                // Avisar que everything salió bien
                 UIComponents.showNotification("Reporte guardado con éxito.", "success");
             } catch (Exception e) {
                 e.printStackTrace();
