@@ -20,6 +20,7 @@
 
 ## 📑 Tabla de Contenidos
 - [Acerca del Proyecto](#-acerca-del-proyecto)
+- [Diagramas UML](#-documentacion-de-diagramas-uml)
 - [Vistas Previas del Sistema](#-vistas-previas-del-sistema)
 - [Stack Tecnológico](#️-stack-tecnológico)
 - [Requerimientos Funcionales](#-requerimientos-funcionales-rf)
@@ -31,6 +32,67 @@
 ## 📖 Acerca del Proyecto
 
 Este proyecto consiste en una solución de software diseñada para optimizar las operaciones diarias de una constructora y su manejo de materiales. El sistema permite gestionar desde el catálogo de productos y el inventario hasta la generación de reportes financieros, garantizando precisión y eficiencia en la toma de decisiones comerciales mediante accesos controlados por roles (Gerente, Vendedor, Almacenista).
+
+
+---
+
+## 📊 Documentación de Diagramas UML
+
+Esta sección documenta la arquitectura y el comportamiento del **SDG_MDC**, modelado mediante diagramas UML (generados con Astah). Se garantiza la coherencia entre los requerimientos, el diseño visual y la implementación en el código fuente.
+
+<details>
+  <summary><b>1. Diagrama de Casos de Uso</b> <i>[Clic para expandir]</i></summary>
+  <br>
+  <div align="center">
+    <img src="ruta/a/diagrama_casos_uso.png" alt="Diagrama de Casos de Uso" width="800"/>
+    <p><i>Ilustra las interacciones de los tres actores principales (Gerente, Vendedor, Almacenista) con los módulos del sistema, definiendo los límites de acceso y operaciones permitidas.</i></p>
+  </div>
+</details>
+
+<details>
+  <summary><b>2. Diagrama de Clases (Diseño y Patrones)</b> <i>[Clic para expandir]</i></summary>
+  <br>
+  <div align="center">
+    <img src="ruta/a/diagrama_clases.png" alt="Diagrama de Clases" width="800"/>
+    <p><i>Estructura estática del sistema bajo la arquitectura MVC. <b>Nota:</b> En este diagrama se refleja la aplicación de los principios SOLID y la implementación de los tres patrones de diseño seleccionados para resolver problemas específicos de creación, estructura o comportamiento.</i></p>
+  </div>
+</details>
+
+<details>
+  <summary><b>3. Diagrama de Secuencia</b> <i>[Clic para expandir]</i></summary>
+  <br>
+  <div align="center">
+    <img src="ruta/a/diagrama_secuencia.png" alt="Diagrama de Secuencia" width="800"/>
+    <p><i>Detalla el flujo de mensajes en el tiempo para un proceso crítico (ej. el registro de una venta o la autorización Override del gerente).</i></p>
+  </div>
+</details>
+
+<details>
+  <summary><b>4. Diagrama de Estado</b> <i>[Clic para expandir]</i></summary>
+  <br>
+  <div align="center">
+    <img src="ruta/a/diagrama_estado.png" alt="Diagrama de Estado" width="800"/>
+    <p><i>Muestra las transiciones por las que pasa un objeto complejo durante su ciclo de vida dentro de la aplicación (ej. el ciclo de vida de una Orden de Compra: Pendiente -> Recibida -> Discrepancia/Completada).</i></p>
+  </div>
+</details>
+
+<details>
+  <summary><b>5. Diagrama de Colaboración (Comunicación)</b> <i>[Clic para expandir]</i></summary>
+  <br>
+  <div align="center">
+    <img src="ruta/a/diagrama_colaboracion.png" alt="Diagrama de Colaboración" width="800"/>
+    <p><i>Enfatiza la organización estructural de los objetos que envían y reciben mensajes, complementando la vista del diagrama de secuencia.</i></p>
+  </div>
+</details>
+
+<details>
+  <summary><b>6. Diagrama de Actividad</b> <i>[Clic para expandir]</i></summary>
+  <br>
+  <div align="center">
+    <img src="ruta/a/diagrama_actividad.png" alt="Diagrama de Actividad" width="800"/>
+    <p><i>Representa el flujo de control o flujo de datos paso a paso de un caso de uso, mostrando decisiones lógicas y actividades en paralelo.</i></p>
+  </div>
+</details>
 
 ---
 
@@ -134,3 +196,16 @@ Abre tu terminal de preferencia y ejecuta:
 ```bash
 git clone [https://github.com/tu-usuario/SDG_MDC.git](https://github.com/tu-usuario/SDG_MDC.git)
 cd SDG_MDC
+```
+
+### 3. Compilar el proyecto
+Como el proyecto utiliza Maven para gestionar las dependencias de JavaFX y el conector CSV, ejecuta el siguiente comando para limpiar y compilar:
+```bash
+mvn clean install
+```
+### 4. Ejecutar la aplicación
+Una vez compilado correctamente, puedes levantar la interfaz gráfica con:
+```bash
+mvn javafx:run
+```
+
