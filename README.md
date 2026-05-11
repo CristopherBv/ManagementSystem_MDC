@@ -1,19 +1,22 @@
 # 🏗️ Sistema de Gestión de Materiales de Construcción (SDG_MDC)
 
 <div align="center">
-  <img src="src/main/resources/images/logoConstructora.png" alt="Logo del Sistema" width="250"/>
+  <img src="src/main/resources/images/logoConstructoraV1.png" alt="Logo del Sistema" width="250"/>
 </div>
 
 <br>
 
 <div align="center">
 
-![Java](https://img.shields.io/badge/Java-17.0.12-ED8B00?style=for-the-badge&logo=java&logoColor=white)
-![JavaFX](https://img.shields.io/badge/JavaFX-UI-4796DA?style=for-the-badge&logo=java&logoColor=white)
-![Maven](https://img.shields.io/badge/Apache_Maven-C71A36?style=for-the-badge&logo=apachemaven&logoColor=white)
-![Arquitectura MVC](https://img.shields.io/badge/Arquitectura-MVC-232F3E?style=for-the-badge)
-![Persistencia](https://img.shields.io/badge/Persistencia-CSV-4CAF50?style=for-the-badge)
+<div align="center">
 
+[![Java](https://img.shields.io/badge/Java-17.0.12-ED8B00?style=for-the-badge&logo=java&logoColor=white)](https://www.oracle.com/java/technologies/javase/jdk17-archive-downloads.html)
+[![JavaFX](https://img.shields.io/badge/JavaFX-UI-4796DA?style=for-the-badge&logo=java&logoColor=white)](https://openjfx.io/)
+[![Maven](https://img.shields.io/badge/Apache_Maven-C71A36?style=for-the-badge&logo=apachemaven&logoColor=white)](https://maven.apache.org/)
+[![Arquitectura MVC](https://img.shields.io/badge/Arquitectura-MVC-232F3E?style=for-the-badge)](https://developer.mozilla.org/es/docs/Glossary/MVC)
+[![Persistencia](https://img.shields.io/badge/Persistencia-CSV-4CAF50?style=for-the-badge)](https://es.wikipedia.org/wiki/Valores_separados_por_comas)
+
+</div>
 </div>
 
 ---
