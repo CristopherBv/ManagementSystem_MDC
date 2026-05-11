@@ -109,11 +109,11 @@ Esta sección documenta la arquitectura y el comportamiento del **SDG_MDC**, mod
   <summary><b>Pantallas de Autenticación</b> <i>[Clic para expandir]</i></summary>
   <br>
   <div align="center">
-    <img src="images/Login_Vista.png" alt="Pantalla de Login" width="800"/>
+    <img src="images/vistasLogin/Login_Vista.png" alt="Pantalla de Login" width="800"/>
     <p><i>Interfaz principal de acceso. Implementa validación de campos para prevenir entradas nulas o formatos incorrectos.</i></p>
     <br>
-    <img src="images/Login_Vista2.png" alt="Login Activo" width="800"/>
-    <p><i>Visualización del estado activo de los campos de texto con respuesta visual inmediata al usuario.</i></p>
+    <img src="images/vistasLogin/Login_Vista2.png" alt="Login Activo" width="800"/>
+    <p><i>Visualización del estado activo de los campos de texto con respuesta visual inmediata para el usuario. Igualmente se puede observar que el campo de contraseña puede ser visible u oculto.</i></p>
   </div>
 </details>
 
