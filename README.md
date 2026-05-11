@@ -1,7 +1,7 @@
 # 🏗️ Sistema de Gestión de Materiales de Construcción (SDG_MDC)
 
 <div align="center">
-  <img src="ruta/a/tu/logo.png" alt="Logo del Sistema" width="250"/>
+  <img src="/resources/images/logoContructora.png" alt="Logo del Sistema" width="250"/>
 </div>
 
 <br>
@@ -43,7 +43,7 @@ Esta sección documenta la arquitectura y el comportamiento del **SDG_MDC**, mod
   <summary><b>1. Diagrama de Casos de Uso</b> <i>[Clic para expandir]</i></summary>
   <br>
   <div align="center">
-    <img src="ruta/a/diagrama_casos_uso.png" alt="Diagrama de Casos de Uso" width="800"/>
+    <img src="/images/D_CasosDeUso" alt="Diagrama de Casos de Uso" width="800"/>
     <p><i>Ilustra las interacciones de los tres actores principales (Gerente, Vendedor, Almacenista) con los módulos del sistema, definiendo los límites de acceso y operaciones permitidas.</i></p>
   </div>
 </details>
