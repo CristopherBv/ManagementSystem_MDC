@@ -100,36 +100,123 @@ Esta sección documenta la arquitectura y el comportamiento del **SDG_MDC**, mod
 
 ## 📸 Vistas Previas del Sistema
 
-> **Nota:** Aquí puedes ver cómo luce el sistema en acción. 
+> **Nota:** El sistema cuenta con interfaces adaptativas según el rol del usuario, garantizando que cada colaborador acceda únicamente a las herramientas necesarias para su función.
 
+---
+
+### 🔑 Módulo de Acceso (Login)
 <details>
-  <summary><b>1. Dashboard del Gerente (Inteligencia de Negocio)</b> <i>[Clic para expandir]</i></summary>
+  <summary><b>Pantallas de Autenticación</b> <i>[Clic para expandir]</i></summary>
   <br>
   <div align="center">
-    <img src="ruta/a/tu/imagen_dashboard.png" alt="Dashboard Gerente" width="800"/>
-    <p><i>Panel principal con KPIs de ventas, alertas de stock e inventario en tiempo real.</i></p>
-  </div>
-</details>
-
-<details>
-  <summary><b>2. Punto de Venta (Vendedor)</b> <i>[Clic para expandir]</i></summary>
-  <br>
-  <div align="center">
-    <img src="ruta/a/tu/imagen_punto_venta.png" alt="Punto de Venta" width="800"/>
-    <p><i>Interfaz fluida para registro de compras, carrito y canje de puntos de lealtad.</i></p>
-  </div>
-</details>
-
-<details>
-  <summary><b>3. Control de Almacén (Almacenista)</b> <i>[Clic para expandir]</i></summary>
-  <br>
-  <div align="center">
-    <img src="ruta/a/tu/imagen_almacen.png" alt="Control de Almacén" width="800"/>
-    <p><i>Módulo para la recepción de proveedores mediante órdenes de compra y despacho a clientes.</i></p>
+    <img src="images/Login_Vista.png" alt="Pantalla de Login" width="800"/>
+    <p><i>Interfaz principal de acceso. Implementa validación de campos para prevenir entradas nulas o formatos incorrectos.</i></p>
+    <br>
+    <img src="images/Login_Vista2.png" alt="Login Activo" width="800"/>
+    <p><i>Visualización del estado activo de los campos de texto con respuesta visual inmediata al usuario.</i></p>
   </div>
 </details>
 
 ---
+
+### 👔 Módulo Administrativo (Gerente)
+Esta sección centraliza las herramientas de inteligencia de negocio y gestión de recursos humanos y materiales.
+
+<details>
+  <summary><b>1. Panel de Control (Dashboard)</b></summary>
+  <br>
+  <div align="center">
+    <img src="images/vistasGerente/Gerente_DashBoard.png" alt="Dashboard Gerente" width="800"/>
+    <p><i>Visualización de métricas clave, KPIs de ventas y estado del inventario en tiempo real.</i></p>
+  </div>
+</details>
+
+<details>
+  <summary><b>2. Gestión de Empleados</b></summary>
+  <br>
+  <div align="center">
+    <img src="images/vistasGerente/Gerente_Empleados.png" alt="Gestión de Empleados" width="800"/>
+    <p><i>Administración de la plantilla laboral, permitiendo el control de roles y credenciales de acceso.</i></p>
+  </div>
+</details>
+
+<details>
+  <summary><b>3. Gestión de Clientes</b></summary>
+  <br>
+  <div align="center">
+    <img src="images/vistasGerente/Gerente_Clientes.png" alt="Gestión de Clientes" width="800"/>
+    <p><i>Directorio de clientes frecuentes con historial de puntos acumulados para el programa de lealtad.</i></p>
+  </div>
+</details>
+
+<details>
+  <summary><b>4. Control de Inventario</b></summary>
+  <br>
+  <div align="center">
+    <img src="images/vistasGerente/Gerente_Inventario.png" alt="Inventario" width="800"/>
+    <p><i>Catálogo maestro de materiales de construcción con alertas de stock mínimo preestablecidas.</i></p>
+  </div>
+</details>
+
+<details>
+  <summary><b>5. Gestión de Pedidos</b></summary>
+  <br>
+  <div align="center">
+    <img src="images/vistasGerente/Gerente_Pedidos.png" alt="Pedidos" width="800"/>
+    <p><i>Seguimiento de pedidos internos y solicitudes de materiales para las operaciones.</i></p>
+  </div>
+</details>
+
+<details>
+  <summary><b>6. Historial de Ventas</b></summary>
+  <br>
+  <div align="center">
+    <img src="images/vistasGerente/Gerente_Ventas.png" alt="Ventas" width="800"/>
+    <p><i>Registro inmutable de transacciones económicas, facilitando la transparencia financiera.</i></p>
+  </div>
+</details>
+
+<details>
+  <summary><b>7. Directorio de Proveedores</b></summary>
+  <br>
+  <div align="center">
+    <img src="images/vistasGerente/Gerente_Proovedores.png" alt="Proveedores" width="800"/>
+    <p><i>Administración de contactos y catálogos de proveedores para el reabastecimiento de stock.</i></p>
+  </div>
+</details>
+
+<details>
+  <summary><b>8. Reportes e Inteligencia</b></summary>
+  <br>
+  <div align="center">
+    <img src="images/vistasGerente/Gerente_Reportes.png" alt="Reportes" width="800"/>
+    <p><i>Generación de informes detallados en formato plano para el análisis de rendimiento mensual y anual.</i></p>
+  </div>
+</details>
+
+---
+
+### 🛒 Módulo Operativo (Vendedor)
+<details>
+  <summary><b>Punto de Venta (POS)</b> <i>[Clic para expandir]</i></summary>
+  <br>
+  <div align="center">
+    <img src="ruta/a/tu/imagen_punto_venta.png" alt="Punto de Venta" width="800"/>
+    <p><i>Interfaz fluida para registro de compras, gestión de carrito y aplicación de promociones.</i></p>
+  </div>
+</details>
+
+---
+
+### 📦 Módulo de Logística (Almacenista)
+<details>
+  <summary><b>Control de Almacén</b> <i>[Clic para expandir]</i></summary>
+  <br>
+  <div align="center">
+    <img src="ruta/a/tu/imagen_almacen.png" alt="Control de Almacén" width="800"/>
+    <p><i>Módulo especializado para la recepción de materiales y despacho de tickets surtidos.</i></p>
+  </div>
+</details>
 
 ## 🛠️ Stack Tecnológico
 
