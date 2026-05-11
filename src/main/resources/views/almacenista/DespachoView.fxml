@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox xmlns="http://javafx.com/javafx/17"
+      xmlns:fx="http://javafx.com/fxml/1"
+      spacing="20"
+      style="-fx-padding: 20;"
+      styleClass="main-content"
+      fx:controller="gestionmats.controllers.almacenista.DespachoController">
+
+    <HBox spacing="10" alignment="CENTER_LEFT">
+        <TextField fx:id="txtIdPedido" promptText="Ingrese ID de Pedido..." style="-fx-text-fill: black;" prefWidth="300"/>
+        <Button text="Buscar Ticket" onAction="#handleBuscarPedido" styleClass="nav-btn"/>
+    </HBox>
+
+    <TableView fx:id="tablaMaterialesPedido" VBox.vgrow="ALWAYS" styleClass="dark-table">
+        <columns>
+            <TableColumn fx:id="colMaterial" text="Material" prefWidth="250"/>
+            <TableColumn fx:id="colCantidad" text="Cantidad a Entregar" prefWidth="150"/>
+            <TableColumn fx:id="colEstado" text="Estado" prefWidth="120"/>
+        </columns>
+    </TableView>
+
+    <HBox alignment="CENTER_RIGHT">
+        <Button text="Confirmar Entrega" onAction="#handleConfirmarEntrega"
+                styleClass="btn-logout" style="-fx-background-color: #27ae60; -fx-text-fill: white; -fx-font-weight: bold;"/>
+    </HBox>
+</VBox>

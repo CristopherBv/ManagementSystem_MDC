@@ -14,6 +14,9 @@ module gestionmats {
     // leer los atributos de tus clases de datos (Producto, Material, etc.)
     //exports gestionmats.model; aun no hay nada xd
 
+    opens gestionmats.controllers.almacenista to javafx.fxml;
+    exports gestionmats.controllers.almacenista;
+
     // Exporta el paquete principal para que el launcher funcione
     exports gestionmats;
     opens gestionmats.controllers.gerente to javafx.fxml;

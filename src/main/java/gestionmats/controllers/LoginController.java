@@ -120,7 +120,7 @@ public class LoginController implements Initializable {
                     cargarVistaUsuario("/views/VendedorView.fxml", "SDG MDC - Punto de Venta");
                     break;
                 case ALMACENISTA:
-                    cargarVistaUsuario("/views/AlmacenistaView.fxml", "SDG MDC - Control de Almacén");
+                    cargarVistaUsuario("/views/almacenista/AlmacenistaView.fxml", "SDG MDC - Control de Almacén");
                     break;
                 default:
                     AlertUtils.mostrarAlerta(Alert.AlertType.ERROR, "Error de Acceso", "Rol no reconocido", "Consulte con soporte.");

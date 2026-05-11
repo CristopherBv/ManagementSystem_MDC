@@ -1,6 +1,7 @@
 package gestionmats.dao;
 
 import gestionmats.model.Producto;
+import gestionmats.utils.CsvUtils;
 
 public class ProductoDaoCsv extends AbstractDaoCsv<Producto> {
 
@@ -118,4 +119,23 @@ public class ProductoDaoCsv extends AbstractDaoCsv<Producto> {
         return false;
     }
 
+    @Override
+    public boolean actualizar(Producto p) {
+        // Usamos reemplazarLinea de CsvUtils.
+        // El método pide: (ruta, id_a_buscar, datos_nuevos...)
+        // MUY IMPORTANTE: El orden de los datos debe ser el mismo que en tu mapearACsv
+        return CsvUtils.reemplazarLinea(
+                this.ruta,
+                p.getIdProducto(),
+                p.getIdProducto(),            // datos[0]
+                p.getNombre(),                // datos[1]
+                p.getMarca(),                 // datos[2]
+                p.getCategoria(),             // datos[3]
+                String.valueOf(p.getPrecioVenta()), // datos[4]
+                String.valueOf(p.getStockMaximo()), // datos[5]
+                String.valueOf(p.getStockActual()), // datos[6] - ¡Aquí va el stock actualizado!
+                p.getUnidadMedida(),          // datos[7]
+                String.valueOf(p.getDescuento())    // datos[8]
+        );
+    }
 }
