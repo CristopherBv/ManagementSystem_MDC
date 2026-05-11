@@ -115,6 +115,7 @@ Esta sección documenta la arquitectura y el comportamiento del **SDG_MDC**, mod
     <img src="images/vistasLogin/Login_Vista2.png" alt="Login Activo" width="800"/>
     <p><i>Visualización del estado activo de los campos de texto con respuesta visual inmediata para el usuario. Igualmente se puede observar que el campo de contraseña puede ser visible u oculto.</i></p>
   </div>
+Nota: Dependiendo de las credenciales ingresadas, el usuario será llevado a su panel correspondiente (Gerente, Vendedor o Almacenista) según su rol asignado.
 </details>
 
 ---
