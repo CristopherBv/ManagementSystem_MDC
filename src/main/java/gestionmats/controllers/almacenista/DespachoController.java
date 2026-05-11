@@ -79,6 +79,7 @@ public class DespachoController {
 
     @FXML
     private void handleConfirmarEntrega() {
+
         if (ventaActual == null) {
             UIComponents.showNotification("Debe buscar un ticket válido primero.", "error");
             return;
@@ -100,6 +101,7 @@ public class DespachoController {
                 productoDao.actualizar(p); // Reescribe la línea en el CSV
             }
         }
+
 
         // 3. Actualizar estado de la venta
         ventaActual.setEstado("SURTIDO");
