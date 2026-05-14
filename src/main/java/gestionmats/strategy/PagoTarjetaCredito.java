@@ -15,10 +15,10 @@ public class PagoTarjetaCredito implements EstrategiaPago {
     @Override
     public boolean procesarPago(double monto) {
         if (validarTarjeta()) {
-            System.out.println("Pago con tarjeta de crédito por $" + monto + " autorizado.");
+            System.out.println("Operación exitosa, el banco aprobó la transacción por $" + monto);
             return true;
         }
-        System.out.println("Tarjeta de crédito inválida.");
+        System.out.println("Operación fallida, el banco rechazó la transacción.");
         return false;
     }
 

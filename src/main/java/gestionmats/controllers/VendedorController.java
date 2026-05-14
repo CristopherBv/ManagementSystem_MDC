@@ -45,7 +45,6 @@ import java.util.ResourceBundle;
 
 public class VendedorController implements Initializable {
 
-    // ── SIDEBAR / TOPBAR ──────────────────────────────────────────────
     @FXML private Label lblPageTitle;
     @FXML private Label lblPageSub;
     @FXML private Label lblFecha;
@@ -53,7 +52,6 @@ public class VendedorController implements Initializable {
     @FXML private Label lblVendedorNombre;
     @FXML private Button btnLogout;
 
-    // ── NAVEGACIÓN ────────────────────────────────────────────────────
     @FXML private Button navVentas;
     @FXML private Button navHistorial;
     @FXML private Button navClientes;
@@ -61,7 +59,6 @@ public class VendedorController implements Initializable {
     @FXML private VBox viewHistorial;
     @FXML private VBox viewClientes;
 
-    // ── VISTA VENTAS: productos ───────────────────────────────────────
     @FXML private TextField txtSearchProducto;
     @FXML private ComboBox<String> cmbCategoria;
     @FXML private TableView<Producto> tableProductos;
@@ -71,7 +68,6 @@ public class VendedorController implements Initializable {
     @FXML private TableColumn<Producto, Integer> colStockProducto;
     @FXML private TableColumn<Producto, Double> colPrecioProducto;
 
-    // ── VISTA VENTAS: carrito ─────────────────────────────────────────
     @FXML private TableView<DetalleVenta> tableCarrito;
     @FXML private TableColumn<DetalleVenta, String> colIdProdCarrito;
     @FXML private TableColumn<DetalleVenta, String> colNombreCarrito;
@@ -80,7 +76,6 @@ public class VendedorController implements Initializable {
     @FXML private TableColumn<DetalleVenta, Double> colSubtotalCarrito;
     @FXML private TableColumn<DetalleVenta, Double> colTotalCarrito;
 
-    // ── VISTA VENTAS: totales y controles ─────────────────────────────
     @FXML private Label lblSubtotal;
     @FXML private Label lblDescuento;
     @FXML private Label lblTotal;
@@ -91,14 +86,12 @@ public class VendedorController implements Initializable {
     @FXML private Button btnAplicarDescuento;
     @FXML private Button btnFinalizarVenta;
 
-    // ── VISTA VENTAS: cliente seleccionado ────────────────────────────
     @FXML private Label lblClienteSeleccionado;
     @FXML private Label lblPuntosCliente;
     @FXML private Button btnSeleccionarCliente;
     @FXML private Button btnLimpiarCliente;
     @FXML private Button btnCanjearPuntos;
 
-    // ── VISTA HISTORIAL ───────────────────────────────────────────────
     @FXML private TextField txtBuscarVenta;
     @FXML private ComboBox<String> cmbFiltroEstado;
     @FXML private TableView<Venta> tableHistorial;
@@ -112,7 +105,6 @@ public class VendedorController implements Initializable {
     @FXML private Button btnVerDetalleVenta;
     @FXML private Label lblFooterHistorial;
 
-    // ── VISTA CLIENTES ────────────────────────────────────────────────
     @FXML private TextField txtBuscarCliente;
     @FXML private TableView<Cliente> tableClientes;
     @FXML private TableColumn<Cliente, Integer> colCliId;
@@ -127,17 +119,14 @@ public class VendedorController implements Initializable {
     @FXML private Button btnEliminarCliente;
     @FXML private Label lblFooterClientes;
 
-    // ── DAOs ──────────────────────────────────────────────────────────
     private ProductoDaoCsv productoDao;
     private VentaDaoCsv ventaDao;
     private DetalleVentaDaoCsv detalleDao;
     private ClienteDaoCsv clienteDao;
 
-    // ── PATRONES ──────────────────────────────────────────────────────
-    private EstrategiaDescuento estrategiaDescuento;
+    private DescuentoCompuesto estrategiaDescuento;
     private EstrategiaPago estrategiaPago;
 
-    // ── ESTADO INTERNO ────────────────────────────────────────────────
     private ObservableList<Producto> todosProductos;
     private FilteredList<Producto> productosFiltrados;
     private ObservableList<DetalleVenta> carrito;
@@ -147,6 +136,7 @@ public class VendedorController implements Initializable {
     private FilteredList<Cliente> clientesFiltrados;
 
     private Cliente clienteActual = null;
+    private double puntosUsadosEnEstaVenta = 0;
     private Timeline clockTimeline;
     private Button activeNavBtn;
 
@@ -157,7 +147,7 @@ public class VendedorController implements Initializable {
         detalleDao = new DetalleVentaDaoCsv();
         clienteDao = new ClienteDaoCsv();
 
-        estrategiaDescuento = new SinDescuento();
+        estrategiaDescuento = new DescuentoCompuesto();
         estrategiaPago = null;
 
         setupClock();
@@ -236,7 +226,6 @@ public class VendedorController implements Initializable {
         mostrarVista(viewClientes, navClientes, "Clientes", "Gestion de clientes y programa de lealtad");
     }
 
-    // ==================== PRODUCTOS ====================
     private void setupTablaProductos() {
         colIdProducto.setCellValueFactory(new PropertyValueFactory<>("idProducto"));
         colNombreProducto.setCellValueFactory(new PropertyValueFactory<>("nombre"));
@@ -274,7 +263,6 @@ public class VendedorController implements Initializable {
         });
     }
 
-    // ==================== CARRITO ====================
     private void setupTablaCarrito() {
         colIdProdCarrito.setCellValueFactory(new PropertyValueFactory<>("idProducto"));
         colNombreCarrito.setCellValueFactory(new PropertyValueFactory<>("nombreProducto"));
@@ -299,7 +287,7 @@ public class VendedorController implements Initializable {
     private void setupCombos() {
         cmbCategoria.setItems(FXCollections.observableArrayList("Todas", "Cemento y concreto", "Acero y metales", "Madera y derivados", "Impermeabilizantes", "Herramientas", "Tuberia y plomeria"));
         cmbCategoria.getSelectionModel().selectFirst();
-        cmbMetodoPago.setItems(FXCollections.observableArrayList("EFECTIVO", "TARJETA", "CREDITO"));
+        cmbMetodoPago.setItems(FXCollections.observableArrayList("EFECTIVO", "DEBITO", "CREDITO"));
         cmbMetodoPago.getSelectionModel().selectFirst();
         cmbTipoVenta.setItems(FXCollections.observableArrayList("INSTANTANEA", "PEDIDO"));
         cmbTipoVenta.getSelectionModel().selectFirst();
@@ -384,7 +372,7 @@ public class VendedorController implements Initializable {
                     UIComponents.showNotification("Valor entre 0 y 100", "warn");
                     return;
                 }
-                estrategiaDescuento = new DescuentoPorPromocion(porcentaje, "Descuento manual");
+                estrategiaDescuento.agregarDescuento(new DescuentoPorPromocion(porcentaje, "Descuento manual"));
                 actualizarTotales();
                 UIComponents.showNotification("Descuento del " + porcentaje + "% aplicado", "success");
             } catch (NumberFormatException e) {
@@ -404,15 +392,21 @@ public class VendedorController implements Initializable {
         double total = subtotal - descuento;
         if (total < 0) total = 0;
         lblSubtotal.setText(String.format("$ %.2f", subtotal));
-        if (estrategiaDescuento instanceof DescuentoPorPromocion) {
-            lblDescuento.setText(String.format("%.1f%%", ((DescuentoPorPromocion) estrategiaDescuento).getPorcentaje()));
+
+        String textoDescuento = "";
+        if (estrategiaDescuento.tieneDescuentoPorPuntos() && estrategiaDescuento.tieneDescuentoManual()) {
+            textoDescuento = "Puntos + " + estrategiaDescuento.getPorcentajeTotal() + "%";
+        } else if (estrategiaDescuento.tieneDescuentoPorPuntos()) {
+            textoDescuento = "Puntos aplicados";
+        } else if (estrategiaDescuento.tieneDescuentoManual()) {
+            textoDescuento = estrategiaDescuento.getPorcentajeTotal() + "%";
         } else {
-            lblDescuento.setText("0%");
+            textoDescuento = "0%";
         }
+        lblDescuento.setText(textoDescuento);
         lblTotal.setText(String.format("$ %.2f", total));
     }
 
-    // ==================== CLIENTE EN VENTA ====================
     @FXML private void handleSeleccionarCliente() {
         Dialog<Cliente> dialog = new Dialog<>();
         dialog.setTitle("Seleccionar Cliente");
@@ -474,7 +468,8 @@ public class VendedorController implements Initializable {
 
     @FXML private void handleLimpiarCliente() {
         clienteActual = null;
-        estrategiaDescuento = new SinDescuento();
+        estrategiaDescuento.limpiar();
+        puntosUsadosEnEstaVenta = 0;
         actualizarTotales();
         actualizarInfoCliente();
     }
@@ -496,27 +491,59 @@ public class VendedorController implements Initializable {
             UIComponents.showNotification("No hay cliente seleccionado", "warn");
             return;
         }
+
+        if (clienteActual.getIdCliente() <= 0) {
+            UIComponents.showNotification("Los clientes no registrados no pueden canjear puntos", "warn");
+            return;
+        }
+
         if (carrito.isEmpty()) {
             UIComponents.showNotification("El carrito esta vacio", "warn");
             return;
         }
 
         double puntosDisponibles = clienteActual.getPuntosLealtad();
+        double subtotal = carrito.stream().mapToDouble(DetalleVenta::getSubtotal).sum();
+
+        // Calcular el descuento manual actual (sin contar puntos)
+        double descuentoManualActual = 0;
+        if (estrategiaDescuento.tieneDescuentoManual()) {
+            descuentoManualActual = new DescuentoPorPromocion(estrategiaDescuento.getPorcentajeTotal(), "").calcularDescuento(subtotal);
+        }
+        double maxDescuentoEnPesos = subtotal - descuentoManualActual;
+
+        // Mostrar puntos disponibles como entero (solo para mostrar)
+        int puntosMostrar = (int) Math.floor(puntosDisponibles);
+
         TextInputDialog dialog = new TextInputDialog("0");
         dialog.setTitle("Canjear Puntos");
-        dialog.setHeaderText("Cliente: " + clienteActual.getNombre() + "\nPuntos disponibles: " + (int) puntosDisponibles);
-        dialog.setContentText("Ingrese la cantidad de puntos a canjear:\n(1 punto = $0.01 MXN)");
+        dialog.setHeaderText("Cliente: " + clienteActual.getNombre() + "\nPuntos disponibles: " + puntosMostrar);
+        dialog.setContentText("Ingrese la cantidad de puntos a canjear:\n(1 punto = $0.05 MXN | Valor maximo: $" + String.format("%.2f", maxDescuentoEnPesos) + ")");
         Optional<String> result = dialog.showAndWait();
         if (result.isPresent()) {
             try {
                 int puntos = Integer.parseInt(result.get().trim());
-                if (puntos <= 0 || puntos > puntosDisponibles) {
-                    UIComponents.showNotification("Cantidad invalida o puntos insuficientes", "warn");
+                if (puntos <= 0) {
+                    UIComponents.showNotification("Debe ingresar una cantidad mayor a 0", "warn");
                     return;
                 }
-                estrategiaDescuento = new DescuentoPorPromocion(puntos, "Canje de puntos");
+                if (puntos > puntosMostrar) {
+                    UIComponents.showNotification("No tiene suficientes puntos. Maximo: " + puntosMostrar, "warn");
+                    return;
+                }
+
+                double descuentoEnPesos = puntos * 0.05;
+                if (descuentoEnPesos > maxDescuentoEnPesos) {
+                    UIComponents.showNotification("El valor del descuento no puede superar el total de la compra.", "warn");
+                    return;
+                }
+
+                DescuentoPorPuntos descuentoPuntos = new DescuentoPorPuntos(puntos);
+                estrategiaDescuento.agregarDescuento(descuentoPuntos);
+                puntosUsadosEnEstaVenta = puntos;
                 actualizarTotales();
-                UIComponents.showNotification("Se canjearon " + puntos + " puntos", "success");
+
+                UIComponents.showNotification("Se canjearon " + puntos + " puntos por $" + String.format("%.2f", descuentoEnPesos), "success");
             } catch (NumberFormatException e) {
                 UIComponents.showNotification("Cantidad invalida", "error");
             }
@@ -567,23 +594,15 @@ public class VendedorController implements Initializable {
                         return;
                     }
                     estrategiaPago = new PagoEfectivo(recibido);
+                    if (!estrategiaPago.procesarPago(total)) return;
                 } catch (NumberFormatException e) {
                     UIComponents.showNotification("Monto invalido", "error");
                     return;
                 }
                 break;
-            case "TARJETA":
-                TextInputDialog tarjetaDialog = new TextInputDialog();
-                tarjetaDialog.setTitle("Pago con Tarjeta");
-                tarjetaDialog.setHeaderText("Ingrese el numero de tarjeta");
-                tarjetaDialog.setContentText("Numero de tarjeta:");
-                Optional<String> numeroTarjeta = tarjetaDialog.showAndWait();
-                if (numeroTarjeta.isEmpty()) return;
-                estrategiaPago = new PagoTarjetaCredito(numeroTarjeta.get());
-                break;
-            case "CREDITO":
+            case "DEBITO":
                 TextInputDialog debitoDialog = new TextInputDialog();
-                debitoDialog.setTitle("Pago con Credito/Debito");
+                debitoDialog.setTitle("Pago con Tarjeta de Debito");
                 debitoDialog.setHeaderText("Ingrese el saldo disponible");
                 debitoDialog.setContentText("Saldo disponible:");
                 Optional<String> saldo = debitoDialog.showAndWait();
@@ -595,19 +614,25 @@ public class VendedorController implements Initializable {
                         return;
                     }
                     estrategiaPago = new PagoTarjetaDebito(saldoDisponible);
+                    if (!estrategiaPago.procesarPago(total)) return;
                 } catch (NumberFormatException e) {
                     UIComponents.showNotification("Saldo invalido", "error");
                     return;
                 }
                 break;
+            case "CREDITO":
+                TextInputDialog creditoDialog = new TextInputDialog();
+                creditoDialog.setTitle("Pago con Tarjeta de Credito");
+                creditoDialog.setHeaderText("Ingrese el numero de tarjeta");
+                creditoDialog.setContentText("Numero de tarjeta:");
+                Optional<String> numeroTarjeta = creditoDialog.showAndWait();
+                if (numeroTarjeta.isEmpty()) return;
+                estrategiaPago = new PagoTarjetaCredito(numeroTarjeta.get());
+                if (!estrategiaPago.procesarPago(total)) return;
+                break;
             default:
                 UIComponents.showNotification("Seleccione un metodo de pago", "warn");
                 return;
-        }
-
-        if (!estrategiaPago.procesarPago(total)) {
-            UIComponents.showNotification("El pago fue rechazado", "error");
-            return;
         }
 
         String msgCliente = clienteActual != null ? "Cliente: " + clienteActual.getNombre() : "Venta general (sin cliente)";
@@ -625,13 +650,13 @@ public class VendedorController implements Initializable {
                 cmbTipoVenta.getValue(),
                 metodoPago,
                 subtotal,
-                estrategiaDescuento instanceof DescuentoPorPromocion ? ((DescuentoPorPromocion) estrategiaDescuento).getPorcentaje() : 0,
+                estrategiaDescuento.getPorcentajeTotal(),
                 total
         );
         venta.setDetalles(new java.util.ArrayList<>(carrito));
         venta.setEstrategiaPago(estrategiaPago);
+        venta.setEstrategiaDescuento(estrategiaDescuento);
 
-        // FACTORY METHOD - Generar recibo
         GeneradorRecibo generador;
         if ("INSTANTANEA".equals(cmbTipoVenta.getValue())) {
             generador = new GeneradorReciboInstantaneo(venta);
@@ -661,25 +686,32 @@ public class VendedorController implements Initializable {
             }
         }
 
-        if (clienteActual != null) {
-            double puntosGanados = total * 0.01;
-            clienteActual.setPuntosLealtad(clienteActual.getPuntosLealtad() + puntosGanados);
+        // ==================== ACTUALIZACIÓN DE PUNTOS CORREGIDA ====================
+        if (clienteActual != null && clienteActual.getIdCliente() > 0) {
+            double puntosUsados = puntosUsadosEnEstaVenta;
+            double puntosGanados = total * 0.05;
+            double puntosFinales = clienteActual.getPuntosLealtad() - puntosUsados + puntosGanados;
+            if (puntosFinales < 0) puntosFinales = 0;
+
+            clienteActual.setPuntosLealtad(puntosFinales);
             clienteDao.actualizar(clienteActual);
+
             UIComponents.showNotification("Cliente " + clienteActual.getNombre() +
-                    " gano " + String.format("%.0f", puntosGanados) + " puntos", "success");
+                    " usó " + String.format("%.0f", puntosUsados) + " puntos, ganó " + String.format("%.0f", puntosGanados) +
+                    " puntos. Saldo actual: " + String.format("%.0f", puntosFinales) + " puntos", "success");
         }
 
         carrito.clear();
-        estrategiaDescuento = new SinDescuento();
+        estrategiaDescuento.limpiar();
         estrategiaPago = null;
         clienteActual = null;
+        puntosUsadosEnEstaVenta = 0;
         actualizarTotales();
         actualizarInfoCliente();
         cargarProductos();
         UIComponents.showNotification("Venta #" + nuevoIdVenta + " completada", "success");
     }
 
-    // ==================== HISTORIAL ====================
     private void setupTablaHistorial() {
         colHisId.setCellValueFactory(new PropertyValueFactory<>("idVenta"));
         colHisFecha.setCellValueFactory(new PropertyValueFactory<>("fechaHora"));
@@ -791,7 +823,6 @@ public class VendedorController implements Initializable {
         dialog.showAndWait();
     }
 
-    // ==================== CLIENTES CRUD ====================
     private void setupTablaClientes() {
         colCliId.setCellValueFactory(new PropertyValueFactory<>("idCliente"));
         colCliNombre.setCellValueFactory(new PropertyValueFactory<>("nombre"));
@@ -929,7 +960,6 @@ public class VendedorController implements Initializable {
         }
     }
 
-    // ==================== LOGOUT ====================
     @FXML private void handleLogout() {
         NavigationTools.manejarLogout(btnLogout, clockTimeline);
     }

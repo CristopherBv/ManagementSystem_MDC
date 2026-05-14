@@ -20,3 +20,17 @@ idDetalle,idVenta,idProducto,nombreProducto,cantidad,precioUnitario,descuentoApl
 19,12,M008,Grava 3/4 (m3),1,420.0,0.0,420.0,420.0
 20,13,M004,Madera pino 2x4,1,120.0,0.0,120.0,120.0
 21,14,M005,Impermeabilizante 19L,1,850.0,0.0,850.0,850.0
+22,15,M004,Madera pino 2x4,1,120.0,0.0,120.0,120.0
+23,16,M005,Impermeabilizante 19L,1,850.0,0.0,850.0,850.0
+24,17,M004,Madera pino 2x4,1,120.0,0.0,120.0,120.0
+25,18,M006,Tubo PVC 4 hidráulico,1,160.0,0.0,160.0,160.0
+26,19,M007,Arena fina (m3),1,400.0,0.0,400.0,400.0
+27,20,M006,Tubo PVC 4 hidráulico,1,160.0,0.0,160.0,160.0
+28,21,M006,Tubo PVC 4 hidráulico,1,160.0,0.0,160.0,160.0
+29,22,M005,Impermeabilizante 19L,1,850.0,0.0,850.0,850.0
+30,23,M005,Impermeabilizante 19L,1,850.0,0.0,850.0,850.0
+31,24,M003,Block de 15x20x40,1,15.5,0.0,15.5,15.5
+32,25,M005,Impermeabilizante 19L,1,850.0,0.0,850.0,850.0
+33,26,M005,Impermeabilizante 19L,1,850.0,0.0,850.0,850.0
+34,27,M006,Tubo PVC 4 hidráulico,1,160.0,0.0,160.0,160.0
+35,28,M005,Impermeabilizante 19L,1,850.0,0.0,850.0,850.0
