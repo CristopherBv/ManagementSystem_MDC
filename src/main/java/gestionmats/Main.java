@@ -9,7 +9,7 @@ import javafx.stage.Stage;
 import java.util.Objects;
 
 public class Main extends Application {
-
+    //Comentario de prueba
     @Override
     public void start(Stage primaryStage) throws Exception {
         Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/views/Login.fxml")));
