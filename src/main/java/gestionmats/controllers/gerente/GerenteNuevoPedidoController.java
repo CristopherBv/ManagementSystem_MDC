@@ -68,21 +68,68 @@ public class GerenteNuevoPedidoController implements Initializable {
         colCosto.setCellValueFactory(d -> new SimpleStringProperty(String.format("$%.2f", d.getValue().calcularSubtotal())));
     }
 
-    @FXML private void handleAgregarDetalle() {
-        Producto p = cmbProducto.getValue();
-        if (p == null) {
-            UIComponents.showNotification("Seleccione un material.", "warn");
+    @FXML
+    private void handleAgregarDetalle() {
+        Producto prodSeleccionado = cmbProducto.getValue();
+        if (prodSeleccionado == null) {
+            UIComponents.showNotification("Seleccione un producto primero.", "warn");
             return;
         }
-        try {
-            int cant = Integer.parseInt(txtCantidad.getText().trim());
-            if (cant <= 0) throw new NumberFormatException();
 
-            detallesCarrito.add(new DetalleOrden(p, cant, 0)); // cantidad recibida inicia en 0
+        try {
+            int cantidad = Integer.parseInt(txtCantidad.getText().trim());
+
+            if (cantidad <= 0) {
+                UIComponents.showNotification("La cantidad a pedir debe ser mayor a 0.", "warn");
+                return;
+            }
+
+            // VALIDACIÓN DE CAPACIDAD MÁXIMA DEL ALMACÉN
+            // 1. Calculamos cuánto espacio físico nos queda
+            int espacioDisponible = prodSeleccionado.getStockMaximo() - prodSeleccionado.getStockActual();
+
+            // 2. Revisamos si este producto ya lo habíamos metido al carrito para sumarlo
+            int cantidadYaEnCarrito = 0;
+            for (DetalleOrden det : detallesCarrito) {
+                if (det.getProducto().getIdProducto().equals(prodSeleccionado.getIdProducto())) {
+                    cantidadYaEnCarrito = det.getCantidadEsperada();
+                    break;
+                }
+            }
+
+            // 3. Verificamos que lo que queremos pedir + lo que ya apartamos no exceda el límite
+            if ((cantidad + cantidadYaEnCarrito) > espacioDisponible) {
+                int limiteReal = espacioDisponible - cantidadYaEnCarrito;
+                UIComponents.showNotification(
+                        "Límite de almacén excedido. Solo puedes pedir " + limiteReal + " unidades más de este producto.",
+                        "error"
+                );
+                return; // Bloqueamos la acción, no se agrega al carrito
+            }
+
+            // Si pasa la validación, lo agregamos o sumamos al carrito normalmente
+            boolean encontrado = false;
+            for (DetalleOrden det : detallesCarrito) {
+                if (det.getProducto().getIdProducto().equals(prodSeleccionado.getIdProducto())) {
+                    det.setCantidadEsperada(det.getCantidadEsperada() + cantidad);
+                    encontrado = true;
+                    break;
+                }
+            }
+
+            if (!encontrado) {
+                detallesCarrito.add(new DetalleOrden(prodSeleccionado, cantidad, 0));
+            }
+
+            tableDetalles.refresh();
+
+            // Asumiendo que tienes un método que recalcula el total visualmente
+            // actualizarTotal();
+
             txtCantidad.clear();
-            actualizarTotal();
+
         } catch (NumberFormatException e) {
-            UIComponents.showNotification("Ingrese una cantidad válida mayor a 0.", "error");
+            UIComponents.showNotification("Ingrese una cantidad numérica válida.", "error");
         }
     }
 
