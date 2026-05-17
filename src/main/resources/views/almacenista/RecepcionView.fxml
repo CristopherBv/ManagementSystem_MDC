@@ -2,30 +2,24 @@
 
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.control.*?>
-<?import javafx.scene.control.cell.*?>
 
 <VBox xmlns="http://javafx.com/javafx/17.0.2"
       xmlns:fx="http://javafx.com/fxml/1"
       fx:controller="gestionmats.controllers.almacenista.RecepcionController"
-      spacing="20"
-      style="-fx-padding: 20;"
-      styleClass="main-content">
+      spacing="15" style="-fx-padding: 20;" styleClass="main-content">
 
-    <HBox spacing="10" alignment="CENTER_LEFT">
-        <TextField fx:id="txtIdOrden" promptText="Ingrese ID de Venta..." style="-fx-text-fill: black;" prefWidth="300"/>
-        <Button text="Buscar Orden" onAction="#handleBuscarOrden" styleClass="nav-btn"/>
+    <HBox spacing="10" alignment="CENTER_LEFT" styleClass="search-bar-container">
+        <Label text="🔍 Filtrar Entradas:" style="-fx-text-fill: white; -fx-font-weight: bold;"/>
+        <TextField fx:id="txtBusqueda" promptText="Escriba el ID de la orden o del proveedor..."
+                   HBox.hgrow="ALWAYS" styleClass="modern-textfield"/>
     </HBox>
 
-    <TableView fx:id="tablaRecepcion" VBox.vgrow="ALWAYS">
+    <TableView fx:id="tablaRecepcion" VBox.vgrow="ALWAYS" styleClass="modern-table">
         <columns>
-            <TableColumn fx:id="colProducto" text="Material / Producto" prefWidth="300" />
-            <TableColumn fx:id="colEsperado" text="Cant. Esperada" prefWidth="150" />
-            <TableColumn fx:id="colRecibido" text="Cant. Recibida" prefWidth="150" />
+            <TableColumn fx:id="colOrden" text="Código OC" prefWidth="120" resizable="false"/>
+            <TableColumn fx:id="colProveedor" text="Proveedor" prefWidth="180" />
+            <TableColumn fx:id="colMateriales" text="Insumos Esperados" prefWidth="520"/>
+            <TableColumn fx:id="colAccion" text="Acción Operativa" prefWidth="150" resizable="false"/>
         </columns>
     </TableView>
-
-    <HBox alignment="CENTER_RIGHT" spacing="10">
-        <Button text="Registrar Entrada" onAction="#handleRegistrarEntrada"
-                style="-fx-background-color: #27ae60; -fx-text-fill: white; -fx-font-weight: bold;"/>
-    </HBox>
 </VBox>

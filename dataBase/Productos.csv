@@ -1,6 +1,6 @@
 idProducto,nombre,marca,categoria,precioVenta,stockMaximo,stockActual,unidadMedida,descuento
-M001,Cemento Portland,Cemex,Cemento y concreto,240.0,200,-1,Sacos,0.0
-M002,Varilla 3/8 Grado 40,Sicartsa,Acero y metales,180.0,150,-3,Barras,0.0
+M001,Cemento Portland,Cemex,Cemento y concreto,240.0,200,0,Sacos,0.0
+M002,Varilla 3/8 Grado 40,Sicartsa,Acero y metales,180.0,150,22,Barras,0.0
 M003,Block de 15x20x40,Mitza,Cemento y concreto,15.5,500,8,Piezas,0.0
 M004,Madera pino 2x4,Local,Madera y derivados,120.0,100,5,Tablas,0.0
 M005,Impermeabilizante 19L,Fester,Impermeabilizantes,850.0,50,24,Cubetas,0.0
