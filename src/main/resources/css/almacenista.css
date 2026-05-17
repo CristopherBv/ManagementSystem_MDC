@@ -1,0 +1,98 @@
+/* ==================================================
+   DISEÑO TÁCTIL Y DE TARJETAS (ZONA ALMACENISTA)
+   ================================================== */
+
+.almacen-root {
+    -fx-background-color: #111318;
+}
+
+/* Panel superior de navegación táctil */
+.navigation-bar-tablet {
+    -fx-background-color: #1a1d24;
+    -fx-padding: 15px 20px;
+    -fx-border-color: #272a33;
+    -fx-border-width: 0 0 1px 0;
+}
+
+/* Tarjetas de Módulo (Botones Grandes) */
+.card-touch-button {
+    -fx-background-color: #22252e;
+    -fx-border-color: #313543;
+    -fx-border-radius: 10px;
+    -fx-background-radius: 10px;
+    -fx-padding: 12px 24px;
+    -fx-cursor: hand;
+    -fx-transition: all 0.2s ease-in-out;
+}
+
+.card-touch-button:hover {
+    -fx-background-color: #292d3a;
+    -fx-border-color: #43495c;
+}
+
+/* Variación de color al estar seleccionado/activo */
+.card-active-despacho {
+    -fx-border-color: #60a5fa !important;
+    -fx-background-color: rgba(96, 165, 250, 0.05) !important;
+}
+
+.card-active-recepcion {
+    -fx-border-color: #F58220 !important;
+    -fx-background-color: rgba(245, 130, 32, 0.05) !important;
+}
+
+/* Títulos dentro de las tarjetas */
+.card-touch-title {
+    -fx-font-family: "Segoe UI", sans-serif;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #ffffff;
+}
+
+.card-touch-subtitle {
+    -fx-font-family: "Segoe UI", sans-serif;
+    -fx-font-size: 11px;
+    -fx-text-fill: #9ca3af;
+}
+
+/* Círculos contadores (Badges) */
+.badge-circle {
+    -fx-background-radius: 50%;
+    -fx-min-width: 34px;
+    -fx-max-width: 34px;
+    -fx-min-height: 34px;
+    -fx-max-height: 34px;
+    -fx-alignment: center;
+}
+
+.badge-blue {
+    -fx-background-color: #60a5fa;
+}
+
+.badge-orange {
+    -fx-background-color: #F58220;
+}
+
+.badge-text {
+    -fx-font-family: "Segoe UI", sans-serif;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #111318;
+}
+
+/* Botón de salida del sistema para tableta */
+.btn-logout-tablet {
+    -fx-background-color: rgba(248, 113, 113, 0.1);
+    -fx-text-fill: #f87171;
+    -fx-border-color: #f87171;
+    -fx-border-radius: 8px;
+    -fx-background-radius: 8px;
+    -fx-font-weight: bold;
+    -fx-padding: 10px 18px;
+    -fx-cursor: hand;
+}
+
+.btn-logout-tablet:hover {
+    -fx-background-color: #f87171;
+    -fx-text-fill: #111318;
+}
