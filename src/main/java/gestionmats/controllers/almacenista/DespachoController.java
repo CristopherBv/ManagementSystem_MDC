@@ -1,119 +1,157 @@
 package gestionmats.controllers.almacenista;
 
-import gestionmats.dao.DetalleVentaDaoCsv;
-import gestionmats.dao.ProductoDaoCsv;
 import gestionmats.dao.VentaDaoCsv;
+import gestionmats.dao.ProductoDaoCsv;
+import gestionmats.model.Venta;
 import gestionmats.model.DetalleVenta;
 import gestionmats.model.Producto;
-import gestionmats.model.Venta;
-import gestionmats.utils.UIComponents;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
-import javafx.scene.control.TextField;
-import javafx.scene.control.cell.PropertyValueFactory;
-
+import javafx.fxml.Initializable;
+import javafx.scene.control.*;
+import javafx.util.Callback;
+import java.net.URL;
 import java.util.List;
+import java.util.ResourceBundle;
+import java.util.stream.Collectors;
 
-public class DespachoController {
+public class DespachoController implements Initializable {
 
-    @FXML private TextField txtIdPedido;
-    @FXML private TableView<DetalleVenta> tablaMaterialesPedido;
-    @FXML private TableColumn<DetalleVenta, String> colMaterial;
-    @FXML private TableColumn<DetalleVenta, Integer> colCantidad;
+    @FXML private TextField txtBusqueda;
+    @FXML private TableView<Venta> tablaDespacho;
+    @FXML private TableColumn<Venta, String> colTicket;
+    @FXML private TableColumn<Venta, String> colCliente;
+    @FXML private TableColumn<Venta, String> colDetalles;
+    @FXML private TableColumn<Venta, Void> colAccion;
 
-    private Venta ventaActual; // Guarda la venta encontrada para procesarla después
+    private ObservableList<Venta> todasLasVentasPendientes = FXCollections.observableArrayList();
+    private ObservableList<Venta> ventasFiltradas = FXCollections.observableArrayList();
 
-    @FXML
-    public void initialize() {
-        // Configuramos las columnas para que lean los atributos de DetalleVenta
-        colMaterial.setCellValueFactory(new PropertyValueFactory<>("nombreProducto"));
-        colCantidad.setCellValueFactory(new PropertyValueFactory<>("cantidad"));
+    @Override
+    public void initialize(URL url, ResourceBundle rb) {
+        // 1. Configurar columna del ID de la Venta
+        colTicket.setCellValueFactory(cellData ->
+                new SimpleStringProperty(String.valueOf(cellData.getValue().getIdVenta())));
+
+        // CORRECCIÓN: Mostrar el ID del cliente asociado que viene en el modelo Venta
+        colCliente.setCellValueFactory(cellData ->
+                new SimpleStringProperty("ID Cliente: " + cellData.getValue().getIdCliente()));
+
+        // CORRECCIÓN: Mapear la lista de Detalles a un string legible ("2x Cemento, 5x Varilla")
+        colDetalles.setCellValueFactory(cellData -> {
+            List<DetalleVenta> items = cellData.getValue().getDetalles();
+            if (items == null || items.isEmpty()) {
+                return new SimpleStringProperty("Sin productos asignados");
+            }
+            String resumen = items.stream()
+                    .map(d -> d.getCantidad() + "x " + d.getNombreProducto()) // <-- CAMBIADO AQUÍ
+                    .collect(Collectors.joining(", "));
+            return new SimpleStringProperty(resumen);
+        });;
+
+        // 2. Cargar los datos de los CSVs
+        cargarVentasPendientes();
+
+        // 3. Insertar botones de "✔ Entregar" en cada fila
+        agregarBotonDespacho();
+
+        // 4. Configurar el filtro en tiempo real al escribir en la barra de búsqueda
+        txtBusqueda.textProperty().addListener((observable, oldValue, newValue) -> {
+            filtrarVentas(newValue);
+        });
     }
 
-    @FXML
-    private void handleBuscarPedido() {
-        String idStr = txtIdPedido.getText().trim();
-        if (idStr.isEmpty()) return;
+    private void cargarVentasPendientes() {
+        VentaDaoCsv ventaDao = new VentaDaoCsv();
+        // NECESITAS ESTE DAO para ir a buscar los renglones de cada ticket
+        gestionmats.dao.DetalleVentaDaoCsv detalleDao = new gestionmats.dao.DetalleVentaDaoCsv();
 
-        try {
-            int idBusqueda = Integer.parseInt(idStr);
-            VentaDaoCsv ventaDao = new VentaDaoCsv();
-            Venta encontrado = null;
+        List<Venta> pendientes = ventaDao.listarTodos().stream()
+                .filter(v -> !"SURTIDO".equals(v.getEstado()))
+                .collect(Collectors.toList());
 
-            // Búsqueda manual en la lista del CSV
-            for (Venta v : ventaDao.listarTodos()) {
-                if (v.getIdVenta() == idBusqueda) {
-                    encontrado = v;
-                    break;
-                }
-            }
+        // ¡EL PASO CLAVE!: Por cada venta, buscamos sus renglones y se los asignamos
+        for (Venta v : pendientes) {
+            List<DetalleVenta> susDetalles = detalleDao.listarTodos().stream()
+                    .filter(d -> d.getIdVenta() == v.getIdVenta())
+                    .collect(Collectors.toList());
+            v.setDetalles(susDetalles);
+        }
 
-            if (encontrado != null) {
-                if ("SURTIDO".equalsIgnoreCase(encontrado.getEstado())) {
-                    UIComponents.showNotification("Aviso: El pedido " + idBusqueda + " ya fue entregado anteriormente.", "error");
-                    limpiarVista();
-                } else {
-                    this.ventaActual = encontrado;
-                    cargarDetallesVenta(idBusqueda);
-                }
-            } else {
-                UIComponents.showNotification("No se encontró ninguna venta con el ID: " + idBusqueda, "error");
-                limpiarVista();
-            }
+        todasLasVentasPendientes.setAll(pendientes);
+        ventasFiltradas.setAll(todasLasVentasPendientes);
+        tablaDespacho.setItems(ventasFiltradas);
+    }
 
-        } catch (NumberFormatException e) {
-            UIComponents.showNotification("Por favor, ingrese un ID numérico válido.", "error");
+    private void filtrarVentas(String texto) {
+        if (texto == null || texto.isEmpty()) {
+            ventasFiltradas.setAll(todasLasVentasPendientes);
+        } else {
+            String query = texto.toLowerCase().trim();
+            ventasFiltradas.setAll(
+                    todasLasVentasPendientes.stream()
+                            .filter(v -> String.valueOf(v.getIdVenta()).contains(query) ||
+                                    String.valueOf(v.getIdCliente()).contains(query))
+                            .collect(Collectors.toList())
+            );
         }
     }
 
-    private void cargarDetallesVenta(int idVenta) {
-        DetalleVentaDaoCsv detalleDao = new DetalleVentaDaoCsv();
-        List<DetalleVenta> lista = detalleDao.listarPorIdVenta(idVenta);
+    private void agregarBotonDespacho() {
+        Callback<TableColumn<Venta, Void>, TableCell<Venta, Void>> cellFactory = new Callback<> () {
+            @Override
+            public TableCell<Venta, Void> call(final TableColumn<Venta, Void> param) {
+                return new TableCell<>() {
+                    private final Button btnConfirmar = new Button("Entregar");
 
-        ObservableList<DetalleVenta> details = FXCollections.observableArrayList(lista);
-        tablaMaterialesPedido.setItems(details);
+                    {
+                        btnConfirmar.getStyleClass().add("btn-table-action");
+                        btnConfirmar.setOnAction(event -> {
+                            Venta ventaSeleccionada = getTableView().getItems().get(getIndex());
+                            procesarDespacho(ventaSeleccionada);
+                        });
+                    }
+
+                    @Override
+                    public void updateItem(Void item, boolean empty) {
+                        super.updateItem(item, empty);
+                        if (empty) {
+                            setGraphic(null);
+                        } else {
+                            setGraphic(btnConfirmar);
+                        }
+                    }
+                };
+            }
+        };
+        colAccion.setCellFactory(cellFactory);
     }
 
-    @FXML
-    private void handleConfirmarEntrega() {
-
-        if (ventaActual == null) {
-            UIComponents.showNotification("Debe buscar un ticket válido primero.", "error");
-            return;
-        }
-
+    private void procesarDespacho(Venta venta) {
         ProductoDaoCsv productoDao = new ProductoDaoCsv();
         VentaDaoCsv ventaDao = new VentaDaoCsv();
-        DetalleVentaDaoCsv detalleDao = new DetalleVentaDaoCsv();
 
-        // 1. Obtener lo que se vendió
-        List<DetalleVenta> detalles = detalleDao.listarPorIdVenta(ventaActual.getIdVenta());
-
-        // 2. Descontar del inventario (CSV Productos)
-        for (DetalleVenta dv : detalles) {
-            Producto p = productoDao.buscarPorId(dv.getIdProducto());
+        // RF-07: Descontar stock físico del inventario
+        for (DetalleVenta item : venta.getDetalles()) {
+            // CORRECCIÓN: item.getIdProducto() nos da el String directo (ej: "M001")
+            Producto p = productoDao.buscarPorId(item.getIdProducto()); // <-- CAMBIADO AQUÍ
             if (p != null) {
-                int stockNuevo = p.getStockActual() - dv.getCantidad();
-                p.setStockActual(stockNuevo);
-                productoDao.actualizar(p); // Reescribe la línea en el CSV
+                int nuevoStock = p.getStockActual() - item.getCantidad();
+                p.setStockActual(Math.max(0, nuevoStock));
+                productoDao.actualizar(p);
             }
         }
 
+        // Cambiamos el estado de la venta
+        venta.setEstado("SURTIDO");
+        ventaDao.actualizar(venta);
 
-        // 3. Actualizar estado de la venta
-        ventaActual.setEstado("SURTIDO");
-        ventaDao.actualizar(ventaActual);
+        // Reactividad en la UI
+        todasLasVentasPendientes.remove(venta);
+        ventasFiltradas.remove(venta);
 
-        UIComponents.showNotification("Despacho completado con éxito. Stock actualizado.", "success");
-        limpiarVista();
-    }
-
-    private void limpiarVista() {
-        this.ventaActual = null;
-        tablaMaterialesPedido.getItems().clear();
-        txtIdPedido.clear();
+        System.out.println("Venta #" + venta.getIdVenta() + " despachada y removida de la vista.");
     }
 }
