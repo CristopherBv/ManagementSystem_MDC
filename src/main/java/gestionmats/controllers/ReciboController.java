@@ -8,10 +8,7 @@ public class ReciboController {
 
     @FXML private TextArea txtRecibo;
 
-    private String contenidoRecibo;
-
     public void setContenidoRecibo(String contenido) {
-        this.contenidoRecibo = contenido;
         txtRecibo.setText(contenido);
     }
 
