@@ -145,7 +145,7 @@
                     <Label fx:id="lblFooterHistorial" text="Mostrando 0 ventas"/>
                 </VBox>
 
-                <!-- VISTA CLIENTES (sin tabla de facturas) -->
+                <!-- VISTA CLIENTES -->
                 <VBox fx:id="viewClientes" visible="false" managed="false" spacing="14" styleClass="view-panel">
                     <HBox spacing="10">
                         <TextField fx:id="txtBuscarCliente" promptText="Buscar cliente..." styleClass="search-input"/>

@@ -20,3 +20,4 @@ idDetalle,idVenta,idProducto,nombreProducto,cantidad,precioUnitario,descuentoApl
 19,12,M008,Grava 3/4 (m3),1,420.0,0.0,420.0,420.0
 20,13,M004,Madera pino 2x4,1,120.0,0.0,120.0,120.0
 21,14,M005,Impermeabilizante 19L,1,850.0,0.0,850.0,850.0
+22,15,M003,Block de 15x20x40,1,15.5,0.0,15.5,15.5

@@ -7,6 +7,14 @@ public class PagoEfectivo implements EstrategiaPago {
         this.montoRecibido = montoRecibido;
     }
 
+    public double getMontoRecibido() {
+        return montoRecibido;
+    }
+
+    public double calcularCambio(double monto) {
+        return montoRecibido - monto;
+    }
+
     @Override
     public boolean procesarPago(double monto) {
         if (montoRecibido >= monto) {
@@ -15,10 +23,6 @@ public class PagoEfectivo implements EstrategiaPago {
         }
         System.out.println("Monto insuficiente. Faltan: $" + (monto - montoRecibido));
         return false;
-    }
-
-    public double calcularCambio(double monto) {
-        return montoRecibido - monto;
     }
 
     @Override

@@ -1,6 +1,9 @@
 package gestionmats.model;
 
 import gestionmats.strategy.EstrategiaPago;
+import gestionmats.strategy.DescuentoCompuesto;
+import gestionmats.strategy.DescuentoPorPromocion;
+import gestionmats.strategy.DescuentoPorPuntos;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -20,8 +23,8 @@ public class Venta {
 
     private List<DetalleVenta> detalles;
     private EstrategiaPago estrategiaPago;
+    private DescuentoCompuesto estrategiaDescuento;
 
-    // Constructor completo
     public Venta(int idVenta, int idCliente, int idVendedor, String fechaHora,
                  String tipoVenta, String metodoPago, double subtotal,
                  double descuento, double total, String estado) {
@@ -36,10 +39,9 @@ public class Venta {
         this.total = total;
         this.estado = estado;
         this.detalles = new ArrayList<>();
-        this.estrategiaPago = null;
+        this.estrategiaDescuento = new DescuentoCompuesto();
     }
 
-    // Constructor para nueva venta (sin ID)
     public Venta(int idCliente, int idVendedor, String tipoVenta,
                  String metodoPago, double subtotal, double descuento, double total) {
         this.idCliente = idCliente;
@@ -52,10 +54,10 @@ public class Venta {
         this.total = total;
         this.estado = "COMPLETADA";
         this.detalles = new ArrayList<>();
-        this.estrategiaPago = null;
+        this.estrategiaDescuento = new DescuentoCompuesto();
     }
 
-    // ========== GETTERS Y SETTERS ==========
+    // Getters y Setters
     public int getIdVenta() { return idVenta; }
     public void setIdVenta(int idVenta) { this.idVenta = idVenta; }
 
@@ -86,26 +88,35 @@ public class Venta {
     public String getEstado() { return estado; }
     public void setEstado(String estado) { this.estado = estado; }
 
-    // ========== MÉTODOS PARA DETALLES ==========
-    public List<DetalleVenta> getDetalles() {
-        return detalles;
+    public List<DetalleVenta> getDetalles() { return detalles; }
+    public void setDetalles(List<DetalleVenta> detalles) { this.detalles = detalles; }
+    public void agregarDetalle(DetalleVenta detalle) { this.detalles.add(detalle); }
+
+    public EstrategiaPago getEstrategiaPago() { return estrategiaPago; }
+    public void setEstrategiaPago(EstrategiaPago estrategiaPago) { this.estrategiaPago = estrategiaPago; }
+
+    public DescuentoCompuesto getEstrategiaDescuento() { return estrategiaDescuento; }
+    public void setEstrategiaDescuento(DescuentoCompuesto estrategiaDescuento) {
+        this.estrategiaDescuento = estrategiaDescuento;
     }
 
-    public void setDetalles(List<DetalleVenta> detalles) {
-        this.detalles = detalles;
+    public double getDescuentoPorPuntos() {
+        if (estrategiaDescuento != null && estrategiaDescuento.tieneDescuentoPorPuntos()) {
+            double subtotalTemp = this.subtotal;
+            double descuentoManual = 0;
+            if (estrategiaDescuento.tieneDescuentoManual()) {
+                descuentoManual = new DescuentoPorPromocion(estrategiaDescuento.getPorcentajeTotal(), "").calcularDescuento(subtotalTemp);
+            }
+            return estrategiaDescuento.calcularDescuento(subtotalTemp) - descuentoManual;
+        }
+        return 0;
     }
 
-    public void agregarDetalle(DetalleVenta detalle) {
-        this.detalles.add(detalle);
-    }
-
-    // ========== MÉTODOS PARA ESTRATEGIA DE PAGO ==========
-    public EstrategiaPago getEstrategiaPago() {
-        return estrategiaPago;
-    }
-
-    public void setEstrategiaPago(EstrategiaPago estrategiaPago) {
-        this.estrategiaPago = estrategiaPago;
+    public double getDescuentoManualPesos() {
+        if (estrategiaDescuento != null && estrategiaDescuento.tieneDescuentoManual()) {
+            return new DescuentoPorPromocion(estrategiaDescuento.getPorcentajeTotal(), "").calcularDescuento(this.subtotal);
+        }
+        return 0;
     }
 
     public boolean procesarPago() {

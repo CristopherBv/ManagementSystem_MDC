@@ -2,6 +2,7 @@ package gestionmats.factory;
 
 import gestionmats.model.DetalleVenta;
 import gestionmats.model.Venta;
+import gestionmats.strategy.PagoEfectivo;
 import java.text.SimpleDateFormat;
 
 public class GeneradorReciboPedido extends GeneradorRecibo {
@@ -39,8 +40,29 @@ public class GeneradorReciboPedido extends GeneradorRecibo {
 
         sb.append("───────────────────────────────────────────────\n");
         sb.append(String.format("SUBTOTAL: $%.2f\n", venta.getSubtotal()));
-        sb.append(String.format("DESCUENTO: %.1f%%\n", venta.getDescuento()));
+
+        // Mostrar descuento por puntos si existe
+        double descuentoPuntos = venta.getDescuentoPorPuntos();
+        if (descuentoPuntos > 0) {
+            sb.append(String.format("DESCUENTO POR PUNTOS: -$%.2f\n", descuentoPuntos));
+        }
+
+        // Mostrar descuento porcentual si existe
+        if (venta.getDescuento() > 0) {
+            sb.append(String.format("DESCUENTO POR PROMOCION: %.1f%%\n", venta.getDescuento()));
+        }
+
         sb.append(String.format("TOTAL: $%.2f\n", venta.getTotal()));
+        sb.append("MÉTODO DE PAGO: ").append(venta.getMetodoPago()).append("\n");
+
+        // Mostrar cambio si el pago fue en efectivo
+        if (venta.getEstrategiaPago() instanceof PagoEfectivo) {
+            PagoEfectivo pagoEfectivo = (PagoEfectivo) venta.getEstrategiaPago();
+            double cambio = pagoEfectivo.calcularCambio(venta.getTotal());
+            sb.append("EFECTIVO RECIBIDO: $").append(String.format("%.2f", pagoEfectivo.getMontoRecibido())).append("\n");
+            sb.append("CAMBIO: $").append(String.format("%.2f", cambio)).append("\n");
+        }
+
         sb.append("───────────────────────────────────────────────\n");
         sb.append("El pedido será procesado en 24 hrs.\n");
         sb.append("═══════════════════════════════════════════════\n");
