@@ -20,19 +20,23 @@
 </div>
 
 ---
-## 👥 Integrantes del Equipo
+
+## 👥 Integrantes
+
 <div align="center">
 
-| **Cristopher Israel Cen Santana** | **Dzib Martínez Agustín Emanuel** |
-| :--- | :--- |
-| `Software Engineer` | `Software Engineer` |
-| :--- | :--- |
-| **Espejo Basto Herbert Alejandro** | **Esquivel Bacelis Estefanía** |
-| :--- | :--- |
-| `Software Engineer` | `Software Engineer` |
+`Cristopher Israel Cen Santana`
+
+`Dzib Martínez Agustín Emanuel`
+
+`Espejo Basto Herbert Alejandro`
+
+`Esquivel Bacelis Estefanía`
 
 </div>
+
 ---
+
 
 ## 📑 Tabla de Contenidos
 - [Acerca del Proyecto](#acerca-del-proyecto)
