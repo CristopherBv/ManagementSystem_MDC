@@ -64,7 +64,7 @@ Esta sección documenta la arquitectura y el comportamiento del **SDG_MDC**, mod
   <summary><b>3. Diagrama de Secuencia</b> <i>[Clic para expandir]</i></summary>
   <br>
   <div align="center">
-    <img src="images/D_SecuenciaVenta.svg" alt="Diagrama de Secuencia" width="800"/>
+    <img src="images/D_SecuenciaVenta.jpg" alt="Diagrama de Secuencia" width="800"/>
     <p><i>Detalla el flujo de mensajes en el tiempo para un proceso de realización de venta.</i></p>
   </div>
 </details>
