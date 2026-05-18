@@ -233,7 +233,7 @@ Esta sección centraliza las herramientas de inteligencia de negocio y gestión 
   <summary><b>Control de Almacén</b> <i>[Clic para expandir]</i></summary>
   <br>
   <div align="center">
-    <img src="ruta/a/tu/imagen_almacen.png" alt="Control de Almacén" width="800"/>
+    <img src="images/vistasAlmacen/GUI_almacenista.png" alt="Control de Almacén" width="800"/>
     <p><i>Módulo especializado para la recepción de materiales y despacho de tickets surtidos.</i></p>
   </div>
 </details>
