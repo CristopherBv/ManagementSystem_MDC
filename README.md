@@ -20,16 +20,16 @@
 </div>
 
 ---
-
-## Integrantes del Equipo
-
+## 👥 Integrantes del Equipo
 <div align="center">
 
-|  Cristopher Israel Cen Santana |
-| Dzib Martínez Agustín Emanuel | 
-| Espejo Basto Herbert Alejandro | 
-| Esquivel Bacelis Estefanía | 
-| Flores Vera Alejandro Manuel | 
+| **Cristopher Israel Cen Santana** | **Dzib Martínez Agustín Emanuel** |
+| :--- | :--- |
+| `Software Engineer` | `Software Engineer` |
+| :--- | :--- |
+| **Espejo Basto Herbert Alejandro** | **Esquivel Bacelis Estefanía** |
+| :--- | :--- |
+| `Software Engineer` | `Software Engineer` |
 
 </div>
 ---
