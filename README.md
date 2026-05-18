@@ -21,6 +21,22 @@
 
 ---
 
+## Integrantes del Equipo
+
+<div align="center">
+
+|  Cristopher Israel Cen Santana |
+| 👤 [Nombre del Integrante 2] | 
+| 👤 [Nombre del Integrante 3] | 
+| 👤 [Nombre del Integrante 4] | 
+| 👤 [Nombre del Integrante 5] | 
+
+</div>
+
+> ⚠️ **Nota del Equipo:** Aunque inicialmente se planificó el flujo de trabajo para una estructura distinta, el proyecto fue ejecutado y coordinado en su totalidad por un **equipo seleccionado de 4 integrantes**, optimizando la distribución de módulos de manera equitativa.
+
+---
+
 ## 📑 Tabla de Contenidos
 - [Acerca del Proyecto](#acerca-del-proyecto)
 - [Documentación de Diagramas UML](#documentación-de-diagramas-uml)
