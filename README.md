@@ -55,7 +55,7 @@ Esta sección documenta la arquitectura y el comportamiento del **SDG_MDC**, mod
   <summary><b>2. Diagrama de Clases (Diseño y Patrones)</b> <i>[Clic para expandir]</i></summary>
   <br>
   <div align="center">
-    <img src="images/D_Clases_SistemaGestionMateriales" alt="Diagrama de Clases" width="800"/>
+    <img src="images/D_Clases_SistemaGestionMateriales.svg" alt="Diagrama de Clases" width="800"/>
     <p><i>Estructura estática del sistema bajo la arquitectura MVC. <b>Nota:</b> En este diagrama se refleja la aplicación de los principios SOLID y la implementación de los tres patrones de diseño seleccionados para resolver problemas específicos de creación, estructura o comportamiento.</i></p>
   </div>
 </details>
