@@ -74,7 +74,7 @@ Esta sección documenta la arquitectura y el comportamiento del **SDG_MDC**, mod
   <summary><b>4. Diagrama de Estado</b> <i>[Clic para expandir]</i></summary>
   <br>
   <div align="center">
-    <img src="ruta/a/diagrama_estado.png" alt="Diagrama de Estado" width="800"/>
+    <img src="images/diagrama_de_estados.png" alt="Diagrama de Estado" width="800"/>
     <p><i>Muestra las transiciones por las que pasa un objeto complejo durante su ciclo de vida dentro de la aplicación (ej. el ciclo de vida de una Orden de Compra: Pendiente -> Recibida -> Discrepancia/Completada).</i></p>
   </div>
 </details>
@@ -83,7 +83,7 @@ Esta sección documenta la arquitectura y el comportamiento del **SDG_MDC**, mod
   <summary><b>5. Diagrama de Colaboración (Comunicación)</b> <i>[Clic para expandir]</i></summary>
   <br>
   <div align="center">
-    <img src="ruta/a/diagrama_colaboracion.png" alt="Diagrama de Colaboración" width="800"/>
+    <img src="images/diagrama_de_comunicacion.png" alt="Diagrama de Colaboración" width="800"/>
     <p><i>Enfatiza la organización estructural de los objetos que envían y reciben mensajes, complementando la vista del diagrama de secuencia.</i></p>
   </div>
 </details>
