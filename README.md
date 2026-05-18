@@ -92,8 +92,8 @@ Esta sección documenta la arquitectura y el comportamiento del **SDG_MDC**, mod
   <summary><b>6. Diagrama de Actividad</b> <i>[Clic para expandir]</i></summary>
   <br>
   <div align="center">
-    <img src="ruta/a/diagrama_actividad.png" alt="Diagrama de Actividad" width="800"/>
-    <p><i>Representa el flujo de control o flujo de datos paso a paso de un caso de uso, mostrando decisiones lógicas y actividades en paralelo.</i></p>
+    <img src="images/DiagramaAct.png" alt="Diagrama de Actividad" width="800"/>
+    <p><i>describe el proceso de venta de materiales, mostrando la interacción entre cliente, vendedor y almacenista.</i></p>
   </div>
 </details>
 
