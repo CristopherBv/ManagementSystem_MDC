@@ -33,6 +33,8 @@
 
 `Esquivel Bacelis Estefanía`
 
+`Alejandro Flores Vera`
+
 </div>
 
 ---
