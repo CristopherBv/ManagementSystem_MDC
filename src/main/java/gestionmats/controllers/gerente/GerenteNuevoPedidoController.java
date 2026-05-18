@@ -122,9 +122,7 @@ public class GerenteNuevoPedidoController implements Initializable {
             }
 
             tableDetalles.refresh();
-
-            // Asumiendo que tienes un método que recalcula el total visualmente
-            // actualizarTotal();
+            actualizarTotal();
 
             txtCantidad.clear();
 
