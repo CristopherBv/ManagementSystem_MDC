@@ -26,7 +26,7 @@ public class GerenteNuevoPedidoController implements Initializable {
     @FXML private TableColumn<DetalleOrden, String> colMaterial, colCosto;
     @FXML private TableColumn<DetalleOrden, Integer> colCantidad;
     @FXML private Label lblTotal;
-    @FXML private Button btnAgregar, btnEmitir, btnCancelar;
+    @FXML private Button btnAgregar, btnEmitir, btnCancelar, btnEliminar;
 
     private ObservableList<DetalleOrden> detallesCarrito;
     private ProveedorDaoCsv proveedorDao = new ProveedorDaoCsv();
@@ -43,9 +43,11 @@ public class GerenteNuevoPedidoController implements Initializable {
         cargarCombos();
         setupTable();
 
-        UIComponents.applyButtonAdd(btnEmitir);
+        // Conservamos únicamente el estilo del botón interno para agregar artículos
         UIComponents.applyButtonEdit(btnAgregar);
-        UIComponents.applyButtonGhost(btnCancelar);
+
+        // Inicializamos el total en cero visualmente
+        actualizarTotal();
     }
 
     private void cargarCombos() {
@@ -69,61 +71,61 @@ public class GerenteNuevoPedidoController implements Initializable {
     }
 
     @FXML
+    private void handleSample() {
+        // Método preventivo para mantener referencias estructurales en el compilador
+    }
+
+    @FXML
     private void handleAgregarDetalle() {
-        Producto prodSeleccionado = cmbProducto.getValue();
-        if (prodSeleccionado == null) {
-            UIComponents.showNotification("Seleccione un producto primero.", "warn");
+        Producto p = cmbProducto.getValue();
+        if (p == null) {
+            UIComponents.showNotification("Seleccione un material.", "warn");
             return;
         }
 
         try {
-            int cantidad = Integer.parseInt(txtCantidad.getText().trim());
+            int cant = Integer.parseInt(txtCantidad.getText().trim());
 
-            if (cantidad <= 0) {
-                UIComponents.showNotification("La cantidad a pedir debe ser mayor a 0.", "warn");
+            if (cant <= 0) {
+                UIComponents.showNotification("La cantidad a pedir debe ser mayor a 0.", "error");
                 return;
             }
 
             // VALIDACIÓN DE CAPACIDAD MÁXIMA DEL ALMACÉN
-            // 1. Calculamos cuánto espacio físico nos queda
-            int espacioDisponible = prodSeleccionado.getStockMaximo() - prodSeleccionado.getStockActual();
+            int espacioDisponible = p.getStockMaximo() - p.getStockActual();
 
-            // 2. Revisamos si este producto ya lo habíamos metido al carrito para sumarlo
             int cantidadYaEnCarrito = 0;
             for (DetalleOrden det : detallesCarrito) {
-                if (det.getProducto().getIdProducto().equals(prodSeleccionado.getIdProducto())) {
+                if (det.getProducto().getIdProducto().equals(p.getIdProducto())) {
                     cantidadYaEnCarrito = det.getCantidadEsperada();
                     break;
                 }
             }
 
-            // 3. Verificamos que lo que queremos pedir + lo que ya apartamos no exceda el límite
-            if ((cantidad + cantidadYaEnCarrito) > espacioDisponible) {
+            if ((cant + cantidadYaEnCarrito) > espacioDisponible) {
                 int limiteReal = espacioDisponible - cantidadYaEnCarrito;
                 UIComponents.showNotification(
                         "Límite de almacén excedido. Solo puedes pedir " + limiteReal + " unidades más de este producto.",
                         "error"
                 );
-                return; // Bloqueamos la acción, no se agrega al carrito
+                return;
             }
 
-            // Si pasa la validación, lo agregamos o sumamos al carrito normalmente
             boolean encontrado = false;
             for (DetalleOrden det : detallesCarrito) {
-                if (det.getProducto().getIdProducto().equals(prodSeleccionado.getIdProducto())) {
-                    det.setCantidadEsperada(det.getCantidadEsperada() + cantidad);
+                if (det.getProducto().getIdProducto().equals(p.getIdProducto())) {
+                    det.setCantidadEsperada(det.getCantidadEsperada() + cant);
                     encontrado = true;
                     break;
                 }
             }
 
             if (!encontrado) {
-                detallesCarrito.add(new DetalleOrden(prodSeleccionado, cantidad, 0));
+                detallesCarrito.add(new DetalleOrden(p, cant, 0));
             }
 
             tableDetalles.refresh();
             actualizarTotal();
-
             txtCantidad.clear();
 
         } catch (NumberFormatException e) {
@@ -131,9 +133,23 @@ public class GerenteNuevoPedidoController implements Initializable {
         }
     }
 
+    @FXML
+    private void handleQuitarDetalle() {
+        DetalleOrden seleccionado = tableDetalles.getSelectionModel().getSelectedItem();
+        if (seleccionado == null) {
+            UIComponents.showNotification("Seleccione un artículo de la tabla para removerlo.", "warn");
+            return;
+        }
+
+        detallesCarrito.remove(seleccionado);
+        tableDetalles.refresh();
+        actualizarTotal();
+        UIComponents.showNotification("Material removido del pedido.", "success");
+    }
+
     private void actualizarTotal() {
         double total = detallesCarrito.stream().mapToDouble(DetalleOrden::calcularSubtotal).sum();
-        lblTotal.setText(String.format("$%.2f", total));
+        lblTotal.setText(String.format("$%,.2f", total));
     }
 
     @FXML private void handleEmitirOrden() {
@@ -147,13 +163,11 @@ public class GerenteNuevoPedidoController implements Initializable {
             return;
         }
 
-        // Creamos la orden general y le añadimos los materiales del carrito
         OrdenCompra nuevaOrden = new OrdenCompra(ordenDao.generarSiguienteId(), prov);
         for (DetalleOrden det : detallesCarrito) {
             nuevaOrden.addDetalleOrden(det);
         }
 
-        // El Super-DAO se encarga de guardar all
         if (ordenDao.guardar(nuevaOrden)) {
 
             Usuario u = gestionmats.services.GestorSesion.getInstancia().getUsuarioActual();

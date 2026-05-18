@@ -630,3 +630,86 @@
     -fx-background-color: #111318; /* Naranja al seleccionar */
     -fx-text-fill: #F58220;        /* Texto oscuro para contrastar */
 }
+
+
+/* ==================================================
+   CONTRASTE SEGURO PARA COMBOBOXES DE FORMULARIOS
+   ================================================== */
+
+.form-input {
+    -fx-background-color: #1a1d24;
+    -fx-border-color: #374151;
+    -fx-text-fill: #ffffff;
+}
+
+/* Forzar que el texto seleccionado dentro de la caja principal sea blanco */
+.form-input .label {
+    -fx-text-fill: #ffffff !important;
+}
+
+/* Control del contenedor flotante desplegable */
+.form-input .list-view {
+    -fx-background-color: #1a1d24;
+    -fx-border-color: #374151;
+    -fx-background-radius: 4px;
+    -fx-border-radius: 4px;
+}
+
+/* Control de las celdas internas de la lista */
+.form-input .list-cell {
+    -fx-background-color: #1a1d24;
+    -fx-text-fill: #ffffff;
+    -fx-padding: 8px 12px;
+}
+
+/* Cambia a naranja brillante con letras oscuras al pasar el cursor (Hover) */
+.form-input .list-cell:filled:hover {
+    -fx-background-color: #F58220;
+    -fx-text-fill: #111318 !important;
+    -fx-cursor: hand;
+}
+
+/* Resalta la opción que se encuentra actualmente activa y seleccionada */
+.form-input .list-cell:filled:selected {
+    -fx-background-color: rgba(245, 130, 32, 0.2);
+    -fx-text-fill: #F58220 !important;
+    -fx-font-weight: bold;
+}
+
+/* ==================================================
+   DISEÑO EXCLUSIVO PARA BOTONES DE NUEVO PEDIDO
+   ================================================== */
+
+.btn-pedido-emitir {
+    -fx-background-color: #27ae60;
+    -fx-text-fill: #ffffff;
+    -fx-font-weight: bold;
+    -fx-font-size: 14px;
+    -fx-padding: 10px 20px;
+    -fx-background-radius: 6px; /* Forma rectangular exacta */
+    -fx-border-radius: 6px;
+    -fx-border-color: transparent;
+    -fx-cursor: hand;
+}
+
+.btn-pedido-emitir:hover {
+    -fx-background-color: #2ecc71;
+}
+
+.btn-pedido-cancelar {
+    -fx-background-color: transparent;
+    -fx-text-fill: #9ca3af;
+    -fx-font-weight: bold;
+    -fx-font-size: 14px;
+    -fx-padding: 10px 20px;
+    -fx-background-radius: 6px; /* Forma rectangular exacta */
+    -fx-border-radius: 6px;
+    -fx-border-color: #4b5563;
+    -fx-cursor: hand;
+}
+
+.btn-pedido-cancelar:hover {
+    -fx-background-color: rgba(248, 113, 113, 0.1);
+    -fx-text-fill: #f87171;
+    -fx-border-color: #f87171;
+}

@@ -19,13 +19,17 @@
                 <Label text="Material" styleClass="kpi-sub"/>
                 <ComboBox fx:id="cmbProducto" prefWidth="300" styleClass="form-input"/>
             </VBox>
-            <HBox spacing="10" alignment="CENTER_LEFT">
+
+            <HBox spacing="10" alignment="BOTTOM_LEFT">
                 <VBox spacing="5">
                     <Label text="Cantidad" styleClass="kpi-sub"/>
-                    <TextField fx:id="txtCantidad" prefWidth="100" styleClass="form-input"/>
+                    <TextField fx:id="txtCantidad" prefWidth="90" prefHeight="35" styleClass="form-input"/>
                 </VBox>
                 <Pane HBox.hgrow="ALWAYS"/>
-                <Button fx:id="btnAgregar" text="Agregar al Pedido" onAction="#handleAgregarDetalle" styleClass="btn-edit" prefHeight="35"/>
+                <HBox spacing="8">
+                    <Button fx:id="btnAgregar" text="Agregar" onAction="#handleAgregarDetalle" styleClass="btn-edit" prefHeight="35"/>
+                    <Button fx:id="btnEliminar" text="Quitar 🗑" onAction="#handleQuitarDetalle" style="-fx-background-color: rgba(248, 113, 113, 0.1); -fx-text-fill: #f87171; -fx-border-color: #f87171; -fx-border-radius: 4; -fx-background-radius: 4; -fx-cursor: hand;" prefHeight="35"/>
+                </HBox>
             </HBox>
         </VBox>
 
@@ -41,14 +45,15 @@
                 </columns>
             </TableView>
             <HBox alignment="CENTER_RIGHT" spacing="15">
-                <Label text="dvargatimado:" styleClass="kpi-sub"/>
+                <Label text="Total Estimado:" styleClass="kpi-sub"/>
                 <Label fx:id="lblTotal" text="0.00" styleClass="kpi-value" style="-fx-font-size: 20px;"/>
             </HBox>
         </VBox>
     </HBox>
 
     <HBox spacing="10" alignment="CENTER_RIGHT" style="-fx-padding: 10 0 0 0;">
-        <Button fx:id="btnCancelar" text="Cancelar" onAction="#handleCancelar" styleClass="btn-ghost" prefHeight="35"/>
-        <Button fx:id="btnEmitir" text="Emitir Orden" onAction="#handleEmitirOrden" styleClass="btn-add" prefHeight="35"/>
+        <Button fx:id="btnCancelar" text="Cancelar" onAction="#handleCancelar" styleClass="btn-pedido-cancelar" prefWidth="120"/>
+        <Button fx:id="btnEmitir" text="Emitir Orden" onAction="#handleEmitirOrden" styleClass="btn-pedido-emitir" prefWidth="200"/>
     </HBox>
+
 </VBox>
