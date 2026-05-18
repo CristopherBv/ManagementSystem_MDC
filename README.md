@@ -26,9 +26,9 @@
 <div align="center">
 
 |  Cristopher Israel Cen Santana |
-| 👤 [Nombre del Integrante 2] | 
+| 👤 [Dzib Martínez Agustín Emanuel] | 
 | 👤 [Nombre del Integrante 3] | 
-| 👤 [Nombre del Integrante 4] | 
+| 👤 [Esquivel Bacelis Estefanía] | 
 | 👤 [Nombre del Integrante 5] | 
 
 </div>
