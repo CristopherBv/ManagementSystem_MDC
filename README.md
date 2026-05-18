@@ -64,10 +64,11 @@ Esta sección documenta la arquitectura y el comportamiento del **SDG_MDC**, mod
   <summary><b>3. Diagrama de Secuencia</b> <i>[Clic para expandir]</i></summary>
   <br>
   <div align="center">
-    <img src="ruta/a/diagrama_secuencia.png" alt="Diagrama de Secuencia" width="800"/>
-    <p><i>Detalla el flujo de mensajes en el tiempo para un proceso crítico (ej. el registro de una venta o la autorización Override del gerente).</i></p>
+    <img src="images/D_SecuenciaVenta.svg" alt="Diagrama de Secuencia" width="800"/>
+    <p><i>Detalla el flujo de mensajes en el tiempo para un proceso de realización de venta.</i></p>
   </div>
 </details>
+    
 
 <details>
   <summary><b>4. Diagrama de Estado</b> <i>[Clic para expandir]</i></summary>
