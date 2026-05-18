@@ -221,7 +221,7 @@ Esta sección centraliza las herramientas de inteligencia de negocio y gestión 
   <summary><b>Clientes (POS)</b> <i>[Clic para expandir]</i></summary>
   <br>
   <div align="center">
-    <img src="images/VistasVendedor/Clientes_Vendedor" alt="Punto de Venta" width="800"/>
+    <img src="images/VistasVendedor/Clientes_Vendedor.png" alt="Punto de Venta" width="800"/>
     <p><i>Gestión de clientes y programa de lealtad. Registra y elimina clientes, permite modificar su información y buscarlos con su ID.</i></p>
   </div>
 </details>
