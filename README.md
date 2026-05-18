@@ -203,8 +203,26 @@ Esta sección centraliza las herramientas de inteligencia de negocio y gestión 
   <summary><b>Punto de Venta (POS)</b> <i>[Clic para expandir]</i></summary>
   <br>
   <div align="center">
-    <img src="ruta/a/tu/imagen_punto_venta.png" alt="Punto de Venta" width="800"/>
-    <p><i>Interfaz fluida para registro de compras, gestión de carrito y aplicación de promociones.</i></p>
+    <img src="PuntoDeVenta_Gerente.jpeg" alt="Punto de Venta" width="800"/>
+    <p><i>gestionar el proceso completo de una venta, desde la selección de productos hasta la generación del recibo.</i></p>
+  </div>
+</details>
+
+<details>
+  <summary><b>Historial (POS)</b> <i>[Clic para expandir]</i></summary>
+  <br>
+  <div align="center">
+    <img src="HistorialVendedor.png" alt="Punto de Venta" width="800"/>
+    <p><i>Permite buscar y visualizar el historial de ventas de un cliente específico (por ID), mostrando detalles como fecha, tipo de recibo, método de pago, costo y estado.</i></p>
+  </div>
+</details>
+
+<details>
+  <summary><b>Clientes (POS)</b> <i>[Clic para expandir]</i></summary>
+  <br>
+  <div align="center">
+    <img src="Clientes_Vendedor" alt="Punto de Venta" width="800"/>
+    <p><i>Gestión de clientes y programa de lealtad. Registra y elimina clientes, permite modificar su información y buscarlos con su ID.</i></p>
   </div>
 </details>
 
