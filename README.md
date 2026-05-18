@@ -34,7 +34,7 @@
 
 ## 📖 Acerca del Proyecto
 
-Este proyecto consiste en una solución de software diseñada para optimizar las operaciones diarias de una constructora y su manejo de materiales. El sistema permite gestionar desde el catálogo de productos y el inventario hasta la generación de reportes financieros, garantizando precisión y eficiencia en la toma de decisiones comerciales mediante accesos controlados por roles (Gerente, Vendedor, Almacenista).
+Este proyecto consiste en una solución de software diseñada para optimizar las operaciones diarias de una tienda de materiales de construcción y su manejo de materiales. El sistema permite gestionar desde el catálogo de productos y el inventario hasta la generación de reportes financieros, garantizando precisión y eficiencia en la toma de decisiones comerciales mediante accesos controlados por roles (Gerente, Vendedor, Almacenista).
 
 ---
 
