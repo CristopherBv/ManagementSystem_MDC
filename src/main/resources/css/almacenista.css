@@ -96,3 +96,99 @@
     -fx-background-color: #f87171;
     -fx-text-fill: #111318;
 }
+
+/* ==================================================
+   UPGRADE DE UI/UX PARA TABLAS (DATA-TABLE)
+   ================================================== */
+
+/* Contenedor principal de la tabla */
+.data-table {
+    -fx-background-color: #1a1d24;
+    -fx-background-radius: 8px;
+    -fx-border-color: #272a33;
+    -fx-border-width: 1px;
+    -fx-border-radius: 8px;
+    -fx-padding: 0;
+}
+
+/* Ocultar el fondo blanco interno por defecto */
+.data-table .virtual-flow {
+    -fx-background-color: transparent;
+}
+
+/* --- ENCABEZADOS DE LA TABLA (HEADERS) --- */
+.data-table .column-header-background {
+    -fx-background-color: #22252e; /* Fondo un poco más claro que la tabla */
+    -fx-background-radius: 8px 8px 0 0;
+}
+
+.data-table .column-header {
+    -fx-background-color: transparent;
+    -fx-border-color: #272a33;
+    -fx-border-width: 0 1px 1px 0; /* Líneas divisoras sutiles */
+    -fx-size: 40px; /* Más altas para uso táctil */
+}
+
+/* Centrar el texto del encabezado */
+.data-table .column-header .label {
+    -fx-text-fill: #9ca3af; /* Gris claro elegante */
+    -fx-font-weight: bold;
+    -fx-font-size: 13px;
+    -fx-alignment: CENTER; /* ¡Centrado absoluto del título! */
+}
+
+/* --- CELDAS DE LA TABLA (CELLS) --- */
+.data-table .table-cell {
+    -fx-text-fill: #ffffff; /* Texto blanco puro */
+    -fx-font-size: 14px;
+    -fx-padding: 12px; /* Margen interno cómodo para los dedos */
+    -fx-border-color: transparent;
+    -fx-alignment: CENTER; /* ¡Centrado absoluto de todo el texto de las celdas! */
+}
+
+/* --- FILAS DE LA TABLA (ROWS) --- */
+.data-table .table-row-cell {
+    -fx-background-color: #1a1d24;
+    -fx-border-color: #272a33;
+    -fx-border-width: 0 0 1px 0; /* Línea divisora inferior */
+}
+
+/* Efecto Hover: Al pasar el cursor o el dedo por encima de una fila */
+.data-table .table-row-cell:hover {
+    -fx-background-color: #22252e;
+}
+
+/* Fila seleccionada */
+.data-table .table-row-cell:selected {
+    -fx-background-color: rgba(245, 130, 32, 0.08); /* Fondo naranja muy sutil */
+    -fx-table-cell-properties: #F58220;
+}
+
+.data-table .table-row-cell:selected .table-cell {
+    -fx-text-fill: #F58220; /* El texto de la fila seleccionada se vuelve naranja */
+    -fx-font-weight: bold;
+}
+
+/* --- DETALLES DE DISEÑO EXTRA --- */
+/* Quitar la esquina vacía que deja la barra de desplazamiento */
+.data-table .column-header-background .filler {
+    -fx-background-color: transparent;
+}
+
+/* Poner bonita la barra de desplazamiento (Scrollbar) */
+.data-table .scroll-bar:vertical,
+.data-table .scroll-bar:horizontal {
+    -fx-background-color: transparent;
+}
+
+.data-table .scroll-bar .thumb {
+    -fx-background-color: #374151;
+    -fx-background-radius: 4px;
+}
+
+/* Mensaje cuando la tabla está vacía */
+.data-table .placeholder .label {
+    -fx-text-fill: #9ca3af;
+    -fx-font-size: 14px;
+    -fx-font-style: italic;
+}prueba

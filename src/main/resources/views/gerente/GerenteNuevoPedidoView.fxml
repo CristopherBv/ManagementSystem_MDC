@@ -41,7 +41,7 @@
                 </columns>
             </TableView>
             <HBox alignment="CENTER_RIGHT" spacing="15">
-                <Label text="Costo Estimado:" styleClass="kpi-sub"/>
+                <Label text="dvargatimado:" styleClass="kpi-sub"/>
                 <Label fx:id="lblTotal" text="0.00" styleClass="kpi-value" style="-fx-font-size: 20px;"/>
             </HBox>
         </VBox>
